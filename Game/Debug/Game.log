@@ -1,6 +1,1 @@
-﻿  Main.cpp
-c:\users\pc\desktop\game\game\main.cpp(100): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
-c:\users\pc\desktop\game\game\main.cpp(112): warning C4018: '<': signed/unsigned mismatch
-c:\users\pc\desktop\game\game\main.cpp(143): warning C4018: '<': signed/unsigned mismatch
-c:\users\pc\desktop\game\game\main.cpp(188): warning C4244: 'argument': conversion from 'DWORD' to 'float', possible loss of data
-  Game.vcxproj -> C:\Users\PC\Desktop\Game\Debug\Game.exe
+﻿  Game.vcxproj -> C:\Users\PC\Documents\GitHub\CastlevaniaGame\Debug\Game.exe

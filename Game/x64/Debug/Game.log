@@ -1,0 +1,2 @@
+﻿  Game.cpp
+c:\users\pc\documents\github\castlevaniagame\game\game.cpp(76): error C2065: 'GWL_HINSTANCE': undeclared identifier
