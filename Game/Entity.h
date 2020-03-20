@@ -25,13 +25,14 @@ public:
 	Entity();
 	~Entity();
 
+	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
 	virtual void Update(float dt);
-	virtual void Render();
+	virtual void Render() = 0;
+
+	void RenderBoundingBox();
 
 	void SetState(int STATE) { this->state = STATE; }
 	int GetState() { return state; }
-
-	RECT GetBound();
 
 	int GetHealth() { return health; }
 	void AddHealth(int BonusHealth) { health += BonusHealth; }

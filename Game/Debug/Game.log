@@ -1,1 +1,12 @@
-﻿  Game.vcxproj -> C:\Users\PC\Documents\GitHub\CastlevaniaGame\Debug\Game.exe
+﻿  Main.cpp
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(100): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(112): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(143): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(188): warning C4244: 'argument': conversion from 'DWORD' to 'float', possible loss of data
+  Player.cpp
+c:\users\pc\documents\github\castlevaniagame\game\player.cpp(39): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\player.cpp(61): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\player.cpp(82): warning C4244: 'argument': conversion from 'DWORD' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\player.cpp(97): warning C4244: 'argument': conversion from 'DWORD' to 'float', possible loss of data
+  Generating Code...
+  Game.vcxproj -> C:\Users\PC\Documents\GitHub\CastlevaniaGame\Debug\Game.exe
