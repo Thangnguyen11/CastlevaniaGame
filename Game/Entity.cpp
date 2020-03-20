@@ -33,5 +33,16 @@ Sprite * Entity::GetSprite()
 
 void Entity::RenderBoundingBox() 
 {
+	Texture2d* bbox = new Texture2d("Resources/bbox.png", 1, 1, 1);
+	D3DXVECTOR3 origin((float)texture->getFrameWidth() / 2, (float)texture->getFrameHeight() / 2, 0);
 
+	float l, t, r, b;
+	GetBoundingBox(l, t, r, b);
+	RECT rect;
+	rect.left = 0;
+	rect.top = 0;
+	rect.right = (int)r - (int)l;
+	rect.bottom = (int)b - (int)t;
+
+	Game::GetInstance()->Draw(posX, posY, bbox->Texture, rect.left, rect.top, rect.right, rect.bottom, origin, 20);
 }

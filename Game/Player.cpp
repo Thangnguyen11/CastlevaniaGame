@@ -117,6 +117,7 @@ void Player::Render()
 		sprite->Draw(posX, posY, 255);
 	}
 
+	RenderBoundingBox();
 }
 
 void Player::SetState(int state)
@@ -163,8 +164,8 @@ void Player::SetState(int state)
 
 void Player::GetBoundingBox(float &left, float &top, float &right, float &bottom) 
 {
-	left = posX - PLAYER_BBOX_WIDTH / 2;
-	top = posY - PLAYER_BBOX_HEIGHT / 2;
-	right = posX + PLAYER_BBOX_WIDTH / 2;
-	bottom = posY + PLAYER_BBOX_HEIGHT / 2;
+	left = posX;
+	top = posY;
+	right = posX + PLAYER_BBOX_WIDTH;
+	bottom = posY + PLAYER_BBOX_HEIGHT;
 }

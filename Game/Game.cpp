@@ -187,4 +187,15 @@ void Game::ProcessKeyboard()
 	}
 }
 
+void Game::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, D3DXVECTOR3 origin, int alpha)
+{
+	D3DXVECTOR3 p(floor(x - cam_x), floor(y - cam_y), 0);
+	RECT r;
+	r.left = left;
+	r.top = top;
+	r.right = right;
+	r.bottom = bottom;
+	spriteHandler->Draw(texture, &r, &origin, &p, D3DCOLOR_ARGB(alpha, 255, 255, 255));
+}
+
 
