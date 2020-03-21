@@ -4,6 +4,7 @@
 #include "debug.h"
 #include "define.h"
 #include "Sprite.h"
+#include "Texture2dManager.h"
 
 class Entity;
 typedef Entity * LPGAMEENTITY;

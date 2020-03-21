@@ -2,8 +2,8 @@
 
 Brick::Brick() 
 {
-	this->texture = new Texture2d("Resources/Ground.png", 4, 2, 8);
-	this->sprite = new Sprite(texture, 100);
+	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::BRICK);
+	this->sprite = new Sprite(texture, MaxFrameRate);
 	tag = EntityType::BRICK;
 }
 

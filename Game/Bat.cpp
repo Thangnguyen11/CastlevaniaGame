@@ -2,8 +2,8 @@
 
 Bat::Bat() 
 {
-	this->texture = new Texture2d("Resources/VampireBat.png", 4, 1, 4);
-	this->sprite = new Sprite(texture, 100);
+	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::BAT);
+	this->sprite = new Sprite(texture, MaxFrameRate);
 	tag = EntityType::BAT;
 
 	direction = 1;

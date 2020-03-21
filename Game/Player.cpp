@@ -2,8 +2,8 @@
 
 Player::Player() 
 {
-	this->texture = new Texture2d("Resources/Simon.png", 8, 7, 56);
-	this->sprite = new Sprite(texture, 100);
+	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::PLAYER);
+	this->sprite = new Sprite(texture, MaxFrameRate);
 	tag = EntityType::PLAYER;
 	direction = 1;
 

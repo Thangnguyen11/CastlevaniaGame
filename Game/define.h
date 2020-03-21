@@ -31,7 +31,9 @@ enum EntityType
 
 	BRICK = 02,
 
-	BAT = 03
+	BAT = 03,
+
+	BBOX = 04
 };
 
 class define
