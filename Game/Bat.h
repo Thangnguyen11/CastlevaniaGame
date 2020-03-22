@@ -19,7 +19,7 @@ public:
 	Bat();
 	~Bat();
 	//	a fake update for testing
-	virtual void Update(float dt, Entity *target);
+	virtual void Update(DWORD dt, vector<LPGAMEENTITY> *coObjects);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	virtual void SetState(int state);

@@ -14,7 +14,7 @@ Sprite::~Sprite()
 
 }
 
-void Sprite::Update(float dt)
+void Sprite::Update(DWORD dt)
 {
 	if (totalFrame <= 1)
 		return;

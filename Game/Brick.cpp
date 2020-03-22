@@ -9,7 +9,7 @@ Brick::Brick()
 
 Brick::~Brick() {}
 
-void Brick::Update(float dt) 
+void Brick::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
 	sprite->SelectFrame(BRICK_NORMAL);
 }

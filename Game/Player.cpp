@@ -16,7 +16,7 @@ Player::Player()
 
 Player::~Player(){}
 
-void Player::Update(DWORD dt)
+void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {	
 	//Not clean
 	if (posY == 375)
@@ -27,7 +27,7 @@ void Player::Update(DWORD dt)
 	if (!isWalking && !isJumping)	//Attack tren mat dat thi dung yen, attack khi dang jump thi di chuyen duoc
 	{
 		vX = 0;
-		//expain: state_walking: jump false already -> state_attack: walking false too -> vX = 0
+		//explain: state_walking: jump false already -> state_attack: walking false too -> vX = 0
 		//		  state_jumping: jump true -> state_attack: jump false but posY != 375 -> jump true -> vX != 0
 	}
 
@@ -95,7 +95,8 @@ void Player::Update(DWORD dt)
 
 
 	Entity::Update(dt);
-
+	posX += dx;
+	posY += dy;
 	// simple fall down
 	vY += PLAYER_GRAVITY;
 	if (posY > 375)
@@ -103,9 +104,44 @@ void Player::Update(DWORD dt)
 		vY = 0; posY = 375;
 	}
 
-	// simple screen edge collision!!!
-	if (vX > 0 && posX > SCREEN_WIDTH) posX = SCREEN_WIDTH;
-	if (vX < 0 && posX < 0) posX = 0;
+
+
+	//vector<LPCOLLISIONEVENT> coEvents;
+	//vector<LPCOLLISIONEVENT> coEventsResult;
+
+	//coEvents.clear();
+
+	//// turn off collision when die 
+	//if (state != PLAYER_STATE_DIE)
+	//	CalcPotentialCollisions(coObjects, coEvents);
+
+
+	//// No collision occured, proceed normally
+	//if (coEvents.size() == 0)
+	//{
+	//	posX += dx;
+	//	posY += dy;
+	//}
+	//else
+	//{
+	//	float min_tx, min_ty, nx = 0, ny;
+
+	//	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+
+	//	// block 
+	//	posX += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+	//	posY += min_ty * dy + ny * 0.4f;
+
+	//	if (nx != 0) vX = 0;
+	//	if (ny != 0) vY = 0;
+
+	//}
+
+
+
+	//// clean up collision events
+	//for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
 }
 
 void Player::Render()

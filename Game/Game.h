@@ -68,5 +68,20 @@ public:
 	float GetCamY() { return this->cam_y; }
 	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, D3DXVECTOR3 origin = D3DXVECTOR3(0,0,0), int alpha = 255);
 
+	static void SweptAABB(
+		float ml,			// move left 
+		float mt,			// move top
+		float mr,			// move right 
+		float mb,			// move bottom
+		float dx,			// 
+		float dy,			// 
+		float sl,			// static left
+		float st,
+		float sr,
+		float sb,
+		float &t,
+		float &nx,
+		float &ny);
+
 };
 

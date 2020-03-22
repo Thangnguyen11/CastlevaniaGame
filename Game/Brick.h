@@ -11,7 +11,7 @@ class Brick : public Entity
 public:
 	Brick();
 	~Brick();
-	virtual void Update(float dt);
+	virtual void Update(DWORD dt, vector<LPGAMEENTITY> *coObjects);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 };

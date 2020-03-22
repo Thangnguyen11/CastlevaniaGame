@@ -7,8 +7,9 @@
 #define PLAYER_GRAVITY						0.05f
 
 #define PLAYER_BBOX_WIDTH					60
-#define PLAYER_BBOX_HEIGHT					63
+#define PLAYER_BBOX_HEIGHT					66
 
+#define PLAYER_STATE_DIE					-1
 #define PLAYER_STATE_IDLE					0
 #define PLAYER_STATE_WALKING_RIGHT			100
 #define PLAYER_STATE_WALKING_LEFT			200
@@ -42,7 +43,7 @@ public:
 	~Player();
 
 	void GetBoundingBox(float &left, float &top, float &right, float &bottom);
-	void Update(DWORD dt);
+	virtual void Update(DWORD dt, vector<LPGAMEENTITY> *colliable_objects = NULL);
 	void Render();
 	void SetState(int state);
 };

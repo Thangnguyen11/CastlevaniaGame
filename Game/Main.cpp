@@ -14,8 +14,6 @@
 Game* game;
 Player* player;
 std::vector<LPGAMEENTITY> objects;
-//testing
-Bat* bat;
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -81,6 +79,7 @@ void LoadContent()
 {
 	player = new Player();
 	player->SetPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+	objects.push_back(player);
 
 	for (int i = 0; i < 30; i++)
 	{
@@ -89,17 +88,14 @@ void LoadContent()
 		objects.push_back(brick);
 	}
 
-	//Bat *bat = new Bat();
-	bat = new Bat();	//testing
+	Bat *bat = new Bat();
 	bat->SetPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 100);
-	//objects.push_back(bat);
+	objects.push_back(bat);
 }
 
-void Update(float dt)
+void Update(DWORD dt)
 {
-	player->Update(dt);
-
-	/*std::vector<LPGAMEENTITY> coObjects;
+	std::vector<LPGAMEENTITY> coObjects;
 	for (int i = 1; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
@@ -107,14 +103,8 @@ void Update(float dt)
 	for (int i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
-	}*/
-
-	for (int i = 0; i < objects.size(); i++)
-	{
-		objects[i]->Update(dt);
 	}
-	//testing
-	bat->Update(dt, player);
+
 
 	float cx, cy;
 	player->ReceivePos(cx, cy);
@@ -138,12 +128,8 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-		//Draw here
-		player->Render();
 		for (int i = 0; i < objects.size(); i++)
 			objects[i]->Render();
-		//testing
-		bat->Render();
 
 		//End draw
 		spriteHandler->End();

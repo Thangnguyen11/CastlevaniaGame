@@ -6,14 +6,34 @@
 #include "Sprite.h"
 #include "Texture2dManager.h"
 
+using namespace std;
+
 class Entity;
 typedef Entity * LPGAMEENTITY;
+
+
+struct CCollisionEvent;
+typedef CCollisionEvent * LPCOLLISIONEVENT;
+struct CCollisionEvent
+{
+	LPGAMEENTITY obj;
+	float t, nx, ny;
+	CCollisionEvent(float t, float nx, float ny, LPGAMEENTITY obj = NULL) { this->t = t; this->nx = nx; this->ny = ny; this->obj = obj; }
+
+	static bool compare(const LPCOLLISIONEVENT &a, LPCOLLISIONEVENT &b)
+	{
+		return a->t < b->t;
+	}
+};
+
 
 class Entity
 {
 protected:
 	float posX, posY;
 	float vX, vY;
+	float dx, dy;	// v * dt
+	DWORD dt;
 	int direction;	//-1 left && 1 right
 	EntityType tag;
 	int health;
@@ -27,7 +47,7 @@ public:
 	~Entity();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
-	virtual void Update(float dt);
+	virtual void Update(DWORD dt, vector<LPGAMEENTITY> *coObjects = NULL);
 	virtual void Render() = 0;
 
 	void RenderBoundingBox();
@@ -52,6 +72,7 @@ public:
 	void SetSpeed(float VX, float VY) { vX = VX; vY = VY; }
 	float GetVx() { return vX; }
 	float GetVy() { return vY; }
+	void ReceiveSpeed(float &vx, float &vy) { vx = this->vX; vy = this->vY; }
 	void SetVx(float VX) { vX = VX; }
 	void SetVy(float VY) { vY = VY; }
 	void AddVx(float VX) { this->SetVx(this->GetVx() + VX); }
@@ -63,5 +84,17 @@ public:
 	int GetHeight() { return this->texture->getFrameHeight(); }
 
 	EntityType GetType() { return tag; }
+
+
+	LPCOLLISIONEVENT SweptAABBEx(LPGAMEENTITY coO);
+	void CalcPotentialCollisions(vector<LPGAMEENTITY> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
+	void FilterCollision(
+		vector<LPCOLLISIONEVENT> &coEvents,
+		vector<LPCOLLISIONEVENT> &coEventsResult,
+		float &min_tx,
+		float &min_ty,
+		float &nx,
+		float &ny);
+
 };
 
