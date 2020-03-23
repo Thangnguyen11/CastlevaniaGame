@@ -78,7 +78,7 @@ HWND InitWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreenHe
 void LoadContent()
 {
 	player = new Player();
-	player->SetPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+	player->SetPosition(SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT / 2 - 100);
 	objects.push_back(player);
 
 	for (int i = 0; i < 30; i++)

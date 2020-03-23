@@ -19,16 +19,18 @@ Player::~Player(){}
 void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {	
 	//Not clean
-	if (posY == 375)
+	/*if (posY == 375)
 		isJumping = false;
 	else
-		isJumping = true;
+		isJumping = true;*/
 
 	if (!isWalking && !isJumping)	//Attack tren mat dat thi dung yen, attack khi dang jump thi di chuyen duoc
 	{
 		vX = 0;
-		//explain: state_walking: jump false already -> state_attack: walking false too -> vX = 0
-		//		  state_jumping: jump true -> state_attack: jump false but posY != 375 -> jump true -> vX != 0
+		//old explain: state_walking: jump false already, transfer to state_attack: walking false too -> vX = 0
+		//		  state_jumping: jump true, transfer to state_attack: jump false but posY != 375 -> jump true -> vX != 0
+		//update explain: state_walking: jump false (collision with brick), transfer to state_attack: walking false too -> vX = 0
+		//				state_jumping: jump true (until collision with brick) -> vX != 0
 	}
 
 	int currentFrame = sprite->GetCurrentFrame();
@@ -95,52 +97,53 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 
 	Entity::Update(dt);
-	posX += dx;
-	posY += dy;
+
 	// simple fall down
 	vY += PLAYER_GRAVITY;
-	if (posY > 375)
+
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
+
+	coEvents.clear();
+
+	// turn off collision when die 
+	if (state != PLAYER_STATE_DIE)
+		CalcPotentialCollisions(coObjects, coEvents);
+
+	// No collision occured, proceed normally
+	if (coEvents.size() == 0)
 	{
-		vY = 0; posY = 375;
+		posX += dx;
+		posY += dy;
+	}
+	else
+	{
+		float min_tx, min_ty, nx = 0, ny;
+
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+
+		// block 
+		posX += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+		posY += min_ty * dy + ny * 0.4f;
+
+		if (ny == -1)
+		{
+			vY = 0.1f;
+			dy = vY * dt;
+
+			if (isJumping)
+			{
+				isJumping = false;
+			}
+		}
+
+		if (nx != 0) vX = 0;
+		if (ny != 0) vY = 0;
+
 	}
 
-
-
-	//vector<LPCOLLISIONEVENT> coEvents;
-	//vector<LPCOLLISIONEVENT> coEventsResult;
-
-	//coEvents.clear();
-
-	//// turn off collision when die 
-	//if (state != PLAYER_STATE_DIE)
-	//	CalcPotentialCollisions(coObjects, coEvents);
-
-
-	//// No collision occured, proceed normally
-	//if (coEvents.size() == 0)
-	//{
-	//	posX += dx;
-	//	posY += dy;
-	//}
-	//else
-	//{
-	//	float min_tx, min_ty, nx = 0, ny;
-
-	//	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-	//	// block 
-	//	posX += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
-	//	posY += min_ty * dy + ny * 0.4f;
-
-	//	if (nx != 0) vX = 0;
-	//	if (ny != 0) vY = 0;
-
-	//}
-
-
-
-	//// clean up collision events
-	//for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	// clean up collision events
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
 }
 
@@ -162,25 +165,24 @@ void Player::SetState(int state)
 	switch (state)
 	{
 	case PLAYER_STATE_WALKING_RIGHT:
-		isWalking = true;
-		isSitting = false;
-		vX = PLAYER_WALKING_SPEED;
 		direction = 1;
+		isWalking = true;
+		//isSitting = false;
+		vX = PLAYER_WALKING_SPEED * direction;
 		break;
 	case PLAYER_STATE_WALKING_LEFT:
-		isWalking = true;
-		isSitting = false;
-		vX = -PLAYER_WALKING_SPEED;
 		direction = -1;
+		isWalking = true;
+		//isSitting = false;
+		vX = PLAYER_WALKING_SPEED * direction;
 		break;
 	case PLAYER_STATE_JUMP:
 		isJumping = true;
-		isSitting = false;
-		if (posY == 375)
-			vY = -PLAYER_JUMP_SPEED_Y;
+		//isSitting = false;
+		vY = -PLAYER_JUMP_SPEED_Y;
 		break;
 	case PLAYER_STATE_IDLE:
-		//vX = 0;
+		vX = 0;
 		isWalking = false;
 		isSitting = false;
 		break;
@@ -188,10 +190,10 @@ void Player::SetState(int state)
 		//vX = 0;		//While attacking cant walking until the attack is done
 		isAttacking = true;
 		isWalking = false;
-		isJumping = false;
+		//isJumping = false;
 		break;
 	case PLAYER_STATE_SITTING:
-		//vX = 0;		//Vi phim return khi dang ngoi nen set vX = 0 de khi moving -> sit se khong bi truot
+		vX = 0;		//Vi phim return khi dang ngoi nen set vX = 0 de khi moving -> sit se khong bi truot
 		isSitting = true;
 		isWalking = false;
 		break;

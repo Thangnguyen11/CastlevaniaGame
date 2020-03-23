@@ -17,8 +17,13 @@ void Brick::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 void Brick::Render()
 {
 	sprite->Draw(posX, posY);
+	RenderBoundingBox();
 }
 
 void Brick::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
+	l = posX;
+	t = posY;
+	r = posX + BRICK_BBOX_WIDTH;
+	b = posY + BRICK_BBOX_HEIGHT;
 }
