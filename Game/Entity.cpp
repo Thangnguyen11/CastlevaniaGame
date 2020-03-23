@@ -71,10 +71,14 @@ LPCOLLISIONEVENT Entity::SweptAABBEx(LPGAMEENTITY coO)
 
 	GetBoundingBox(ml, mt, mr, mb);
 
+	//		STARRRR
+	//Do BBox theo logic SweptAABB la xet cac rect voi origin la goc trai tren
+	//Nhu vay logic se ap dung cho Draw voi origin la goc trai tren
+	//Su dung origin la tam texture -> xet cac rect lech theo huong tam texture
 	Game::SweptAABB(
-		ml, mt, mr, mb,
+		ml - (float)texture->getFrameWidth() / 2, mt - (float)texture->getFrameHeight() / 2, mr - (float)texture->getFrameWidth() / 2, mb - (float)texture->getFrameHeight() / 2,
 		dx, dy,
-		sl, st, sr, sb,
+		sl - (float)coO->texture->getFrameWidth() / 2, st - (float)coO->texture->getFrameHeight() / 2, sr - (float)coO->texture->getFrameWidth(), sb - (float)coO->texture->getFrameHeight() / 2,
 		t, nx, ny
 	);
 

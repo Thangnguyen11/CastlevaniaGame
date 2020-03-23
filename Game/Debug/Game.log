@@ -1,4 +1,2 @@
-﻿  Player.cpp
-c:\users\pc\documents\github\castlevaniagame\game\player.cpp(41): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\player.cpp(63): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+﻿  Entity.cpp
   Game.vcxproj -> C:\Users\PC\Documents\GitHub\CastlevaniaGame\Debug\Game.exe

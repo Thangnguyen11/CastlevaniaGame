@@ -36,7 +36,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	int currentFrame = sprite->GetCurrentFrame();
 	if (isSitting) {
 		if (isAttacking) {
-			if (currentFrame < PLAYER_ANI_SITTING_ATTACK_BEGIN) {
+			if (currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN+1 && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN+2) {
 				sprite->SelectFrame(PLAYER_ANI_SITTING_ATTACK_BEGIN);
 				sprite->currentTotalTime = dt;
 			}
@@ -48,7 +48,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				}
 
 				if (sprite->GetCurrentFrame() > PLAYER_ANI_SITTING_ATTACK_END) {
-					sprite->SelectFrame(PLAYER_ANI_IDLE);
+					sprite->SelectFrame(PLAYER_ANI_SITTING);
 					isAttacking = false;
 				}
 			}
