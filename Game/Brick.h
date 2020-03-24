@@ -1,14 +1,17 @@
 #pragma once
 #include "Entity.h"
 
-#define BRICK_BBOX_WIDTH  16
-#define BRICK_BBOX_HEIGHT 16
+#define BRICK_BBOX_WIDTH  32
+#define BRICK_BBOX_HEIGHT 32
 
-#define BRICK_NORMAL		4
+#define BRICK_TYPE1		0
+#define BRICK_TYPE2		1
 
 class Brick : public Entity
 {
 public:
+	int brickType;
+
 	Brick();
 	~Brick();
 	virtual void Update(DWORD dt, vector<LPGAMEENTITY> *coObjects);

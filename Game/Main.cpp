@@ -78,39 +78,41 @@ HWND InitWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreenHe
 void LoadContent()
 {
 	player = new Player();
-	player->SetPosition(SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT / 2 - 100);
+	player->SetPosition(SCREEN_WIDTH / 2, 600);
 	objects.push_back(player);
 
 	for (int i = 0; i < 100; i++)
 	{
 		Brick *brick = new Brick();
-		brick->SetPosition(i * 16.0f, SCREEN_HEIGHT / 2 + 40);
+		brick->SetPosition(i * 32.0f, 695);
 		objects.push_back(brick);
 	}
 	for (int i = 0; i < 5; i++)
 	{
 		Brick *brick = new Brick();
-		brick->SetPosition(SCREEN_WIDTH / 2 + 132.0f + i * 300, SCREEN_HEIGHT / 2 - 100);
+		brick->brickType = 2;
+		brick->SetPosition(200 + i * 275, 550 - i * 150);
 		objects.push_back(brick);
 
 		brick = new Brick();
-		brick->SetPosition(SCREEN_WIDTH / 2 + 116.0f + i * 300, SCREEN_HEIGHT / 2 - 100);
+		brick->brickType = 2;
+		brick->SetPosition(232 + i * 275, 550 - i * 150);
 		objects.push_back(brick);
 
 		brick = new Brick();
-		brick->SetPosition(SCREEN_WIDTH / 2 + 116.0f + i * 300, SCREEN_HEIGHT / 2 - 116);
+		brick->brickType = 2;
+		brick->SetPosition(264 + i * 275, 550 - i * 150);
 		objects.push_back(brick);
 	}
 
-	Bat *bat = new Bat();
-	bat->SetPosition(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 100);
+	Bat *bat = new Bat(SCREEN_WIDTH / 2 + 300, 600);
 	objects.push_back(bat);
 }
 
 void Update(DWORD dt)
 {
 	std::vector<LPGAMEENTITY> coObjects;
-	for (int i = 1; i < objects.size(); i++)
+	for (int i = 0; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
 	}
@@ -231,8 +233,7 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 
 void CSampleKeyHander::KeyState(BYTE *states)
 {
-	if (player->isAttacking || player->isJumping) {	
-		//While attacking dont receive moving btn
+	if (player->IsDeadYet() || player->isAttacking || player->isJumping) {	
 		return;
 	}
 

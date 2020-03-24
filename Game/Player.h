@@ -5,6 +5,7 @@
 #define PLAYER_WALKING_SPEED				0.25f
 #define PLAYER_JUMP_SPEED_Y					0.8f
 #define PLAYER_GRAVITY						0.025f
+#define PLAYER_JUMP_DEFLECT_SPEED_Y			0.35f
 
 #define PLAYER_BBOX_WIDTH					60
 #define PLAYER_BBOX_HEIGHT					66
@@ -17,6 +18,7 @@
 #define PLAYER_STATE_ATTACK					400
 #define PLAYER_STATE_SITTING				500
 
+#define PLAYER_ANI_DIE						28
 #define PLAYER_ANI_IDLE						0
 #define PLAYER_ANI_WALKING_BEGIN			1
 #define PLAYER_ANI_WALKING_END				3

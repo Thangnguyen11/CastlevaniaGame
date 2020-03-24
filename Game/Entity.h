@@ -37,6 +37,7 @@ protected:
 	int direction;	//-1 left && 1 right
 	EntityType tag;
 	int health;
+	bool isDead;
 	Texture2d* texture;
 	Sprite* sprite;
 
@@ -57,6 +58,7 @@ public:
 
 	int GetHealth() { return health; }
 	void AddHealth(int BonusHealth) { health += BonusHealth; }
+	bool IsDeadYet() { return isDead; }
 	void SetDirection(int d) { direction = d; }
 	int GetDirection() { return direction; }
 

@@ -1,12 +1,17 @@
 #include "Bat.h"
+#include <math.h>
 
-Bat::Bat() 
+Bat::Bat(float posX, float posY, int direction) 
 {
 	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::BAT);
 	this->sprite = new Sprite(texture, MaxFrameRate);
 	tag = EntityType::BAT;
 
-	direction = 1;
+	this->posX = posX;
+	this->posY = posY;
+	tempY = posY;
+	this->direction = direction;
+	directionY = 1;
 
 	this->SetState(BAT_STATE_FLYING);
 
@@ -36,29 +41,81 @@ void Bat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		}
 	}
 
-	//Entity* target;
-	//for (UINT i = 0; i < coObjects->size(); i++)
-	//	if (coObjects->at(i)->GetType() == EntityType::PLAYER)
-	//		target = coObjects->at(i);
+	if (posY - tempY >= BAT_AMPLITUDE_VERTICAL)
+		directionY = -1;
+	else if(tempY - posY >= BAT_AMPLITUDE_VERTICAL)
+		directionY = 1;
 
-	////AI (testing - not neccesary)
-	//D3DXVECTOR2 pos = D3DXVECTOR2(posX, posY);
-	////speed nay dc define cho vX (pos += vX * dt) nen khi muon dung cho pos phai nhan voi 1 so tuong duong dt
-	//pos += RadialMovement(D3DXVECTOR2(target->GetPosX(), target->GetPosY()), pos, BAT_FLYING_SPEED*10);	
-	//posX = pos.x;
-	//posY = pos.y;
+	vY = BAT_FLYING_SPEED_Y * directionY;
 
 	Entity::Update(dt);
 	posX += dx;
 	posY += dy;
 
-	if (vX < 0 && posX < 0) {
-		posX = 0; vX = -vX;
-	}
+	if (posX < 0 || posX > SCREEN_WIDTH)
+		SetState(BAT_STATE_DIE);
+#pragma region Past
+	//Entity* target;
+	////Player is the first unit of vector
+	//target = coObjects->at(0);
+	//if (!target->IsDeadYet() && !isDead) {
+	//	//AI (testing - not neccesary)
+	//	D3DXVECTOR2 pos = D3DXVECTOR2(posX, posY);
+	//	//speed nay dc define cho vX (pos += vX * dt) nen khi muon dung cho pos phai nhan voi 1 so tuong duong dt
+	//	pos += RadialMovement(D3DXVECTOR2(target->GetPosX(), target->GetPosY()), pos, BAT_FLYING_SPEED * 10);
+	//	posX = pos.x;
+	//	posY = pos.y;
+	//}
+	//Entity::Update(dt);
 
-	if (vX > 0 && posX > SCREEN_WIDTH) {
-		posX = SCREEN_WIDTH; vX = -vX;
-	}
+	//vector<LPCOLLISIONEVENT> coEvents;
+	//vector<LPCOLLISIONEVENT> coEventsResult;
+
+	//coEvents.clear();
+
+	//// turn off collision when die 
+	//if (state != BAT_STATE_DIE)
+	//	CalcPotentialCollisions(coObjects, coEvents);
+
+	//// No collision occured, proceed normally
+	//if (coEvents.size() == 0)
+	//{
+	//	posX += dx;
+	//	posY += dy;
+	//}
+	//else
+	//{
+	//	float min_tx, min_ty, nx = 0, ny;
+
+	//	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+
+	//	// block 
+	//	posX += min_tx * dx + nx * 0.6f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+	//	posY += min_ty * dy + ny * 0.6f;
+
+	//	if (nx != 0) vX = 0;
+	//	if (ny != 0) vY = 0;
+
+	//	for (UINT i = 0; i < coEventsResult.size(); i++)
+	//	{
+	//		LPCOLLISIONEVENT e = coEventsResult[i];
+
+	//		if (e->obj->GetType() == EntityType::PLAYER)
+	//		{
+	//			Player *player = dynamic_cast<Player *>(e->obj);
+
+	//			if (e->ny != 1 && (GetDistance(D3DXVECTOR2(posX, posY), D3DXVECTOR2(target->GetPosX(), target->GetPosY())) <= BAT_BBOX_WIDTH/2))
+	//			{
+	//				if (player->GetState() != PLAYER_STATE_DIE)
+	//				{
+	//					player->SetState(PLAYER_STATE_DIE);
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
+#pragma endregion
+
 }
 
 void Bat::Render() 
@@ -72,6 +129,7 @@ void Bat::Render()
 	else {
 		sprite->Draw(posX, posY, 255);
 	}
+	RenderBoundingBox();
 }
 
 void Bat::SetState(int state)
@@ -85,14 +143,20 @@ void Bat::SetState(int state)
 		isDead = true;
 		break;
 	case BAT_STATE_FLYING:
-		//vX = -BAT_FLYING_SPEED;
+		vX = -BAT_FLYING_SPEED_X;
 		break;
 	}
 }
 
 void Bat::GetBoundingBox(float &l, float &t, float &r, float &b) 
 {
-
+	//not clean
+	if (!isDead) {
+		l = posX;
+		t = posY;
+		r = posX + BAT_BBOX_WIDTH;
+		b = posY + BAT_BBOX_HEIGHT;
+	}
 }
 
 float Bat::GetDistance(D3DXVECTOR2 pos, D3DXVECTOR2 target)

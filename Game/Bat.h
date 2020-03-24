@@ -2,7 +2,12 @@
 #include "Entity.h"
 #include <math.h>
 
-#define BAT_FLYING_SPEED		0.15f
+#define BAT_FLYING_SPEED_X		0.15f
+#define BAT_FLYING_SPEED_Y		0.1f
+#define BAT_AMPLITUDE_VERTICAL	25.0f	
+
+#define BAT_BBOX_WIDTH			32
+#define BAT_BBOX_HEIGHT			32
 
 #define BAT_STATE_FLYING		100
 #define BAT_STATE_DIE			200
@@ -14,9 +19,10 @@
 
 class Bat : public Entity
 {
-	bool isDead;
+	int directionY;
+	float tempY;
 public:
-	Bat();
+	Bat(float posX, float posY, int direction = 1);
 	~Bat();
 	//	a fake update for testing
 	virtual void Update(DWORD dt, vector<LPGAMEENTITY> *coObjects);

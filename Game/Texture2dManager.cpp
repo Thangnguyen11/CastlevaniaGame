@@ -28,7 +28,7 @@ void Texture2dManager::AddTexture(EntityType tag, Texture2d* texture)
 void Texture2dManager::LoadContent()
 {
 	AddTexture(EntityType::PLAYER, new Texture2d("Resources/Simon.png", 8, 7, 56));
-	AddTexture(EntityType::BRICK, new Texture2d("Resources/Ground.png", 4, 2, 8));
+	AddTexture(EntityType::BRICK, new Texture2d("Resources/Ground.png", 2, 1, 2));
 	AddTexture(EntityType::BAT, new Texture2d("Resources/VampireBat.png", 4, 1, 4));
 	AddTexture(EntityType::BBOX, new Texture2d("Resources/bbox.png", 1, 1, 1));
 }

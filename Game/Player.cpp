@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Bat.h"
 
 Player::Player() 
 {
@@ -9,6 +10,7 @@ Player::Player()
 
 	this->SetState(PLAYER_STATE_IDLE);
 
+	isDead = false;
 	isWalking = false;
 	isJumping = false;
 	isAttacking = false;
@@ -34,67 +36,71 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 
 	int currentFrame = sprite->GetCurrentFrame();
-	if (isSitting) {
-		if (isAttacking) {
-			if (currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN+1 && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN+2) {
-				sprite->SelectFrame(PLAYER_ANI_SITTING_ATTACK_BEGIN);
+	if (isDead)
+		sprite->SelectFrame(PLAYER_ANI_DIE);
+	else 
+		if (isSitting) {
+			if (isAttacking) {
+				if (currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 1 && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 2) {
+					sprite->SelectFrame(PLAYER_ANI_SITTING_ATTACK_BEGIN);
+					sprite->currentTotalTime = dt;
+				}
+				else {
+					sprite->currentTotalTime += dt;
+					if (sprite->currentTotalTime >= PLAYER_ATTACKING_DELAY) {
+						sprite->currentTotalTime -= PLAYER_ATTACKING_DELAY;
+						sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100 and trans to next frame
+					}
+
+					if (sprite->GetCurrentFrame() > PLAYER_ANI_SITTING_ATTACK_END) {
+						sprite->SelectFrame(PLAYER_ANI_SITTING);
+						isAttacking = false;
+					}
+				}
+			}
+			else {
+				sprite->SelectFrame(PLAYER_ANI_SITTING);
+			}
+		}
+		else if (isAttacking && !isSitting) {
+			if (currentFrame < PLAYER_ANI_ATTACK_BEGIN) {
+				sprite->SelectFrame(PLAYER_ANI_ATTACK_BEGIN);
 				sprite->currentTotalTime = dt;
 			}
 			else {
 				sprite->currentTotalTime += dt;
 				if (sprite->currentTotalTime >= PLAYER_ATTACKING_DELAY) {
 					sprite->currentTotalTime -= PLAYER_ATTACKING_DELAY;
-					sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100 and trans to next frame
+					sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100ms and trans to next frame
 				}
 
-				if (sprite->GetCurrentFrame() > PLAYER_ANI_SITTING_ATTACK_END) {
-					sprite->SelectFrame(PLAYER_ANI_SITTING);
+				if (sprite->GetCurrentFrame() > PLAYER_ANI_ATTACK_END) {
+					sprite->SelectFrame(PLAYER_ANI_IDLE);
 					isAttacking = false;
 				}
 			}
 		}
-		else {
-			sprite->SelectFrame(PLAYER_ANI_SITTING);
-		}
-	}
-	else if (isAttacking && !isSitting) {
-		if (currentFrame < PLAYER_ANI_ATTACK_BEGIN) {
-			sprite->SelectFrame(PLAYER_ANI_ATTACK_BEGIN);
-			sprite->currentTotalTime = dt;
-		}
-		else {
-			sprite->currentTotalTime += dt;
-			if (sprite->currentTotalTime >= PLAYER_ATTACKING_DELAY) {
-				sprite->currentTotalTime -= PLAYER_ATTACKING_DELAY;
-				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100ms and trans to next frame
-			}
-
-			if (sprite->GetCurrentFrame() > PLAYER_ANI_ATTACK_END) {
-				sprite->SelectFrame(PLAYER_ANI_IDLE);
-				isAttacking = false;
-			}
-		}
-	}
-	else 
-		if (isWalking) {
-			if (!isJumping) {
-				if (currentFrame < PLAYER_ANI_WALKING_BEGIN || currentFrame >= PLAYER_ANI_WALKING_END)
-					sprite->SelectFrame(PLAYER_ANI_WALKING_BEGIN);
-
-				sprite->Update(dt);
-			}
-			else {
-				sprite->SelectFrame(PLAYER_ANI_JUMPING);
-			}
-		}
 		else
-			if (isJumping) {		//Nhay tai cho
-				sprite->SelectFrame(PLAYER_ANI_JUMPING);
-			}
-			else {
-				sprite->SelectFrame(PLAYER_ANI_IDLE);
-			}
+			if (isWalking) {
+				if (!isJumping) {
+					if (currentFrame < PLAYER_ANI_WALKING_BEGIN || currentFrame >= PLAYER_ANI_WALKING_END)
+						sprite->SelectFrame(PLAYER_ANI_WALKING_BEGIN);
 
+					sprite->Update(dt);
+				}
+				else {
+					sprite->SelectFrame(PLAYER_ANI_JUMPING);
+				}
+			}
+			else
+				if (isJumping) {		//Nhay tai cho
+					sprite->SelectFrame(PLAYER_ANI_JUMPING);
+				}
+				else {
+					sprite->SelectFrame(PLAYER_ANI_IDLE);
+				}
+
+	
 
 	Entity::Update(dt);
 
@@ -123,8 +129,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
 		// block 
-		posX += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
-		posY += min_ty * dy + ny * 0.4f;
+		posX += min_tx * dx + nx * 0.6f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+		posY += min_ty * dy + ny * 0.6f;
 
 		if (ny == -1)
 		{
@@ -140,8 +146,33 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		if (nx != 0) vX = 0;
 		if (ny != 0) vY = 0;
 
-	}
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
 
+			if (e->obj->GetType() == EntityType::BAT) 
+			{
+				Bat *bat = dynamic_cast<Bat *>(e->obj);
+
+				if (e->ny < 0)
+				{
+					if (bat->GetState() != BAT_STATE_DIE)
+					{
+						bat->SetState(BAT_STATE_DIE);
+						vY = -PLAYER_JUMP_DEFLECT_SPEED_Y;
+					}
+				}
+				else if (e->nx != 0 || e->ny != 0)
+				{
+					if (bat->GetState() != BAT_STATE_DIE)
+					{
+						SetState(PLAYER_STATE_DIE);
+						bat->SetState(BAT_STATE_DIE);
+					}
+				}
+			}
+		}
+	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
@@ -149,6 +180,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 void Player::Render()
 {
+
 	if (direction == 1) {
 		sprite->DrawFlipVertical(posX, posY, 255);
 	}
@@ -164,6 +196,11 @@ void Player::SetState(int state)
 	Entity::SetState(state);
 	switch (state)
 	{
+	case PLAYER_STATE_DIE:
+		isDead = true;
+		vX = 0;
+		vY = 0;
+		break;
 	case PLAYER_STATE_WALKING_RIGHT:
 		direction = 1;
 		isWalking = true;
