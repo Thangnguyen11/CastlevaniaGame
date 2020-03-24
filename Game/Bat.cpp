@@ -1,5 +1,6 @@
 #include "Bat.h"
 #include <math.h>
+#define PI 3.141562535898
 
 Bat::Bat(float posX, float posY, int direction) 
 {
@@ -40,13 +41,19 @@ void Bat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			}
 		}
 	}
+	
+	//2 optional to FLY
 
-	if (posY - tempY >= BAT_AMPLITUDE_VERTICAL)
+	//zigzag one
+	/*if (posY - tempY >= BAT_AMPLITUDE_VERTICAL)
 		directionY = -1;
 	else if(tempY - posY >= BAT_AMPLITUDE_VERTICAL)
 		directionY = 1;
 
-	vY = BAT_FLYING_SPEED_Y * directionY;
+	vY = BAT_FLYING_SPEED_Y * directionY;*/
+
+	//sin one
+	posY = 30 * sin(1.5*posX*PI / 180) + tempY;
 
 	Entity::Update(dt);
 	posX += dx;
