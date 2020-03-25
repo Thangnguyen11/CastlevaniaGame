@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Entity.h"
+#include "MorningStar.h"
+#include <map>
 
 #define PLAYER_WALKING_SPEED				0.25f
 #define PLAYER_JUMP_SPEED_Y					0.8f
@@ -29,7 +31,7 @@
 #define PLAYER_ANI_SITTING_ATTACK_BEGIN		15
 #define PLAYER_ANI_SITTING_ATTACK_END		17
 
-#define PLAYER_ATTACKING_DELAY		150
+#define PLAYER_ATTACKING_DELAY		110
 
 class Player : public Entity
 {
@@ -37,9 +39,13 @@ class Player : public Entity
 public:
 	bool isWalking,
 		isJumping,
+		isAllowJump,
 		isAttacking,
 		isSitting;
 
+	//testing
+	//std::unordered_map<EntityType, Weapon*> weapons;
+	Weapon* currentWeapon;
 
 	Player();
 	~Player();
@@ -48,5 +54,7 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEENTITY> *colliable_objects = NULL);
 	void Render();
 	void SetState(int state);
+
+	void Attack(EntityType weaponType);	//Ve sau xet weapon type
 };
 

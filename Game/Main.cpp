@@ -80,11 +80,20 @@ void LoadContent()
 	player = new Player();
 	player->SetPosition(SCREEN_WIDTH / 2, 600);
 	objects.push_back(player);
+	//temp //player dont collision with weapon
+	objects.push_back(player->currentWeapon);
 
 	for (int i = 0; i < 100; i++)
 	{
 		Brick *brick = new Brick();
 		brick->SetPosition(i * 32.0f, 695);
+		objects.push_back(brick);
+	}
+	for (int i = 0; i < 40; i++)
+	{
+		Brick *brick = new Brick();
+		brick->brickType = 2;
+		brick->SetPosition(0.0f, 695 - 32 * i);
 		objects.push_back(brick);
 	}
 	for (int i = 0; i < 5; i++)

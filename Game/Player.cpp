@@ -13,7 +13,10 @@ Player::Player()
 	isDead = false;
 	isWalking = false;
 	isJumping = false;
+	isAllowJump = true;
 	isAttacking = false;
+
+	currentWeapon = new MorningStar();
 }
 
 Player::~Player(){}
@@ -113,7 +116,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	coEvents.clear();
 
 	// turn off collision when die 
-	if (state != PLAYER_STATE_DIE)
+	//if (state != PLAYER_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
 
 	// No collision occured, proceed normally
@@ -140,6 +143,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			if (isJumping)
 			{
 				isJumping = false;
+				isAllowJump = true;
 			}
 		}
 
@@ -180,7 +184,6 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 void Player::Render()
 {
-
 	if (direction == 1) {
 		sprite->DrawFlipVertical(posX, posY, 255);
 	}
@@ -214,7 +217,10 @@ void Player::SetState(int state)
 		vX = PLAYER_WALKING_SPEED * direction;
 		break;
 	case PLAYER_STATE_JUMP:
+		if (!isAllowJump)
+			return;
 		isJumping = true;
+		isAllowJump = false;
 		//isSitting = false;
 		vY = -PLAYER_JUMP_SPEED_Y;
 		break;
@@ -224,10 +230,12 @@ void Player::SetState(int state)
 		isSitting = false;
 		break;
 	case PLAYER_STATE_ATTACK:
+		Attack(EntityType::MORNINGSTAR);
 		//vX = 0;		//While attacking cant walking until the attack is done
 		isAttacking = true;
 		isWalking = false;
 		//isJumping = false;
+		//testing
 		break;
 	case PLAYER_STATE_SITTING:
 		vX = 0;		//Vi phim return khi dang ngoi nen set vX = 0 de khi moving -> sit se khong bi truot
@@ -243,4 +251,16 @@ void Player::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	top = posY;
 	right = posX + PLAYER_BBOX_WIDTH;
 	bottom = posY + PLAYER_BBOX_HEIGHT;
+}
+
+void Player::Attack(EntityType weaponType)
+{
+	if (isAttacking)
+		return;
+	
+	if (currentWeapon->GetIsDone())
+	{
+		isAttacking = true;
+		currentWeapon->Attack(posX, posY, direction);
+	}
 }

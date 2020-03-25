@@ -19,7 +19,7 @@
 #define WIN_NAME L"NewbieGame"
 #define WIN_TITLE L"NewbieGame"
 
-#define BGColor D3DCOLOR_XRGB(255,255,255)
+#define BGColor D3DCOLOR_XRGB(255,120,255)
 #define SCREEN_WIDTH 1365
 #define SCREEN_HEIGHT 750
 
@@ -33,7 +33,9 @@ enum EntityType
 
 	BAT = 03,
 
-	BBOX = 04
+	BBOX = 04,
+
+	MORNINGSTAR = 05
 };
 
 class define
