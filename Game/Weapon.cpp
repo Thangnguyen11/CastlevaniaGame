@@ -15,6 +15,11 @@ void Weapon::Attack(float posX, float posY, int direction)
 	isDone = false;
 }
 
+void Weapon::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
+{
+	Entity::Update(dt);
+}
+
 void Weapon::Render() 
 {
 	if (isDone)
@@ -35,4 +40,12 @@ void Weapon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	top = posY;
 	right = posX + texture->getFrameWidth();
 	bottom = posY + texture->getFrameHeight();
+}
+
+bool Weapon::IsCollidingObject(Entity* Obj)
+{
+	if (Obj->GetHealth() <= 0 || Obj->IsDeadYet() || isDone)
+		return false;
+
+	return Entity::IsCollidingObject(Obj);
 }

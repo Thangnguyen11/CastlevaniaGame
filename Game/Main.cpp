@@ -80,10 +80,8 @@ void LoadContent()
 	player = new Player();
 	player->SetPosition(SCREEN_WIDTH / 2, 600);
 	objects.push_back(player);
-	//temp //player dont collision with weapon
-	objects.push_back(player->currentWeapon);
 
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 50; i++)
 	{
 		Brick *brick = new Brick();
 		brick->SetPosition(i * 32.0f, 695);
@@ -96,7 +94,7 @@ void LoadContent()
 		brick->SetPosition(0.0f, 695 - 32 * i);
 		objects.push_back(brick);
 	}
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		Brick *brick = new Brick();
 		brick->brickType = 2;
@@ -118,6 +116,26 @@ void LoadContent()
 	objects.push_back(bat);
 }
 
+void WeaponCollision(vector<LPGAMEENTITY> coObjects)
+{
+	if (!player->currentWeapon->GetIsDone())
+	{
+		for (UINT i = 0; i < coObjects.size(); i++)
+			if (player->currentWeapon->IsCollidingObject(coObjects[i]))	//weapon va cham voi obj
+			{
+				LPGAMEENTITY coO = coObjects[i];
+				switch (coO->GetType())
+				{
+				case EntityType::BAT:
+					coO->AddHealth(-1);
+					break;
+				default:
+					break;
+				}
+			}
+	}
+}
+
 void Update(DWORD dt)
 {
 	std::vector<LPGAMEENTITY> coObjects;
@@ -129,7 +147,7 @@ void Update(DWORD dt)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
-
+	WeaponCollision(objects);
 
 	float cx, cy;
 	player->ReceivePos(cx, cy);

@@ -11,7 +11,7 @@ MorningStar::~MorningStar(){}
 
 void MorningStar::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	Entity::Update(dt);
+	Weapon::Update(dt);
 
 	if (sprite->GetCurrentFrame() == MORNINGSTAR_ANI_END)
 		isDone = true;
@@ -36,7 +36,6 @@ void MorningStar::GetBoundingBox(float &left, float &top, float &right, float &b
 void MorningStar::Attack(float posX, float posY, int direction)
 {
 	Weapon::Attack(posX, posY, direction);
-	ArticulatedPlayerPos();
 	sprite->SelectFrame(MORNINGSTAR_ANI_BEGIN);
 }
 
@@ -48,4 +47,13 @@ void MorningStar::ArticulatedPlayerPos()
 		posX -= 25;*/
 
 	posX += 25 * direction;
+}
+
+bool MorningStar::IsCollidingObject(Entity* Obj)
+{
+	//Khong tinh 2 frame dau
+	if (sprite->GetCurrentFrame() <= MORNINGSTAR_ANI_BEGIN + 1)
+		return false;
+
+	return Weapon::IsCollidingObject(Obj);
 }

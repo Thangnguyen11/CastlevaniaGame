@@ -97,6 +97,6 @@ public:
 		float &min_ty,
 		float &nx,
 		float &ny);
-
+	virtual bool IsCollidingObject(Entity* Obj);
 };
 

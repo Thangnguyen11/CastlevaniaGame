@@ -180,6 +180,13 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
+	if (!currentWeapon->GetIsDone())
+	{
+		currentWeapon->SetPosition(posX, posY);	//Update pos per player::update
+		currentWeapon->SetSpeed(vX, vY);		//Collision
+		currentWeapon->ArticulatedPlayerPos();	//Fixing weapon pos
+		currentWeapon->Update(dt, coObjects);
+	}
 }
 
 void Player::Render()
@@ -189,6 +196,11 @@ void Player::Render()
 	}
 	else {
 		sprite->Draw(posX, posY, 255);
+	}
+
+	if (!currentWeapon->GetIsDone())
+	{
+		currentWeapon->Render();
 	}
 
 	RenderBoundingBox();
@@ -232,7 +244,6 @@ void Player::SetState(int state)
 	case PLAYER_STATE_ATTACK:
 		Attack(EntityType::MORNINGSTAR);
 		//vX = 0;		//While attacking cant walking until the attack is done
-		isAttacking = true;
 		isWalking = false;
 		//isJumping = false;
 		//testing

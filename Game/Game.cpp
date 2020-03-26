@@ -198,6 +198,13 @@ void Game::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top,
 	spriteHandler->Draw(texture, &r, &origin, &p, D3DCOLOR_ARGB(alpha, 255, 255, 255));
 }
 
+bool Game::IsCollidingAABB(
+	float ml, float mt, float mr, float mb,
+	float sl, float st, float sr, float sb)
+{
+	return !(mr < sl || ml > sr || mb < st || mt > sb);
+}
+
 void Game::SweptAABB(
 	float ml, float mt, float mr, float mb,
 	float dx, float dy,

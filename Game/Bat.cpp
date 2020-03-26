@@ -16,6 +16,7 @@ Bat::Bat(float posX, float posY, int direction)
 
 	this->SetState(BAT_STATE_FLYING);
 
+	health = 1;
 	isDead = false;
 }
 
@@ -23,6 +24,12 @@ Bat::~Bat(){}
 
 void Bat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
+	if (health <= 0) 
+	{
+		SetState(BAT_STATE_DIE);
+		return;
+	}
+
 	int currentFrame = sprite->GetCurrentFrame();
 	if (!isDead) {
 		if (currentFrame < BAT_ANI_FLYING_BEGIN) {
