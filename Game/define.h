@@ -20,22 +20,24 @@
 #define WIN_TITLE L"NewbieGame"
 
 #define BGColor D3DCOLOR_XRGB(255,120,255)
-#define SCREEN_WIDTH 1365
-#define SCREEN_HEIGHT 750
+#define SCREEN_WIDTH 780
+#define SCREEN_HEIGHT 660
 
 #define MaxFrameRate 100
 
 enum EntityType
 {
-	PLAYER = 01,
+	BBOX = 0,
 
-	BRICK = 02,
+	PLAYER = 1,
 
-	BAT = 03,
+	BRICK = 2,
 
-	BBOX = 04,
+	BAT = 3,
 
-	MORNINGSTAR = 05
+	ZOMBIE = 4,
+
+	MORNINGSTAR = 5
 };
 
 class define

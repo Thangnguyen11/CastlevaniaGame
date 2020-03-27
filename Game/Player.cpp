@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Bat.h"
+#include "Zombie.h"
 
 Player::Player() 
 {
@@ -158,7 +159,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			{
 				Bat *bat = dynamic_cast<Bat *>(e->obj);
 
-				if (e->ny < 0)
+				//No jump on head
+				/*if (e->ny < 0)
 				{
 					if (bat->GetState() != BAT_STATE_DIE)
 					{
@@ -166,13 +168,32 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 						vY = -PLAYER_JUMP_DEFLECT_SPEED_Y;
 					}
 				}
-				else if (e->nx != 0 || e->ny != 0)
+				else */
+					if (e->nx != 0 || e->ny != 0)
 				{
 					if (bat->GetState() != BAT_STATE_DIE)
 					{
 						SetState(PLAYER_STATE_DIE);
 						bat->SetState(BAT_STATE_DIE);
 					}
+				}
+			}
+			if (e->obj->GetType() == EntityType::ZOMBIE)
+			{
+				Zombie *zombie = dynamic_cast<Zombie *>(e->obj);
+				if (zombie->GetState() != ZOMBIE_STATE_DIE) 
+				{
+					if (e->ny < 0)
+					{
+						zombie->SetState(ZOMBIE_STATE_DIE);
+						vY = -PLAYER_JUMP_DEFLECT_SPEED_Y;
+					}
+					else
+						if (e->nx != 0 || e->ny != 0)
+						{
+							SetState(PLAYER_STATE_DIE);
+							zombie->SetState(ZOMBIE_STATE_DIE);
+						}
 				}
 			}
 		}
@@ -184,7 +205,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		currentWeapon->SetPosition(posX, posY);	//Update pos per player::update
 		currentWeapon->SetSpeed(vX, vY);		//Collision
-		currentWeapon->ArticulatedPlayerPos();	//Fixing weapon pos
+		currentWeapon->ArticulatedPlayerPos(isSitting);	//Fixing weapon pos
 		currentWeapon->Update(dt, coObjects);
 	}
 }

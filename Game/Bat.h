@@ -1,6 +1,5 @@
 #pragma once
 #include "Entity.h"
-#include <math.h>
 
 #define BAT_FLYING_SPEED_X		0.15f
 #define BAT_FLYING_SPEED_Y		0.1f
@@ -24,14 +23,10 @@ class Bat : public Entity
 public:
 	Bat(float posX, float posY, int direction = 1);
 	~Bat();
-	//	a fake update for testing
 	virtual void Update(DWORD dt, vector<LPGAMEENTITY> *coObjects);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	virtual void SetState(int state);
 
-	//	some AI func
-	float GetDistance(D3DXVECTOR2 pos, D3DXVECTOR2 target);
-	D3DXVECTOR2 RadialMovement(D3DXVECTOR2 focus, D3DXVECTOR2 pos, float speed);
 };
 

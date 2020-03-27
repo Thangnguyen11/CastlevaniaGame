@@ -160,3 +160,18 @@ bool Entity::IsCollidingObject(Entity* Obj)
 	bool isColliding = e->t > 0 && e->t <= 1;
 	return isColliding;
 }
+
+
+float Entity::GetDistance(D3DXVECTOR2 pos, D3DXVECTOR2 target)
+{
+	return (float)sqrt(pow(pos.x - target.x, 2) + pow(pos.y - target.y, 2));
+}
+
+D3DXVECTOR2 Entity::RadialMovement(D3DXVECTOR2 focus, D3DXVECTOR2 pos, float speed)
+{
+	float dist = GetDistance(pos, focus);
+	if (dist < speed)
+		return focus - pos;
+	else
+		return (focus - pos) * speed / dist;
+}

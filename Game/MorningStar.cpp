@@ -39,7 +39,7 @@ void MorningStar::Attack(float posX, float posY, int direction)
 	sprite->SelectFrame(MORNINGSTAR_ANI_BEGIN);
 }
 
-void MorningStar::ArticulatedPlayerPos()
+void MorningStar::ArticulatedPlayerPos(bool isSitting)
 {
 	/*if (direction == 1)
 		posX += 25;
@@ -47,12 +47,15 @@ void MorningStar::ArticulatedPlayerPos()
 		posX -= 25;*/
 
 	posX += 25 * direction;
+
+	if (isSitting)
+		posY += 12;
 }
 
 bool MorningStar::IsCollidingObject(Entity* Obj)
 {
-	//Khong tinh 2 frame dau
-	if (sprite->GetCurrentFrame() <= MORNINGSTAR_ANI_BEGIN + 1)
+	//Khong tinh 3 frame dau
+	if (sprite->GetCurrentFrame() <= MORNINGSTAR_ANI_BEGIN + 2)
 		return false;
 
 	return Weapon::IsCollidingObject(Obj);

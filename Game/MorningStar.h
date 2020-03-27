@@ -17,7 +17,7 @@ public:
 	void Render();
 
 	void Attack(float posX, float posY, int direction);
-	void ArticulatedPlayerPos();
+	void ArticulatedPlayerPos(bool isSitting = false);
 
 	bool IsCollidingObject(Entity* Obj);
 };

@@ -172,17 +172,3 @@ void Bat::GetBoundingBox(float &l, float &t, float &r, float &b)
 		b = posY + BAT_BBOX_HEIGHT;
 	}
 }
-
-float Bat::GetDistance(D3DXVECTOR2 pos, D3DXVECTOR2 target)
-{
-	return (float)sqrt(pow(pos.x - target.x, 2) + pow(pos.y - target.y, 2));
-}
-
-D3DXVECTOR2 Bat::RadialMovement(D3DXVECTOR2 focus, D3DXVECTOR2 pos, float speed)
-{
-	float dist = GetDistance(pos, focus);
-	if (dist < speed)
-		return focus - pos;
-	else
-		return (focus - pos) * speed / dist;
-}

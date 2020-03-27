@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <math.h>
 
 #include "debug.h"
 #include "define.h"
@@ -98,5 +99,10 @@ public:
 		float &nx,
 		float &ny);
 	virtual bool IsCollidingObject(Entity* Obj);
+
+
+	//	some AI func
+	float GetDistance(D3DXVECTOR2 pos, D3DXVECTOR2 target);
+	D3DXVECTOR2 RadialMovement(D3DXVECTOR2 focus, D3DXVECTOR2 pos, float speed);
 };
 

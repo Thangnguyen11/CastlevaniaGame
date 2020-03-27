@@ -1,4 +1,15 @@
-﻿  Player.cpp
-c:\users\pc\documents\github\castlevaniagame\game\player.cpp(49): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\player.cpp(71): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+﻿  Main.cpp
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(99): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(106): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(111): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(116): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(153): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(157): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(185): warning C4018: '<': signed/unsigned mismatch
+  Player.cpp
+c:\users\pc\documents\github\castlevaniagame\game\player.cpp(50): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\player.cpp(72): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+  Zombie.cpp
+c:\users\pc\documents\github\castlevaniagame\game\zombie.cpp(34): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+  Generating Code...
   Game.vcxproj -> C:\Users\PC\Documents\GitHub\CastlevaniaGame\Debug\Game.exe

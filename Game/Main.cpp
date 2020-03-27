@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "Brick.h"
 #include "Bat.h"
+#include "Zombie.h"
 
 Game* game;
 Player* player;
@@ -78,42 +79,49 @@ HWND InitWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreenHe
 void LoadContent()
 {
 	player = new Player();
-	player->SetPosition(SCREEN_WIDTH / 2, 600);
+	player->SetPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 150);
 	objects.push_back(player);
+
+	Brick *brick = new Brick();
+	brick->SetPosition(SCREEN_WIDTH / 2 + 200, SCREEN_HEIGHT - 87);
+	objects.push_back(brick);
 
 	for (int i = 0; i < 50; i++)
 	{
 		Brick *brick = new Brick();
-		brick->SetPosition(i * 32.0f, 695);
+		brick->SetPosition(i * 32.0f, SCREEN_HEIGHT - 55);
 		objects.push_back(brick);
 	}
-	for (int i = 0; i < 40; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		Brick *brick = new Brick();
 		brick->brickType = 2;
-		brick->SetPosition(0.0f, 695 - 32 * i);
+		brick->SetPosition(0.0f, SCREEN_HEIGHT - 55 - 32 * i);
 		objects.push_back(brick);
 	}
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		Brick *brick = new Brick();
 		brick->brickType = 2;
-		brick->SetPosition(200 + i * 275, 550 - i * 150);
+		brick->SetPosition(200 + i * 275, SCREEN_HEIGHT - 200 - i * 150);
 		objects.push_back(brick);
 
 		brick = new Brick();
 		brick->brickType = 2;
-		brick->SetPosition(232 + i * 275, 550 - i * 150);
+		brick->SetPosition(232 + i * 275, SCREEN_HEIGHT - 200 - i * 150);
 		objects.push_back(brick);
 
 		brick = new Brick();
 		brick->brickType = 2;
-		brick->SetPosition(264 + i * 275, 550 - i * 150);
+		brick->SetPosition(264 + i * 275, SCREEN_HEIGHT - 200 - i * 150);
 		objects.push_back(brick);
 	}
 
-	Bat *bat = new Bat(SCREEN_WIDTH / 2 + 300, 600);
+	Bat *bat = new Bat(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT - 150);
 	objects.push_back(bat);
+
+	Zombie *zombie = new Zombie(SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT - 150, -1);
+	objects.push_back(zombie);
 }
 
 void WeaponCollision(vector<LPGAMEENTITY> coObjects)
@@ -127,6 +135,9 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 				switch (coO->GetType())
 				{
 				case EntityType::BAT:
+					coO->AddHealth(-1);
+					break;
+				case EntityType::ZOMBIE:
 					coO->AddHealth(-1);
 					break;
 				default:
