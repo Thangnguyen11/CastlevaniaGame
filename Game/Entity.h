@@ -43,7 +43,7 @@ protected:
 	Sprite* sprite;
 
 	int state;
-
+	int bbARGB;
 public:
 	Entity();
 	~Entity();
@@ -88,6 +88,8 @@ public:
 
 	EntityType GetType() { return tag; }
 
+	void SetBBARGB(int x) { bbARGB = x; }
+	int GetBBARGB() { return bbARGB; }
 
 	LPCOLLISIONEVENT SweptAABBEx(LPGAMEENTITY coO);
 	void CalcPotentialCollisions(vector<LPGAMEENTITY> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);

@@ -31,7 +31,7 @@ void Weapon::Render()
 		sprite->Draw(posX, posY, 255);
 	}
 	
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void Weapon::GetBoundingBox(float &left, float &top, float &right, float &bottom)

@@ -1,15 +1,13 @@
 ﻿  Main.cpp
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(99): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(106): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(111): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(116): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(153): warning C4018: '<': signed/unsigned mismatch
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(157): warning C4018: '<': signed/unsigned mismatch
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(185): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(100): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(105): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(110): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(147): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(151): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(182): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(254): warning C4018: '<': signed/unsigned mismatch
   Player.cpp
-c:\users\pc\documents\github\castlevaniagame\game\player.cpp(50): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\player.cpp(72): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
-  Zombie.cpp
-c:\users\pc\documents\github\castlevaniagame\game\zombie.cpp(34): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\player.cpp(51): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\player.cpp(73): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
   Generating Code...
   Game.vcxproj -> C:\Users\PC\Documents\GitHub\CastlevaniaGame\Debug\Game.exe

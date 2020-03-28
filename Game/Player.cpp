@@ -11,6 +11,7 @@ Player::Player()
 
 	this->SetState(PLAYER_STATE_IDLE);
 
+	health = PLAYER_MAXHEALTH;
 	isDead = false;
 	isWalking = false;
 	isJumping = false;
@@ -109,7 +110,10 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	Entity::Update(dt);
 
 	// simple fall down
-	vY += PLAYER_GRAVITY;
+	vY += PLAYER_GRAVITY * dt;
+
+	if (posX <= 15)
+		posX = 15;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -133,8 +137,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
 		// block 
-		posX += min_tx * dx + nx * 0.6f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
-		posY += min_ty * dy + ny * 0.6f;
+		posX += min_tx * dx + nx * 0.1f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+		posY += min_ty * dy + ny * 0.1f;
 
 		if (ny == -1)
 		{
@@ -165,7 +169,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					if (bat->GetState() != BAT_STATE_DIE)
 					{
 						bat->SetState(BAT_STATE_DIE);
-						vY = -PLAYER_JUMP_DEFLECT_SPEED_Y;
+						vY = -PLAYER_DEFLECT_SPEED_Y;
 					}
 				}
 				else */
@@ -173,8 +177,10 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				{
 					if (bat->GetState() != BAT_STATE_DIE)
 					{
-						SetState(PLAYER_STATE_DIE);
-						bat->SetState(BAT_STATE_DIE);
+						AddHealth(-2);
+						vX = -PLAYER_DEFLECT_SPEED_X;
+						vY = -PLAYER_DEFLECT_SPEED_Y;
+						bat->AddHealth(-1);
 					}
 				}
 			}
@@ -183,17 +189,13 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				Zombie *zombie = dynamic_cast<Zombie *>(e->obj);
 				if (zombie->GetState() != ZOMBIE_STATE_DIE) 
 				{
-					if (e->ny < 0)
+					if (e->nx != 0 || e->ny != 0)
 					{
-						zombie->SetState(ZOMBIE_STATE_DIE);
-						vY = -PLAYER_JUMP_DEFLECT_SPEED_Y;
+						vX = -PLAYER_DEFLECT_SPEED_X;
+						vY = -PLAYER_DEFLECT_SPEED_Y;
+						AddHealth(-2);
+						//zombie->SetState(ZOMBIE_STATE_DIE);
 					}
-					else
-						if (e->nx != 0 || e->ny != 0)
-						{
-							SetState(PLAYER_STATE_DIE);
-							zombie->SetState(ZOMBIE_STATE_DIE);
-						}
 				}
 			}
 		}

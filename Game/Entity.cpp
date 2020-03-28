@@ -8,6 +8,8 @@ Entity::Entity()
 
 	health = 1;
 	isDead = false;
+
+	bbARGB = 0;
 }
 
 Entity::~Entity() {
@@ -45,7 +47,7 @@ void Entity::RenderBoundingBox()
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;
 
-	Game::GetInstance()->Draw(posX, posY, bbox->Texture, rect.left, rect.top, rect.right, rect.bottom, origin, 5);
+	Game::GetInstance()->Draw(posX, posY, bbox->Texture, rect.left, rect.top, rect.right, rect.bottom, origin, bbARGB);
 }
 
 

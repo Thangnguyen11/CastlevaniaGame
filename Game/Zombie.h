@@ -1,8 +1,8 @@
 #pragma once
 #include "Entity.h"
 
-#define ZOMBIE_WALKING_SPEED		0.20f
-#define ZOMBIE_GRAVITY				0.025f
+#define ZOMBIE_WALKING_SPEED		0.15f
+#define ZOMBIE_GRAVITY				0.002f
 #define ZOMBIE_MAX_DISTANCE			1200.0f
 
 #define ZOMBIE_BBOX_WIDTH			32

@@ -4,13 +4,15 @@
 #include "MorningStar.h"
 #include <map>
 
-#define PLAYER_WALKING_SPEED				0.25f
-#define PLAYER_JUMP_SPEED_Y					0.8f
-#define PLAYER_GRAVITY						0.025f
-#define PLAYER_JUMP_DEFLECT_SPEED_Y			0.35f
+#define PLAYER_WALKING_SPEED				0.20f	//0.25
+#define PLAYER_JUMP_SPEED_Y					0.5f	//0.8
+#define PLAYER_GRAVITY						0.002f	//0.025
+#define PLAYER_DEFLECT_SPEED_X				0.8f
+#define PLAYER_DEFLECT_SPEED_Y				0.3f
+#define PLAYER_MAXHEALTH					16
 
-#define PLAYER_BBOX_WIDTH					60
-#define PLAYER_BBOX_HEIGHT					66
+#define PLAYER_BBOX_WIDTH					45		//60
+#define PLAYER_BBOX_HEIGHT					63		//66
 
 #define PLAYER_STATE_DIE					-1
 #define PLAYER_STATE_IDLE					0

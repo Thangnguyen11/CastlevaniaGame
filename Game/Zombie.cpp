@@ -46,7 +46,7 @@ void Zombie::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		}
 	}
 	Entity::Update(dt);
-	vY += ZOMBIE_GRAVITY;
+	vY += ZOMBIE_GRAVITY * dt;
 
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -76,19 +76,16 @@ void Zombie::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
 		// block 
-		posX += min_tx * dx + nx * 0.6f;		
-		posY += min_ty * dy + ny * 0.6f;
+		posX += min_tx * dx + nx * 0.1f;		
+		posY += min_ty * dy + ny * 0.1f;
 
-		if (ny == -1)
+		if (nx != 0 && ny == 0)
 		{
-			vY = 0.1f;
-			dy = vY * dt;
+			direction *= -1;
+			vX *= -1;
 		}
-
-		if (nx != 0) { vX *= -1; direction *= -1; }
-		if (ny != 0) vY = 0;
-
-
+		else if (ny == -1)	
+			vY = 0;
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)

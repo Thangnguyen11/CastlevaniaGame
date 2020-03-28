@@ -79,12 +79,12 @@ HWND InitWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreenHe
 void LoadContent()
 {
 	player = new Player();
-	player->SetPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 150);
+	player->SetPosition(SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT - 150);
 	objects.push_back(player);
 
-	Brick *brick = new Brick();
+	/*Brick *brick = new Brick();
 	brick->SetPosition(SCREEN_WIDTH / 2 + 200, SCREEN_HEIGHT - 87);
-	objects.push_back(brick);
+	objects.push_back(brick);*/
 
 	for (int i = 0; i < 50; i++)
 	{
@@ -92,28 +92,22 @@ void LoadContent()
 		brick->SetPosition(i * 32.0f, SCREEN_HEIGHT - 55);
 		objects.push_back(brick);
 	}
-	for (int i = 0; i < 20; i++)
-	{
-		Brick *brick = new Brick();
-		brick->brickType = 2;
-		brick->SetPosition(0.0f, SCREEN_HEIGHT - 55 - 32 * i);
-		objects.push_back(brick);
-	}
+	
 	for (int i = 0; i < 3; i++)
 	{
 		Brick *brick = new Brick();
 		brick->brickType = 2;
-		brick->SetPosition(200 + i * 275, SCREEN_HEIGHT - 200 - i * 150);
+		brick->SetPosition(1000 + i * 200, SCREEN_HEIGHT - 110 - i * 50);
 		objects.push_back(brick);
 
 		brick = new Brick();
 		brick->brickType = 2;
-		brick->SetPosition(232 + i * 275, SCREEN_HEIGHT - 200 - i * 150);
+		brick->SetPosition(1032 + i * 200, SCREEN_HEIGHT - 110 - i * 50);
 		objects.push_back(brick);
 
 		brick = new Brick();
 		brick->brickType = 2;
-		brick->SetPosition(264 + i * 275, SCREEN_HEIGHT - 200 - i * 150);
+		brick->SetPosition(1064 + i * 200, SCREEN_HEIGHT - 110 - i * 50);
 		objects.push_back(brick);
 	}
 
@@ -163,10 +157,13 @@ void Update(DWORD dt)
 	float cx, cy;
 	player->ReceivePos(cx, cy);
 
-	cx -= SCREEN_WIDTH / 2;
+	if (player->GetPosX() < SCREEN_WIDTH / 2)
+		cx -= SCREEN_WIDTH / 2 - (SCREEN_WIDTH / 2 - player->GetPosX());
+	else
+		cx -= SCREEN_WIDTH / 2;
 	cy -= SCREEN_HEIGHT / 2;
 
-	Game::GetInstance()->SetCamPos(cx, 0.0f);
+	Game::GetInstance()->SetCamPos(cx, 0.0f);//cy khi muon camera move theo y player //castlevania chua can
 }
 
 void Render()
@@ -253,6 +250,15 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	{
 	case DIK_ESCAPE:
 		DestroyWindow(Game::GetInstance()->GetWindowHandle());
+	case DIK_R:
+		for (int i = 0; i < objects.size(); i++)
+		{
+			if (objects[i]->GetBBARGB() == 0)
+				objects[i]->SetBBARGB(200);
+			else
+				objects[i]->SetBBARGB(0);
+		}
+		break;
 	case DIK_C:
 		if (player->isAttacking || player->isSitting)
 			return;
