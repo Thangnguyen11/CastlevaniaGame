@@ -19,7 +19,7 @@
 #define WIN_NAME L"NewbieGame"
 #define WIN_TITLE L"NewbieGame"
 
-#define BGColor D3DCOLOR_XRGB(255,120,255)
+#define BGColor D3DCOLOR_XRGB(0,0,0)
 #define SCREEN_WIDTH 780
 #define SCREEN_HEIGHT 660
 
@@ -37,7 +37,9 @@ enum EntityType
 
 	ZOMBIE = 4,
 
-	MORNINGSTAR = 5
+	MORNINGSTAR = 5,
+
+	PLAYERHP = 6
 };
 
 class define

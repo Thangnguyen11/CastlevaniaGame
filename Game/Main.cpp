@@ -260,11 +260,13 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		}
 		break;
 	case DIK_C:
-		if (player->isAttacking || player->isSitting)
+		if (player->isAttacking || player->isSitting || player->isHurting)
 			return;
 		player->SetState(PLAYER_STATE_JUMP);
 		break;
 	case DIK_X:
+		if (player->isHurting)
+			return;
 		player->SetState(PLAYER_STATE_ATTACK);
 		break;
 	}
@@ -277,7 +279,7 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 
 void CSampleKeyHander::KeyState(BYTE *states)
 {
-	if (player->IsDeadYet() || player->isAttacking || player->isJumping) {	
+	if (player->IsDeadYet() || player->isAttacking || player->isJumping || player->isHurting) {	
 		return;
 	}
 

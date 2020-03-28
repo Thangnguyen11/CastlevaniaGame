@@ -2,6 +2,8 @@
 
 #include "Entity.h"
 #include "MorningStar.h"
+#include "Timer.h"
+#include "PlayerHealthBar.h"
 #include <map>
 
 #define PLAYER_WALKING_SPEED				0.20f	//0.25
@@ -21,6 +23,7 @@
 #define PLAYER_STATE_JUMP					300
 #define PLAYER_STATE_ATTACK					400
 #define PLAYER_STATE_SITTING				500
+#define PLAYER_STATE_HURTING				600
 
 #define PLAYER_ANI_DIE						28
 #define PLAYER_ANI_IDLE						0
@@ -29,6 +32,7 @@
 #define PLAYER_ANI_JUMPING					4
 #define PLAYER_ANI_ATTACK_BEGIN				5
 #define PLAYER_ANI_ATTACK_END				7
+#define PLAYER_ANI_HURTING					8
 #define PLAYER_ANI_SITTING					29
 #define PLAYER_ANI_SITTING_ATTACK_BEGIN		15
 #define PLAYER_ANI_SITTING_ATTACK_END		17
@@ -37,13 +41,15 @@
 
 class Player : public Entity
 {
-	
+	Timer* hurtingTimer = new Timer(500);
+	PlayerHealthBar* plHB;
 public:
 	bool isWalking,
 		isJumping,
 		isAllowJump,
 		isAttacking,
-		isSitting;
+		isSitting,
+		isHurting;
 
 	//testing
 	//std::unordered_map<EntityType, Weapon*> weapons;

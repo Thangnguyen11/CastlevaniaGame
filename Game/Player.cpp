@@ -19,17 +19,16 @@ Player::Player()
 	isAttacking = false;
 
 	currentWeapon = new MorningStar();
+
+	plHB = new PlayerHealthBar(health, posX - 100, posY - 400);
 }
 
 Player::~Player(){}
 
 void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {	
-	//Not clean
-	/*if (posY == 375)
-		isJumping = false;
-	else
-		isJumping = true;*/
+	if (health <= 0)
+		isDead = true;
 
 	if (!isWalking && !isJumping)	//Attack tren mat dat thi dung yen, attack khi dang jump thi di chuyen duoc
 	{
@@ -39,73 +38,83 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		//update explain: state_walking: jump false (collision with brick), transfer to state_attack: walking false too -> vX = 0
 		//				state_jumping: jump true (until collision with brick) -> vX != 0
 	}
+	if (isHurting && hurtingTimer->IsTimeUp()) {
+		SetState(PLAYER_STATE_IDLE);
+		isHurting = false;
+		hurtingTimer->Reset();
+	}
 
 	int currentFrame = sprite->GetCurrentFrame();
 	if (isDead)
 		sprite->SelectFrame(PLAYER_ANI_DIE);
 	else 
-		if (isSitting) {
-			if (isAttacking) {
-				if (currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 1 && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 2) {
-					sprite->SelectFrame(PLAYER_ANI_SITTING_ATTACK_BEGIN);
+		if (isHurting)
+		{
+			sprite->SelectFrame(PLAYER_ANI_HURTING);
+		}
+		else
+			if (isSitting) {
+				if (isAttacking) {
+					if (currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 1 && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 2) {
+						sprite->SelectFrame(PLAYER_ANI_SITTING_ATTACK_BEGIN);
+						sprite->currentTotalTime = dt;
+					}
+					else {
+						sprite->currentTotalTime += dt;
+						if (sprite->currentTotalTime >= PLAYER_ATTACKING_DELAY) {
+							sprite->currentTotalTime -= PLAYER_ATTACKING_DELAY;
+							sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100 and trans to next frame
+						}
+
+						if (sprite->GetCurrentFrame() > PLAYER_ANI_SITTING_ATTACK_END) {
+							sprite->SelectFrame(PLAYER_ANI_SITTING);
+							isAttacking = false;
+						}
+					}
+				}
+				else {
+					sprite->SelectFrame(PLAYER_ANI_SITTING);
+				}
+			}
+			else if (isAttacking && !isSitting) {
+				if (currentFrame < PLAYER_ANI_ATTACK_BEGIN) {
+					sprite->SelectFrame(PLAYER_ANI_ATTACK_BEGIN);
 					sprite->currentTotalTime = dt;
 				}
 				else {
 					sprite->currentTotalTime += dt;
 					if (sprite->currentTotalTime >= PLAYER_ATTACKING_DELAY) {
 						sprite->currentTotalTime -= PLAYER_ATTACKING_DELAY;
-						sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100 and trans to next frame
+						sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100ms and trans to next frame
 					}
 
-					if (sprite->GetCurrentFrame() > PLAYER_ANI_SITTING_ATTACK_END) {
-						sprite->SelectFrame(PLAYER_ANI_SITTING);
+					if (sprite->GetCurrentFrame() > PLAYER_ANI_ATTACK_END) {
+						sprite->SelectFrame(PLAYER_ANI_IDLE);
 						isAttacking = false;
 					}
 				}
 			}
-			else {
-				sprite->SelectFrame(PLAYER_ANI_SITTING);
-			}
-		}
-		else if (isAttacking && !isSitting) {
-			if (currentFrame < PLAYER_ANI_ATTACK_BEGIN) {
-				sprite->SelectFrame(PLAYER_ANI_ATTACK_BEGIN);
-				sprite->currentTotalTime = dt;
-			}
-			else {
-				sprite->currentTotalTime += dt;
-				if (sprite->currentTotalTime >= PLAYER_ATTACKING_DELAY) {
-					sprite->currentTotalTime -= PLAYER_ATTACKING_DELAY;
-					sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100ms and trans to next frame
-				}
-
-				if (sprite->GetCurrentFrame() > PLAYER_ANI_ATTACK_END) {
-					sprite->SelectFrame(PLAYER_ANI_IDLE);
-					isAttacking = false;
-				}
-			}
-		}
-		else
-			if (isWalking) {
-				if (!isJumping) {
-					if (currentFrame < PLAYER_ANI_WALKING_BEGIN || currentFrame >= PLAYER_ANI_WALKING_END)
-						sprite->SelectFrame(PLAYER_ANI_WALKING_BEGIN);
-
-					sprite->Update(dt);
-				}
-				else {
-					sprite->SelectFrame(PLAYER_ANI_JUMPING);
-				}
-			}
 			else
-				if (isJumping) {		//Nhay tai cho
-					sprite->SelectFrame(PLAYER_ANI_JUMPING);
-				}
-				else {
-					sprite->SelectFrame(PLAYER_ANI_IDLE);
-				}
+				if (isWalking) {
+					if (!isJumping) {
+						if (currentFrame < PLAYER_ANI_WALKING_BEGIN || currentFrame >= PLAYER_ANI_WALKING_END)
+							sprite->SelectFrame(PLAYER_ANI_WALKING_BEGIN);
 
-	
+						sprite->Update(dt);
+					}
+					else {
+						sprite->SelectFrame(PLAYER_ANI_JUMPING);
+					}
+				}
+				else
+					if (isJumping) {		//Nhay tai cho
+						sprite->SelectFrame(PLAYER_ANI_JUMPING);
+					}
+					else {
+						sprite->SelectFrame(PLAYER_ANI_IDLE);
+					}
+
+
 
 	Entity::Update(dt);
 
@@ -149,11 +158,14 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			{
 				isJumping = false;
 				isAllowJump = true;
+				isHurting = false;
 			}
 		}
 
 		if (nx != 0) vX = 0;
 		if (ny != 0) vY = 0;
+		if (nx != 0 && ny != 0)
+			isHurting = false;
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
@@ -177,9 +189,9 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				{
 					if (bat->GetState() != BAT_STATE_DIE)
 					{
-						AddHealth(-2);
-						vX = -PLAYER_DEFLECT_SPEED_X;
-						vY = -PLAYER_DEFLECT_SPEED_Y;
+						this->AddHealth(-2);
+						hurtingTimer->Start();
+						SetState(PLAYER_STATE_HURTING);
 						bat->AddHealth(-1);
 					}
 				}
@@ -191,9 +203,9 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				{
 					if (e->nx != 0 || e->ny != 0)
 					{
-						vX = -PLAYER_DEFLECT_SPEED_X;
-						vY = -PLAYER_DEFLECT_SPEED_Y;
-						AddHealth(-2);
+						this->AddHealth(-2);
+						hurtingTimer->Start();
+						SetState(PLAYER_STATE_HURTING);
 						//zombie->SetState(ZOMBIE_STATE_DIE);
 					}
 				}
@@ -210,6 +222,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		currentWeapon->ArticulatedPlayerPos(isSitting);	//Fixing weapon pos
 		currentWeapon->Update(dt, coObjects);
 	}
+
+	plHB->Update(health, posX - 100, posY - 400);
 }
 
 void Player::Render()
@@ -226,6 +240,7 @@ void Player::Render()
 		currentWeapon->Render();
 	}
 
+	plHB->Render();
 	RenderBoundingBox();
 }
 
@@ -276,6 +291,17 @@ void Player::SetState(int state)
 		isSitting = true;
 		isWalking = false;
 		break;
+	case PLAYER_STATE_HURTING:
+		if (isHurting == true)
+			return;
+		isHurting = true;
+		isWalking = false;
+		isJumping = false;
+		isAttacking = false;
+		if (isSitting)	isSitting = false;
+		vX = PLAYER_DEFLECT_SPEED_X * direction;
+		vY = -PLAYER_DEFLECT_SPEED_Y;
+		break;
 	}
 }
 
@@ -294,6 +320,7 @@ void Player::Attack(EntityType weaponType)
 	
 	if (currentWeapon->GetIsDone())
 	{
+		this->AddHealth(-2);
 		isAttacking = true;
 		currentWeapon->Attack(posX, posY, direction);
 	}

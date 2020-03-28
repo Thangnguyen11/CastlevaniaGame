@@ -35,6 +35,7 @@ void Texture2dManager::LoadContent()
 
 	//Static Obj
 	AddTexture(EntityType::BRICK, new Texture2d("Resources/Ground.png", 2, 1, 2));
+	AddTexture(EntityType::PLAYERHP, new Texture2d("Resources/HP.png", 3, 1, 3));
 
 	//Mobs and Bosses
 	AddTexture(EntityType::BAT, new Texture2d("Resources/VampireBat.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
