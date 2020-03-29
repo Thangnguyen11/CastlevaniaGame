@@ -26,7 +26,7 @@ void Zombie::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		SetState(ZOMBIE_STATE_DIE);
 		return;
 	}
-
+	
 	int currentFrame = sprite->GetCurrentFrame();
 	if (!isDead) {
 		if (currentFrame < ZOMBIE_ANI_WALKING_BEGIN) {

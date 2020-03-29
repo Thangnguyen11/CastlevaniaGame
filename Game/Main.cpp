@@ -14,7 +14,7 @@
 #include "Bat.h"
 #include "Zombie.h"
 
-#define SPAWNING_ZOMBIE_DELAY			2
+#define SPAWNING_ZOMBIE_DELAY			20
 
 Game* game;
 Player* player;
@@ -128,6 +128,7 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 					break;
 				case EntityType::ZOMBIE:
 					coO->AddHealth(-1);
+					counterZombie -= 1;
 					break;
 				default:
 					break;
@@ -139,19 +140,19 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 void Update(DWORD dt)
 {
 	//Bugging
-	if (counterZombie == 0)
-	{
-		spawningZombieTimer->Start();
-	}
 	if (counterZombie <= 3 && spawningZombieTimer->IsTimeUp())
 	{
-		objects.push_back(new Zombie(player->GetPosX() + 100, SCREEN_HEIGHT - 150, -1));
+		objects.push_back(new Zombie(SCREEN_WIDTH / 2 + 400, SCREEN_HEIGHT - 150, -1));
 		counterZombie++; 
 		if (counterZombie == 3)
 		{
 			spawningZombieTimer->Reset();
 			counterZombie = 0;
 		}
+	}
+	if (counterZombie == 0)	//Dat Dieu kien Start sau counter++
+	{
+		spawningZombieTimer->Start();
 	}
 #pragma region Object Updates
 	std::vector<LPGAMEENTITY> coObjects;
