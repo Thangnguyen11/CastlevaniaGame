@@ -1,10 +1,14 @@
 #include "Brick.h"
 
-Brick::Brick() 
+Brick::Brick(float posX, float posY, int brickType)
 {
 	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::BRICK);
 	this->sprite = new Sprite(texture, MaxFrameRate);
 	tag = EntityType::BRICK;
+
+	this->posX = posX;
+	this->posY = posY;
+	this->brickType = brickType;
 }
 
 Brick::~Brick() {}

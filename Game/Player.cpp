@@ -2,11 +2,13 @@
 #include "Bat.h"
 #include "Zombie.h"
 
-Player::Player() 
+Player::Player(float posX, float posY) 
 {
 	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::PLAYER);
 	this->sprite = new Sprite(texture, MaxFrameRate);
 	tag = EntityType::PLAYER;
+	this->posX = posX;
+	this->posY = posY;
 	direction = 1;
 
 	this->SetState(PLAYER_STATE_IDLE);
@@ -17,10 +19,12 @@ Player::Player()
 	isJumping = false;
 	isAllowJump = true;
 	isAttacking = false;
+	isSitting = false;
+	isHurting = false;
+	isImmortaling = false;
 
 	currentWeapon = new MorningStar();
 
-	plHB = new PlayerHealthBar(health, posX - 100, posY - 400);
 }
 
 Player::~Player(){}
@@ -42,6 +46,10 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		SetState(PLAYER_STATE_IDLE);
 		isHurting = false;
 		hurtingTimer->Reset();
+	}
+	if (isImmortaling && immortalTimer->IsTimeUp()) {
+		isImmortaling = false;
+		immortalTimer->Reset();
 	}
 
 	int currentFrame = sprite->GetCurrentFrame();
@@ -167,72 +175,68 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		if (nx != 0 && ny != 0)
 			isHurting = false;
 
-		for (UINT i = 0; i < coEventsResult.size(); i++)
-		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
-
-			if (e->obj->GetType() == EntityType::BAT) 
+		if(!isImmortaling)
+			for (UINT i = 0; i < coEventsResult.size(); i++)
 			{
-				Bat *bat = dynamic_cast<Bat *>(e->obj);
+				LPCOLLISIONEVENT e = coEventsResult[i];
 
-				//No jump on head
-				/*if (e->ny < 0)
+				if (e->obj->GetType() == EntityType::BAT)
 				{
-					if (bat->GetState() != BAT_STATE_DIE)
+					Bat *bat = dynamic_cast<Bat *>(e->obj);
+
+					if (e->nx != 0 || e->ny != 0)
 					{
-						bat->SetState(BAT_STATE_DIE);
-						vY = -PLAYER_DEFLECT_SPEED_Y;
+						if (bat->GetState() != BAT_STATE_DIE)
+						{
+							this->AddHealth(-2);
+							hurtingTimer->Start();
+							immortalTimer->Start();
+							isImmortaling = true;
+							SetState(PLAYER_STATE_HURTING);
+							bat->AddHealth(-1);
+						}
 					}
 				}
-				else */
-					if (e->nx != 0 || e->ny != 0)
+				if (e->obj->GetType() == EntityType::ZOMBIE)
 				{
-					if (bat->GetState() != BAT_STATE_DIE)
+					Zombie *zombie = dynamic_cast<Zombie *>(e->obj);
+					if (zombie->GetState() != ZOMBIE_STATE_DIE)
 					{
-						this->AddHealth(-2);
-						hurtingTimer->Start();
-						SetState(PLAYER_STATE_HURTING);
-						bat->AddHealth(-1);
+						if (e->nx != 0 || e->ny != 0)
+						{
+							this->AddHealth(-2);
+							hurtingTimer->Start();
+							immortalTimer->Start();
+							isImmortaling = true;
+							SetState(PLAYER_STATE_HURTING);
+						}
 					}
 				}
 			}
-			if (e->obj->GetType() == EntityType::ZOMBIE)
-			{
-				Zombie *zombie = dynamic_cast<Zombie *>(e->obj);
-				if (zombie->GetState() != ZOMBIE_STATE_DIE) 
-				{
-					if (e->nx != 0 || e->ny != 0)
-					{
-						this->AddHealth(-2);
-						hurtingTimer->Start();
-						SetState(PLAYER_STATE_HURTING);
-						//zombie->SetState(ZOMBIE_STATE_DIE);
-					}
-				}
-			}
-		}
+		
 	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
 	if (!currentWeapon->GetIsDone())
 	{
-		currentWeapon->SetPosition(posX, posY);	//Update pos per player::update
-		currentWeapon->SetSpeed(vX, vY);		//Collision
-		currentWeapon->ArticulatedPlayerPos(isSitting);	//Fixing weapon pos
+		currentWeapon->SetPosition(posX, posY);				//Update pos per player::update
+		currentWeapon->SetSpeed(vX, vY);					//Collision
+		currentWeapon->ArticulatedPlayerPos(isSitting);		//Fixing weapon pos
 		currentWeapon->Update(dt, coObjects);
 	}
-
-	plHB->Update(health, posX - 100, posY - 400);
 }
 
 void Player::Render()
 {
+	int alpha = 255;
+	if (isImmortaling)
+		alpha = 150;
 	if (direction == 1) {
-		sprite->DrawFlipVertical(posX, posY, 255);
+		sprite->DrawFlipVertical(posX, posY, alpha);
 	}
 	else {
-		sprite->Draw(posX, posY, 255);
+		sprite->Draw(posX, posY, alpha);
 	}
 
 	if (!currentWeapon->GetIsDone())
@@ -240,7 +244,6 @@ void Player::Render()
 		currentWeapon->Render();
 	}
 
-	plHB->Render();
 	RenderBoundingBox();
 }
 
@@ -278,6 +281,7 @@ void Player::SetState(int state)
 		vX = 0;
 		isWalking = false;
 		isSitting = false;
+		isAllowJump = true;
 		break;
 	case PLAYER_STATE_ATTACK:
 		Attack(EntityType::MORNINGSTAR);
@@ -320,7 +324,6 @@ void Player::Attack(EntityType weaponType)
 	
 	if (currentWeapon->GetIsDone())
 	{
-		this->AddHealth(-2);
 		isAttacking = true;
 		currentWeapon->Attack(posX, posY, direction);
 	}

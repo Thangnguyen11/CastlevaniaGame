@@ -12,7 +12,7 @@ class Brick : public Entity
 public:
 	int brickType;
 
-	Brick();
+	Brick(float posX, float posY, int brickType = 1);
 	~Brick();
 	virtual void Update(DWORD dt, vector<LPGAMEENTITY> *coObjects);
 	virtual void Render();

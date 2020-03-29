@@ -6,15 +6,23 @@
 #include "debug.h"
 #include "define.h"
 #include "Game.h"
+#include "Timer.h"
+#include "HealthBar.h"
 
 #include "Player.h"
 #include "Brick.h"
 #include "Bat.h"
 #include "Zombie.h"
 
+#define SPAWNING_ZOMBIE_DELAY			2
+
 Game* game;
 Player* player;
 std::vector<LPGAMEENTITY> objects;
+HealthBar* playerHB;
+HealthBar* enemyHB;
+int counterZombie;
+Timer* spawningZombieTimer = new Timer(SPAWNING_ZOMBIE_DELAY);
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -78,52 +86,39 @@ HWND InitWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreenHe
 
 void LoadContent()
 {
-	player = new Player();
-	player->SetPosition(SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT - 150);
+#pragma region Creat Player
+	player = new Player(SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT - 150);
 	objects.push_back(player);
 
-	/*Brick *brick = new Brick();
-	brick->SetPosition(SCREEN_WIDTH / 2 + 200, SCREEN_HEIGHT - 87);
-	objects.push_back(brick);*/
-
+	playerHB = new HealthBar(player->GetHealth(), true);
+#pragma endregion
+#pragma region Creat Ground
 	for (int i = 0; i < 50; i++)
-	{
-		Brick *brick = new Brick();
-		brick->SetPosition(i * 32.0f, SCREEN_HEIGHT - 55);
-		objects.push_back(brick);
-	}
+		objects.push_back(new Brick(i * 32.0f, SCREEN_HEIGHT - 55));
 	
 	for (int i = 0; i < 3; i++)
 	{
-		Brick *brick = new Brick();
-		brick->brickType = 2;
-		brick->SetPosition(1000 + i * 200, SCREEN_HEIGHT - 110 - i * 50);
-		objects.push_back(brick);
-
-		brick = new Brick();
-		brick->brickType = 2;
-		brick->SetPosition(1032 + i * 200, SCREEN_HEIGHT - 110 - i * 50);
-		objects.push_back(brick);
-
-		brick = new Brick();
-		brick->brickType = 2;
-		brick->SetPosition(1064 + i * 200, SCREEN_HEIGHT - 110 - i * 50);
-		objects.push_back(brick);
+		objects.push_back(new Brick(1000 + i * 200, SCREEN_HEIGHT - 110 - i * 50, 2));
+		objects.push_back(new Brick(1032 + i * 200, SCREEN_HEIGHT - 110 - i * 50, 2));
+		objects.push_back(new Brick(1064 + i * 200, SCREEN_HEIGHT - 110 - i * 50, 2));
 	}
+#pragma endregion
+	objects.push_back(new Bat(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT - 150));
 
-	Bat *bat = new Bat(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT - 150);
-	objects.push_back(bat);
+	counterZombie = 0;
+	//objects.push_back(new Zombie(SCREEN_WIDTH / 2 + 400, SCREEN_HEIGHT - 150, -1));
+	//objects.push_back(new Zombie(SCREEN_WIDTH / 2 + 450, SCREEN_HEIGHT - 150, -1));
+	//objects.push_back(new Zombie(SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT - 150, -1));
 
-	Zombie *zombie = new Zombie(SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT - 150, -1);
-	objects.push_back(zombie);
+	enemyHB = new HealthBar(16, false);
 }
 
 void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 {
-	if (!player->currentWeapon->GetIsDone())
+	if (!player->GetPlayerCurrentWeapon()->GetIsDone())
 	{
 		for (UINT i = 0; i < coObjects.size(); i++)
-			if (player->currentWeapon->IsCollidingObject(coObjects[i]))	//weapon va cham voi obj
+			if (player->GetPlayerCurrentWeapon()->IsCollidingObject(coObjects[i]))	//weapon va cham voi obj
 			{
 				LPGAMEENTITY coO = coObjects[i];
 				switch (coO->GetType())
@@ -143,6 +138,22 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 
 void Update(DWORD dt)
 {
+	//Bugging
+	if (counterZombie == 0)
+	{
+		spawningZombieTimer->Start();
+	}
+	if (counterZombie <= 3 && spawningZombieTimer->IsTimeUp())
+	{
+		objects.push_back(new Zombie(player->GetPosX() + 100, SCREEN_HEIGHT - 150, -1));
+		counterZombie++; 
+		if (counterZombie == 3)
+		{
+			spawningZombieTimer->Reset();
+			counterZombie = 0;
+		}
+	}
+#pragma region Object Updates
 	std::vector<LPGAMEENTITY> coObjects;
 	for (int i = 0; i < objects.size(); i++)
 	{
@@ -152,8 +163,9 @@ void Update(DWORD dt)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
+#pragma endregion
 	WeaponCollision(objects);
-
+#pragma region Camera
 	float cx, cy;
 	player->ReceivePos(cx, cy);
 
@@ -164,6 +176,9 @@ void Update(DWORD dt)
 	cy -= SCREEN_HEIGHT / 2;
 
 	Game::GetInstance()->SetCamPos(cx, 0.0f);//cy khi muon camera move theo y player //castlevania chua can
+#pragma endregion
+	playerHB->Update(player->GetHealth(), cx + 175, 80);	//move posX follow camera
+	enemyHB->Update(16, playerHB->GetPosX(), playerHB->GetPosY() + 20);
 }
 
 void Render()
@@ -181,6 +196,8 @@ void Render()
 
 		for (int i = 0; i < objects.size(); i++)
 			objects[i]->Render();
+		playerHB->Render();
+		enemyHB->Render();
 
 		//End draw
 		spriteHandler->End();
@@ -260,12 +277,12 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		}
 		break;
 	case DIK_C:
-		if (player->isAttacking || player->isSitting || player->isHurting)
+		if (player->IsAttacking() || player->IsSitting() || player->IsHurting())
 			return;
 		player->SetState(PLAYER_STATE_JUMP);
 		break;
 	case DIK_X:
-		if (player->isHurting)
+		if (player->IsHurting())
 			return;
 		player->SetState(PLAYER_STATE_ATTACK);
 		break;
@@ -279,7 +296,7 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 
 void CSampleKeyHander::KeyState(BYTE *states)
 {
-	if (player->IsDeadYet() || player->isAttacking || player->isJumping || player->isHurting) {	
+	if (player->IsDeadYet() || player->IsAttacking() || player->IsJumping() || player->IsHurting()) {	
 		return;
 	}
 

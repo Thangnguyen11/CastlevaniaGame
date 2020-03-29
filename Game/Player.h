@@ -3,7 +3,6 @@
 #include "Entity.h"
 #include "MorningStar.h"
 #include "Timer.h"
-#include "PlayerHealthBar.h"
 #include <map>
 
 #define PLAYER_WALKING_SPEED				0.20f	//0.25
@@ -37,25 +36,29 @@
 #define PLAYER_ANI_SITTING_ATTACK_BEGIN		15
 #define PLAYER_ANI_SITTING_ATTACK_END		17
 
-#define PLAYER_ATTACKING_DELAY		110
+#define PLAYER_ATTACKING_DELAY				110
+#define PLAYER_HURTING_DELAY				600
+#define PLAYER_IMMORTAL_TIMECOUNTER			1200
 
 class Player : public Entity
 {
-	Timer* hurtingTimer = new Timer(500);
-	PlayerHealthBar* plHB;
-public:
 	bool isWalking,
 		isJumping,
 		isAllowJump,
 		isAttacking,
 		isSitting,
-		isHurting;
+		isHurting,
+		isImmortaling;	//not a state, a sub-state from hurt
+	Timer* hurtingTimer = new Timer(PLAYER_HURTING_DELAY);
+	Timer* immortalTimer = new Timer(PLAYER_IMMORTAL_TIMECOUNTER);
+	//Immortal != Invincible !!!!! You may be Immortal, but you are not Invincible! - a Prince of Persia said.
 
+	Weapon* currentWeapon;
+public:
 	//testing
 	//std::unordered_map<EntityType, Weapon*> weapons;
-	Weapon* currentWeapon;
 
-	Player();
+	Player(float posX, float posY);
 	~Player();
 
 	void GetBoundingBox(float &left, float &top, float &right, float &bottom);
@@ -64,5 +67,14 @@ public:
 	void SetState(int state);
 
 	void Attack(EntityType weaponType);	//Ve sau xet weapon type
+	bool IsWalking() { return isWalking; }
+	bool IsJumping() { return isJumping; }
+	bool IsAllowJump() { return isAllowJump; }
+	bool IsAttacking() { return isAttacking; }
+	bool IsSitting() { return isSitting; }
+	bool IsHurting() { return isHurting; }
+	bool IsImmortaling() { return isImmortaling; }
+
+	Weapon* GetPlayerCurrentWeapon() { return currentWeapon; }
 };
 
