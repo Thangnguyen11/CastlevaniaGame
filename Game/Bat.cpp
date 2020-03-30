@@ -24,7 +24,7 @@ Bat::~Bat(){}
 
 void Bat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0) 
+	if (health <= 0 || posX < 0 || posX > SCREEN_WIDTH * 2)
 	{
 		SetState(BAT_STATE_DIE);
 		return;
@@ -66,8 +66,6 @@ void Bat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	posX += dx;
 	posY += dy;
 
-	if (posX < 0 || posX > SCREEN_WIDTH)
-		SetState(BAT_STATE_DIE);
 #pragma region Past
 	//Entity* target;
 	////Player is the first unit of vector
@@ -129,7 +127,6 @@ void Bat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	//	}
 	//}
 #pragma endregion
-
 }
 
 void Bat::Render() 
@@ -157,7 +154,7 @@ void Bat::SetState(int state)
 		isDead = true;
 		break;
 	case BAT_STATE_FLYING:
-		vX = -BAT_FLYING_SPEED_X;
+		vX = BAT_FLYING_SPEED_X * direction;
 		break;
 	}
 }

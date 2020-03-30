@@ -14,7 +14,9 @@
 #include "Bat.h"
 #include "Zombie.h"
 
-#define SPAWNING_ZOMBIE_DELAY			20
+#define SPAWNING_ZOMBIE_DELAY				3000
+#define SPAWNING_DELAY_BETWEEN_2_ZOMBIE		360	
+#define SPAWNING_BAT_DELAY					3000
 
 Game* game;
 Player* player;
@@ -22,7 +24,16 @@ std::vector<LPGAMEENTITY> objects;
 HealthBar* playerHB;
 HealthBar* enemyHB;
 int counterZombie;
+bool isTimeToSpawnZombie;
+bool triggerSpawnZombie;
 Timer* spawningZombieTimer = new Timer(SPAWNING_ZOMBIE_DELAY);
+Timer* delaySpawningZombieTimer = new Timer(SPAWNING_DELAY_BETWEEN_2_ZOMBIE);
+bool isTimeToSpawnBat;
+bool triggerSpawnBat;
+Timer* spawningBatTimer = new Timer(SPAWNING_BAT_DELAY);
+//testing Scan
+//bool isScanned;
+//Timer* scanningGameTimer = new Timer(SCANING_GAME_DELAY);
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -86,6 +97,9 @@ HWND InitWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreenHe
 
 void LoadContent()
 {
+	//testing Scan
+	//isScanned = false;
+	//scanningGameTimer->Start();
 #pragma region Creat Player
 	player = new Player(SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT - 150);
 	objects.push_back(player);
@@ -103,14 +117,17 @@ void LoadContent()
 		objects.push_back(new Brick(1064 + i * 200, SCREEN_HEIGHT - 110 - i * 50, 2));
 	}
 #pragma endregion
-	objects.push_back(new Bat(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT - 150));
+
 
 	counterZombie = 0;
-	//objects.push_back(new Zombie(SCREEN_WIDTH / 2 + 400, SCREEN_HEIGHT - 150, -1));
-	//objects.push_back(new Zombie(SCREEN_WIDTH / 2 + 450, SCREEN_HEIGHT - 150, -1));
-	//objects.push_back(new Zombie(SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT - 150, -1));
+	isTimeToSpawnZombie = true;		//vua vao spawn luon
+	triggerSpawnZombie = false;
+
+	isTimeToSpawnBat = true;
+	triggerSpawnBat = true;
 
 	enemyHB = new HealthBar(16, false);
+
 }
 
 void WeaponCollision(vector<LPGAMEENTITY> coObjects)
@@ -128,7 +145,13 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 					break;
 				case EntityType::ZOMBIE:
 					coO->AddHealth(-1);
-					counterZombie -= 1;
+					counterZombie--;
+					if (counterZombie == 0)
+					{
+						spawningZombieTimer->Start();
+						triggerSpawnZombie = true;
+						isTimeToSpawnZombie = false;
+					}
 					break;
 				default:
 					break;
@@ -137,23 +160,130 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 	}
 }
 
+void ScanEntitiesPeriodically(vector<LPGAMEENTITY> coObjects)
+{
+}
+
 void Update(DWORD dt)
 {
-	//Bugging
-	if (counterZombie <= 3 && spawningZombieTimer->IsTimeUp())
+#pragma region Scan Game Periodically
+	//Nen co 1 lan quet toan bo object cua game moi 100 hoac 1000 lan update
+	/*if (!isScanned && scanningGameTimer->IsTimeUp())
 	{
-		objects.push_back(new Zombie(SCREEN_WIDTH / 2 + 400, SCREEN_HEIGHT - 150, -1));
-		counterZombie++; 
-		if (counterZombie == 3)
+		isScanned = true;
+		if (isScanned) 
 		{
-			spawningZombieTimer->Reset();
-			counterZombie = 0;
+			ScanEntitiesPeriodically(objects);
+			isScanned = false;
+		}
+		scanningGameTimer->Reset();
+		scanningGameTimer->Start();
+	}*/
+#pragma endregion
+#pragma region Checking alive object is in screen
+	for (UINT i = 0; i < objects.size(); i++)
+	{
+		LPGAMEENTITY coO = objects[i];	
+		if(coO->GetHealth() > 0)	//Xet object con song	//object health < 0 con xu li o trong zombie.cpp update
+			switch (coO->GetType())
+			{
+			case EntityType::BAT:
+				if (coO->GetPosX() < 0 || coO->GetPosX() > SCREEN_WIDTH * 2)
+				{
+					coO->SetState(BAT_STATE_DIE);
+				}
+				break;
+			case EntityType::ZOMBIE:
+				if (coO->GetPosY() > SCREEN_HEIGHT + 200)
+				{
+					coO->SetState(ZOMBIE_STATE_DIE);
+					counterZombie--;
+					if (counterZombie == 0)
+					{
+						spawningZombieTimer->Start();
+						triggerSpawnZombie = true;
+						isTimeToSpawnZombie = false;	//De khong vao if voi
+					}
+				}
+				break;
+			default:
+				break;
+			}
+	}
+#pragma endregion
+#pragma region Spawning Zombie Logic
+#pragma region Failed Operation Spawning Each Zombie
+	////auto if = true neu counter chua len 3 do spawningTimer kh thay doi
+	//if (isTimeToSpawnZombie) {
+	//	if (counterZombie <= 3 && spawningZombieTimer->IsTimeUp())
+	//	{
+	//		if (delaySpawningZombieTimer->IsTimeUp())	//IsTimeUp nay vao duoc do co Start o dieu kien duoi
+	//		{
+	//			objects.push_back(new Zombie(SCREEN_WIDTH / 2 + 400, SCREEN_HEIGHT - 150, -1));
+	//			counterZombie++;
+
+	//			delaySpawningZombieTimer->Reset();		//Reset va start su dung nhu 1 vong lap (ap dung ham Update)
+	//			delaySpawningZombieTimer->Start();
+	//		}
+	//		if (counterZombie == 3)	//counter len 3 thay doi spawningTimer de thoat khoi if thu nhat
+	//		{
+	//			spawningZombieTimer->Reset();
+	//			counterZombie = 0;
+	//			isTimeToSpawnZombie = false;
+	//		}
+	//	}
+	//	if (triggerSpawnZombie)	//STAR: Dat Dieu kien Start sau counter++
+	//	{
+	//		spawningZombieTimer->Start();
+	//		//start dau tien cua delay de co the vao IsTimeUp cua no
+	//		delaySpawningZombieTimer->Start();
+	//		triggerSpawnZombie = false;	//Bien trigger giup cho spawning zombie chi thuc hien khi dang co 0 hoac 3 zombie
+	//	}
+	//}
+#pragma endregion
+	if (isTimeToSpawnZombie)
+	{
+		if (delaySpawningZombieTimer->IsTimeUp()) 
+		{
+			if (counterZombie < 3)
+			{
+				objects.push_back(new Zombie(SCREEN_WIDTH / 2 + 400, SCREEN_HEIGHT - 150, -1));
+				counterZombie++;
+				if (counterZombie >= 3)
+				{
+					isTimeToSpawnZombie = false;	//out ra khoi if nay
+					triggerSpawnZombie = false;		//out ra ca if sau
+				}
+				delaySpawningZombieTimer->Start();
+			}
 		}
 	}
-	if (counterZombie == 0)	//Dat Dieu kien Start sau counter++
+	else
 	{
-		spawningZombieTimer->Start();
+		if (triggerSpawnZombie)
+		{
+			if(spawningZombieTimer->IsTimeUp())
+			{
+				isTimeToSpawnZombie = true;
+			}
+		}
 	}
+#pragma endregion
+#pragma region Spawning Bat Logic
+	if (isTimeToSpawnBat) {
+		if (spawningBatTimer->IsTimeUp())
+		{
+			objects.push_back(new Bat(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT - 150, 1));
+			spawningBatTimer->Reset(SPAWNING_BAT_DELAY + (rand() % 3000));
+			triggerSpawnBat = true;	//Dung 1 cho thi se spawn bat mai mai, cho den khi di den khu vuc ma trigger o do = false
+		}
+		if (triggerSpawnBat)
+		{
+			spawningBatTimer->Start();
+			triggerSpawnBat = false;
+		}
+	}
+#pragma endregion
 #pragma region Object Updates
 	std::vector<LPGAMEENTITY> coObjects;
 	for (int i = 0; i < objects.size(); i++)
@@ -180,6 +310,11 @@ void Update(DWORD dt)
 #pragma endregion
 	playerHB->Update(player->GetHealth(), cx + 175, 80);	//move posX follow camera
 	enemyHB->Update(16, playerHB->GetPosX(), playerHB->GetPosY() + 20);
+	//test
+	if (player->GetPosX() > SCREEN_WIDTH + 200)
+		isTimeToSpawnBat = false;
+	else
+		isTimeToSpawnBat = true;
 }
 
 void Render()
@@ -278,12 +413,12 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		}
 		break;
 	case DIK_C:
-		if (player->IsAttacking() || player->IsSitting() || player->IsHurting())
+		if (player->IsDeadYet() || player->IsAttacking() || player->IsSitting() || player->IsHurting())
 			return;
 		player->SetState(PLAYER_STATE_JUMP);
 		break;
 	case DIK_X:
-		if (player->IsHurting())
+		if (player->IsDeadYet() || player->IsHurting())
 			return;
 		player->SetState(PLAYER_STATE_ATTACK);
 		break;

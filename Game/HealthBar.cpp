@@ -18,6 +18,8 @@ HealthBar::~HealthBar() {}
 void HealthBar::Update(int currentHealth, float X, float Y)
 {
 	currentOwnerHealth = currentHealth;
+	if (currentOwnerHealth <= 0)
+		return;
 	posX = X;
 	posY = Y;
 	if(isAllies)

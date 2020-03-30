@@ -20,5 +20,5 @@ public:
 	bool IsTimeUp() { return GetTickCount() - startTime >= limitTime; }
 	void AddToTimer(int msec) { startTime += msec; }
 	void Reset() { startTime = 0; }
-	void Reset(int newLimitTime) { limitTime = newLimitTime; }
+	void Reset(int newLimitTime) { startTime = 0; limitTime = newLimitTime; }
 };

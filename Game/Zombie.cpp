@@ -21,7 +21,7 @@ Zombie::~Zombie() {}
 
 void Zombie::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (health <= 0)
+	if (health <= 0 || posY > SCREEN_HEIGHT + 200)
 	{
 		SetState(ZOMBIE_STATE_DIE);
 		return;
@@ -115,6 +115,7 @@ void Zombie::SetState(int state)
 	case ZOMBIE_STATE_DIE:
 		vX = 0;
 		vY = 0;
+		health = 0;
 		isDead = true;
 		break;
 	case ZOMBIE_STATE_WALKING:
