@@ -12,6 +12,8 @@ SmallHeart::SmallHeart(float posX, float posY)
 
 	timeDisplayed = 0;
 	timeDisplayMax = SMALLHEART_TIMEDISPLAYMAX;
+	//Dat vX o day de vi kh co state va co the dung yen khi gap mat dat
+	vX = SMALLHEART_SPEED_X * direction;
 }
 
 SmallHeart::~SmallHeart(){}
@@ -30,8 +32,6 @@ void SmallHeart::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		direction = -1;
 	else if(tempX - posX >= SMALLHEART_AMPLITUDE_VERTICAL)
 		direction = 1;
-
-	vX = SMALLHEART_SPEED_X * direction;
 
 	Entity::Update(dt);
 	vY = SMALLHEART_GRAVITY * dt;
@@ -64,7 +64,8 @@ void SmallHeart::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		posX += min_tx * dx + nx * 0.1f;
 		posY += min_ty * dy + ny * 0.1f;
 
-		if (ny == -1) {
+		if (ny == -1) 
+		{
 			vX = 0;
 			vY = 0;
 		}
@@ -72,5 +73,4 @@ void SmallHeart::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	for (UINT i = 0; i < coEvents.size(); i++)
 		delete coEvents[i];
-
 }

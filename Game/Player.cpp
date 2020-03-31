@@ -2,6 +2,8 @@
 #include "Bat.h"
 #include "Zombie.h"
 #include "SmallHeart.h"
+#include "BigHeart.h"
+#include "MoneyBags.h"
 
 Player::Player(float posX, float posY) 
 {
@@ -135,12 +137,16 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
-
+	vector<LPGAMEENTITY> listObjMayCollide;			//Khong xet va cham voi torch
 	coEvents.clear();
+	listObjMayCollide.clear();
+	for (UINT i = 0; i < coObjects->size(); i++)
+		if (coObjects->at(i)->GetType() != EntityType::TORCH)
+			listObjMayCollide.push_back(coObjects->at(i));
 
 	// turn off collision when die 
 	//if (state != PLAYER_STATE_DIE)
-		CalcPotentialCollisions(coObjects, coEvents);
+		CalcPotentialCollisions(&listObjMayCollide, coEvents);
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -220,6 +226,42 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				{
 					//tang mana
 					smallheart->SetIsDone(true);
+				}
+			}
+			if (e->obj->GetType() == EntityType::BIGHEART)
+			{
+				BigHeart *bigheart = dynamic_cast<BigHeart *>(e->obj);
+				if (!bigheart->GetIsDone())
+				{
+					//tang mana
+					bigheart->SetIsDone(true);
+				}
+			}
+			if (e->obj->GetType() == EntityType::MONEYBAGRED)
+			{
+				MoneyBags *moneybag = dynamic_cast<MoneyBags *>(e->obj);
+				if (!moneybag->GetIsDone())
+				{
+					//tang mana
+					moneybag->SetIsDone(true);
+				}
+			}
+			if (e->obj->GetType() == EntityType::MONEYBAGWHITE)
+			{
+				MoneyBags *moneybag = dynamic_cast<MoneyBags *>(e->obj);
+				if (!moneybag->GetIsDone())
+				{
+					//tang mana
+					moneybag->SetIsDone(true);
+				}
+			}
+			if (e->obj->GetType() == EntityType::MONEYBAGBLUE)
+			{
+				MoneyBags *moneybag = dynamic_cast<MoneyBags *>(e->obj);
+				if (!moneybag->GetIsDone())
+				{
+					//tang mana
+					moneybag->SetIsDone(true);
 				}
 			}
 		}

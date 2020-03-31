@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include <math.h>
+#include <cstdlib>
+#include <ctime>
 
 #include "debug.h"
 #include "define.h"

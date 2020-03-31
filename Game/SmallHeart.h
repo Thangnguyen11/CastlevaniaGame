@@ -1,7 +1,7 @@
 #pragma once
 #include "Item.h"
 
-#define SMALLHEART_GRAVITY				0.005f
+#define SMALLHEART_GRAVITY				0.003f
 #define SMALLHEART_SPEED_X				0.08f
 #define SMALLHEART_AMPLITUDE_VERTICAL	30.0f	
 

@@ -36,6 +36,8 @@ void Texture2dManager::LoadContent()
 	//Static Obj
 	AddTexture(EntityType::BRICK, new Texture2d("Resources/Ground.png", 2, 1, 2));
 	AddTexture(EntityType::PLAYERHP, new Texture2d("Resources/HP.png", 3, 1, 3));
+	AddTexture(EntityType::TORCH, new Texture2d("Resources/Torch.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::CANDLE, new Texture2d("Resources/Candle.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
 	//Mobs and Bosses
 	AddTexture(EntityType::BAT, new Texture2d("Resources/VampireBat.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
@@ -46,7 +48,7 @@ void Texture2dManager::LoadContent()
 
 	//Items
 	AddTexture(EntityType::SMALLHEART, new Texture2d("Resources/SmallHeart.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
-	AddTexture(EntityType::LARGEHEART, new Texture2d("Resources/LargeHeart.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::BIGHEART, new Texture2d("Resources/BigHeart.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::YUMMICHICKENLEG, new Texture2d("Resources/YummiChickenLeg.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::MONEYBAGS, new Texture2d("Resources/MoneyBags.png", 3, 1, 3, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::UPGRADEMORNINGSTAR, new Texture2d("Resources/UpgradeMS.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));

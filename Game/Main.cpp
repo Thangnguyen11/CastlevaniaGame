@@ -9,11 +9,14 @@
 #include "Timer.h"
 #include "HealthBar.h"
 #include "SmallHeart.h"
+#include "BigHeart.h"
+#include "MoneyBags.h"
 
 #include "Player.h"
 #include "Brick.h"
 #include "Bat.h"
 #include "Zombie.h"
+#include "Torch.h"
 
 #define SPAWNING_ZOMBIE_DELAY				3000
 #define SPAWNING_DELAY_BETWEEN_2_ZOMBIE		360	
@@ -117,6 +120,11 @@ void LoadContent()
 		objects.push_back(new Brick(1032 + i * 200, SCREEN_HEIGHT - 110 - i * 50, 2));
 		objects.push_back(new Brick(1064 + i * 200, SCREEN_HEIGHT - 110 - i * 50, 2));
 	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		objects.push_back(new Torch(100 + i * 200, SCREEN_HEIGHT - 105));
+	}
 #pragma endregion
 	counterZombie = 0;
 	isTimeToSpawnZombie = true;		//vua vao spawn luon
@@ -130,9 +138,23 @@ void LoadContent()
 
 Item* DropItem(EntityType type, float posX, float posY)
 {
-	if (type == EntityType::ZOMBIE || type == EntityType::BAT)
+	int bagrandom = rand() % 100;
+	if (type == EntityType::ZOMBIE || type == EntityType::BAT || type == EntityType::TORCH)
 	{
-		return new SmallHeart(posX, posY);
+		int random = rand() % 1000;
+		if (random <= 333)
+			return new SmallHeart(posX, posY);
+		else if (333 < random && random <= 666)
+			return new BigHeart(posX, posY);
+		else
+		{
+			if (bagrandom <= 33)
+				return new MoneyBags(posX, posY, EntityType::MONEYBAGRED);
+			else if (33 < bagrandom && bagrandom <= 66)
+				return new MoneyBags(posX, posY, EntityType::MONEYBAGWHITE);
+			else
+				return new MoneyBags(posX, posY, EntityType::MONEYBAGBLUE);
+		}
 	}
 	else
 		return new SmallHeart(posX, posY);
@@ -163,6 +185,9 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 						isTimeToSpawnZombie = false;
 					}
 					break;
+				case EntityType::TORCH:
+					coO->AddHealth(-1);
+					objects.push_back(DropItem(coO->GetType(), coO->GetPosX(), coO->GetPosY()));
 				default:
 					break;
 				}
