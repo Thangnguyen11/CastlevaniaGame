@@ -1,16 +1,2 @@
-﻿  Main.cpp
-c:\users\pc\documents\github\castlevaniagame\game\timer.h(20): warning C4018: '>=': signed/unsigned mismatch
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(116): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(117): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(118): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(299): warning C4018: '<': signed/unsigned mismatch
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(303): warning C4018: '<': signed/unsigned mismatch
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(343): warning C4018: '<': signed/unsigned mismatch
-c:\users\pc\documents\github\castlevaniagame\game\main.cpp(417): warning C4018: '<': signed/unsigned mismatch
-  Player.cpp
-c:\users\pc\documents\github\castlevaniagame\game\timer.h(20): warning C4018: '>=': signed/unsigned mismatch
-c:\users\pc\documents\github\castlevaniagame\game\player.cpp(69): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\player.cpp(91): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
-  SmallHeart.cpp
-  Generating Code...
+﻿  Entity.cpp
   Game.vcxproj -> C:\Users\PC\Documents\GitHub\CastlevaniaGame\Debug\Game.exe

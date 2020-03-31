@@ -128,6 +128,16 @@ void LoadContent()
 	enemyHB = new HealthBar(16, false);
 }
 
+Item* DropItem(EntityType type, float posX, float posY)
+{
+	if (type == EntityType::ZOMBIE || type == EntityType::BAT)
+	{
+		return new SmallHeart(posX, posY);
+	}
+	else
+		return new SmallHeart(posX, posY);
+}
+
 void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 {
 	if (!player->GetPlayerCurrentWeapon()->GetIsDone())
@@ -140,11 +150,11 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 				{
 				case EntityType::BAT:
 					coO->AddHealth(-1);
-					objects.push_back(new SmallHeart(coO->GetPosX(), coO->GetPosY()));
+					objects.push_back(DropItem(coO->GetType(), coO->GetPosX(), coO->GetPosY()));
 					break;
 				case EntityType::ZOMBIE:
 					coO->AddHealth(-1);
-					//objects.push_back(DropItem(coO->GetType(), coO->GetPosX(), coO->GetPosY()));
+					objects.push_back(DropItem(coO->GetType(), coO->GetPosX(), coO->GetPosY()));
 					counterZombie--;
 					if (counterZombie == 0)
 					{
@@ -162,16 +172,6 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 
 void ScanEntitiesPeriodically(vector<LPGAMEENTITY> coObjects)
 {
-}
-
-Item* DropItem(EntityType type, float posX, float posY)
-{
-	if (type == EntityType::ZOMBIE || type == EntityType::BAT)
-	{
-		return new SmallHeart(posX, posY);
-	}
-	else
-		return new SmallHeart(posX, posY);
 }
 
 void Update(DWORD dt)
