@@ -8,6 +8,7 @@
 #include "Game.h"
 #include "Timer.h"
 #include "HealthBar.h"
+#include "SmallHeart.h"
 
 #include "Player.h"
 #include "Brick.h"
@@ -117,8 +118,6 @@ void LoadContent()
 		objects.push_back(new Brick(1064 + i * 200, SCREEN_HEIGHT - 110 - i * 50, 2));
 	}
 #pragma endregion
-
-
 	counterZombie = 0;
 	isTimeToSpawnZombie = true;		//vua vao spawn luon
 	triggerSpawnZombie = false;
@@ -127,7 +126,6 @@ void LoadContent()
 	triggerSpawnBat = true;
 
 	enemyHB = new HealthBar(16, false);
-
 }
 
 void WeaponCollision(vector<LPGAMEENTITY> coObjects)
@@ -142,9 +140,11 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 				{
 				case EntityType::BAT:
 					coO->AddHealth(-1);
+					objects.push_back(new SmallHeart(coO->GetPosX(), coO->GetPosY()));
 					break;
 				case EntityType::ZOMBIE:
 					coO->AddHealth(-1);
+					//objects.push_back(DropItem(coO->GetType(), coO->GetPosX(), coO->GetPosY()));
 					counterZombie--;
 					if (counterZombie == 0)
 					{
@@ -162,6 +162,16 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 
 void ScanEntitiesPeriodically(vector<LPGAMEENTITY> coObjects)
 {
+}
+
+Item* DropItem(EntityType type, float posX, float posY)
+{
+	if (type == EntityType::ZOMBIE || type == EntityType::BAT)
+	{
+		return new SmallHeart(posX, posY);
+	}
+	else
+		return new SmallHeart(posX, posY);
 }
 
 void Update(DWORD dt)

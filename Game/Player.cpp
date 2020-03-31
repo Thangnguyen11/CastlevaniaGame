@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Bat.h"
 #include "Zombie.h"
+#include "SmallHeart.h"
 
 Player::Player(float posX, float posY) 
 {
@@ -174,12 +175,11 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		if (ny != 0) vY = 0;
 		if (nx != 0 && ny != 0)
 			isHurting = false;
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
 
-		if(!isImmortaling)
-			for (UINT i = 0; i < coEventsResult.size(); i++)
-			{
-				LPCOLLISIONEVENT e = coEventsResult[i];
-
+			if (!isImmortaling) {
 				if (e->obj->GetType() == EntityType::BAT)
 				{
 					Bat *bat = dynamic_cast<Bat *>(e->obj);
@@ -213,7 +213,16 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					}
 				}
 			}
-		
+			if (e->obj->GetType() == EntityType::SMALLHEART)
+			{
+				SmallHeart *smallheart = dynamic_cast<SmallHeart *>(e->obj);
+				if (!smallheart->GetIsDone())
+				{
+					//tang mana
+					smallheart->SetIsDone(true);
+				}
+			}
+		}
 	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];

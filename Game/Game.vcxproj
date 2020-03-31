@@ -138,10 +138,12 @@
     <ClCompile Include="define.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MorningStar.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="HealthBar.cpp" />
+    <ClCompile Include="SmallHeart.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Texture2d.cpp" />
     <ClCompile Include="Texture2dManager.cpp" />
@@ -155,9 +157,11 @@
     <ClInclude Include="define.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="MorningStar.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="HealthBar.h" />
+    <ClInclude Include="SmallHeart.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Texture2d.h" />
     <ClInclude Include="Texture2dManager.h" />

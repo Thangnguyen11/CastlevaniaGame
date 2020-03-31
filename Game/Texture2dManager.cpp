@@ -43,4 +43,19 @@ void Texture2dManager::LoadContent()
 
 	//Weapons
 	AddTexture(EntityType::MORNINGSTAR, new Texture2d("Resources/MorningStar.png", 4, 3, 12, D3DCOLOR_ARGB(255, 255, 0, 255)));
+
+	//Items
+	AddTexture(EntityType::SMALLHEART, new Texture2d("Resources/SmallHeart.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::LARGEHEART, new Texture2d("Resources/LargeHeart.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::YUMMICHICKENLEG, new Texture2d("Resources/YummiChickenLeg.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::MONEYBAGS, new Texture2d("Resources/MoneyBags.png", 3, 1, 3, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::UPGRADEMORNINGSTAR, new Texture2d("Resources/UpgradeMS.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::CRYSTALBALL, new Texture2d("Resources/CrystalBall.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::INVIPOTION, new Texture2d("Resources/InviPotion.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::DAGGER, new Texture2d("Resources/Dagger.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::STOPWATCH, new Texture2d("Resources/StopWatch.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::CROSS, new Texture2d("Resources/Cross.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::AXE, new Texture2d("Resources/Axe.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::BOOMERANG, new Texture2d("Resources/Boomerang.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::WATERPOTION, new Texture2d("Resources/WaterPotion.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
 }

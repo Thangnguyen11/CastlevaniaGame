@@ -52,9 +52,9 @@ void Bat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	//2 optional to FLY
 
 	//zigzag one
-	/*if (posY - tempY >= BAT_AMPLITUDE_VERTICAL)
+	/*if (posY - tempY >= BAT_AMPLITUDE_HORIZONTAL)
 		directionY = -1;
-	else if(tempY - posY >= BAT_AMPLITUDE_VERTICAL)
+	else if(tempY - posY >= BAT_AMPLITUDE_HORIZONTAL)
 		directionY = 1;
 
 	vY = BAT_FLYING_SPEED_Y * directionY;*/

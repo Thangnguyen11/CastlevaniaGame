@@ -25,10 +25,10 @@ void Weapon::Render()
 	if (isDone)
 		return;
 	if (direction == 1) {
-		sprite->DrawFlipVertical(posX, posY, 255);
+		sprite->DrawFlipVertical(posX, posY);
 	}
 	else {
-		sprite->Draw(posX, posY, 255);
+		sprite->Draw(posX, posY);
 	}
 	
 	RenderBoundingBox();
