@@ -4,6 +4,8 @@
 #include "SmallHeart.h"
 #include "BigHeart.h"
 #include "MoneyBags.h"
+#include "YummiChickenLeg.h"
+#include "UpgradeMorningStar.h"
 
 Player::Player(float posX, float posY) 
 {
@@ -265,6 +267,24 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				{
 					AddScore(500);
 					moneybag->SetIsDone(true);
+				}
+			}
+			if (e->obj->GetType() == EntityType::YUMMICHICKENLEG)
+			{
+				YummiChickenLeg *chickenleg = dynamic_cast<YummiChickenLeg *>(e->obj);
+				if (!chickenleg->GetIsDone())
+				{
+					AddScore(1000);
+					chickenleg->SetIsDone(true);
+				}
+			}
+			if (e->obj->GetType() == EntityType::UPGRADEMORNINGSTAR)
+			{
+				UpgradeMorningStar *upgrade = dynamic_cast<UpgradeMorningStar *>(e->obj);
+				if (!upgrade->GetIsDone())
+				{
+					//nang cap ms
+					upgrade->SetIsDone(true);
 				}
 			}
 		}

@@ -12,6 +12,8 @@
 #include "SmallHeart.h"
 #include "BigHeart.h"
 #include "MoneyBags.h"
+#include "YummiChickenLeg.h"
+#include "UpgradeMorningStar.h"
 
 #include "Player.h"
 #include "Brick.h"
@@ -143,10 +145,14 @@ Item* DropItem(EntityType type, float posX, float posY)
 	if (type == EntityType::ZOMBIE || type == EntityType::BAT || type == EntityType::TORCH)
 	{
 		int random = rand() % 1000;
-		if (random <= 333)
+		if (random <= 200)
 			return new SmallHeart(posX, posY);
-		else if (333 < random && random <= 666)
+		else if (200 < random && random <= 400)
 			return new BigHeart(posX, posY);
+		else if (400 < random && random <= 600)
+			return new YummiChickenLeg(posX, posY);
+		else if (600 < random && random <= 800)
+			return new UpgradeMorningStar(posX, posY);
 		else
 		{
 			if (bagrandom <= 33)
