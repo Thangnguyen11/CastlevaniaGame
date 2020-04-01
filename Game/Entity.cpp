@@ -13,7 +13,7 @@ Entity::Entity()
 }
 
 Entity::~Entity() {
-	//SAFE_DELETE(sprite);
+	//SAFE_DELETE(textSprite);
 }
 
 void Entity::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
@@ -77,7 +77,7 @@ LPCOLLISIONEVENT Entity::SweptAABBEx(LPGAMEENTITY coO)
 	//		STARRRR
 	//Do BBox theo logic SweptAABB la xet cac rect voi origin la goc trai tren
 	//Nhu vay logic se ap dung cho Draw voi origin la goc trai tren
-	//Su dung origin la tam texture -> xet cac rect lech theo huong tam texture
+	//Su dung origin la tam textTexture -> xet cac rect lech theo huong tam textTexture
 	Game::SweptAABB(
 		ml - (float)texture->getFrameWidth() / 2, mt - (float)texture->getFrameHeight() / 2, mr - (float)texture->getFrameWidth() / 2, mb - (float)texture->getFrameHeight() / 2,
 		dx, dy,

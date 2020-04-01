@@ -20,10 +20,12 @@
 #define WIN_TITLE L"NewbieGame"
 
 #define BGColor D3DCOLOR_XRGB(0,0,0)
-#define SCREEN_WIDTH 780
-#define SCREEN_HEIGHT 660
+#define SCREEN_WIDTH 530
+#define SCREEN_HEIGHT 480
 
 #define MaxFrameRate 100
+
+#define SCENEGAME_GAMETIMEMAX		300
 
 enum EntityType
 {
@@ -75,7 +77,11 @@ enum EntityType
 
 	TORCH = 23,
 
-	CANDLE = 24
+	CANDLE = 24,
+
+	TEXTS = 25,
+
+	BLACKBOARD = 26
 };
 
 class define

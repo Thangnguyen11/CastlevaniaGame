@@ -33,7 +33,7 @@ Texture2d::Texture2d(char* filePath, int COLUMN, int ROW, int TOTALFRAME, D3DCOL
 		colorKey,
 		&info,
 		NULL,
-		&Texture);							// Created texture pointer
+		&Texture);							// Created textTexture pointer
 
 	if (result != D3D_OK)
 	{

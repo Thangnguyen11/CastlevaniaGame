@@ -6,8 +6,9 @@
 #include "debug.h"
 #include "define.h"
 #include "Game.h"
+#include "GameTime.h"
 #include "Timer.h"
-#include "HealthBar.h"
+#include "UI.h"
 #include "SmallHeart.h"
 #include "BigHeart.h"
 #include "MoneyBags.h"
@@ -25,8 +26,8 @@
 Game* game;
 Player* player;
 std::vector<LPGAMEENTITY> objects;
-HealthBar* playerHB;
-HealthBar* enemyHB;
+UI* gameUI;
+GameTime* gameTime;
 int counterZombie;
 bool isTimeToSpawnZombie;
 bool triggerSpawnZombie;
@@ -105,10 +106,8 @@ void LoadContent()
 	//isScanned = false;
 	//scanningGameTimer->Start();
 #pragma region Creat Player
-	player = new Player(SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT - 150);
+	player = new Player(100, SCREEN_HEIGHT - 150);
 	objects.push_back(player);
-
-	playerHB = new HealthBar(player->GetHealth(), true);
 #pragma endregion
 #pragma region Creat Ground
 	for (int i = 0; i < 50; i++)
@@ -123,9 +122,12 @@ void LoadContent()
 
 	for (int i = 0; i < 5; i++)
 	{
-		objects.push_back(new Torch(100 + i * 200, SCREEN_HEIGHT - 105));
+		objects.push_back(new Torch(200 + i * 250, SCREEN_HEIGHT - 105));
 	}
 #pragma endregion
+	gameTime = new GameTime();
+	gameUI = new UI(player->GetHealth(), 16);
+
 	counterZombie = 0;
 	isTimeToSpawnZombie = true;		//vua vao spawn luon
 	triggerSpawnZombie = false;
@@ -133,7 +135,6 @@ void LoadContent()
 	isTimeToSpawnBat = true;
 	triggerSpawnBat = true;
 
-	enemyHB = new HealthBar(16, false);
 }
 
 Item* DropItem(EntityType type, float posX, float posY)
@@ -172,10 +173,12 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 				{
 				case EntityType::BAT:
 					coO->AddHealth(-1);
+					player->AddScore(500);
 					objects.push_back(DropItem(coO->GetType(), coO->GetPosX(), coO->GetPosY()));
 					break;
 				case EntityType::ZOMBIE:
 					coO->AddHealth(-1);
+					player->AddScore(100);
 					objects.push_back(DropItem(coO->GetType(), coO->GetPosX(), coO->GetPosY()));
 					counterZombie--;
 					if (counterZombie == 0)
@@ -193,10 +196,6 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 				}
 			}
 	}
-}
-
-void ScanEntitiesPeriodically(vector<LPGAMEENTITY> coObjects)
-{
 }
 
 void Update(DWORD dt)
@@ -343,8 +342,8 @@ void Update(DWORD dt)
 
 	Game::GetInstance()->SetCamPos(cx, 0.0f);//cy khi muon camera move theo y player //castlevania chua can
 #pragma endregion
-	playerHB->Update(player->GetHealth(), cx + 175, 80);	//move posX follow camera
-	enemyHB->Update(16, playerHB->GetPosX(), playerHB->GetPosY() + 20);
+	gameTime->Update(dt);
+	gameUI->Update(cx + 260, 35, player->GetHealth(), 16);	//move posX follow camera
 	//test
 	if (player->GetPosX() > SCREEN_WIDTH + 200)
 		isTimeToSpawnBat = false;
@@ -367,8 +366,7 @@ void Render()
 
 		for (int i = 0; i < objects.size(); i++)
 			objects[i]->Render();
-		playerHB->Render();
-		enemyHB->Render();
+		gameUI->Render(1, SCENEGAME_GAMETIMEMAX - gameTime->GetTime(), player);
 
 		//End draw
 		spriteHandler->End();

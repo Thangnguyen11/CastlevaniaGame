@@ -17,6 +17,9 @@ Player::Player(float posX, float posY)
 	this->SetState(PLAYER_STATE_IDLE);
 
 	health = PLAYER_MAXHEALTH;
+	mana = 0;
+	score = 0;
+	live = 1;
 	isDead = false;
 	isWalking = false;
 	isJumping = false;
@@ -224,7 +227,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				SmallHeart *smallheart = dynamic_cast<SmallHeart *>(e->obj);
 				if (!smallheart->GetIsDone())
 				{
-					//tang mana
+					AddMana(1);
 					smallheart->SetIsDone(true);
 				}
 			}
@@ -233,7 +236,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				BigHeart *bigheart = dynamic_cast<BigHeart *>(e->obj);
 				if (!bigheart->GetIsDone())
 				{
-					//tang mana
+					AddMana(5);
 					bigheart->SetIsDone(true);
 				}
 			}
@@ -242,7 +245,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				MoneyBags *moneybag = dynamic_cast<MoneyBags *>(e->obj);
 				if (!moneybag->GetIsDone())
 				{
-					//tang mana
+					AddScore(100);
 					moneybag->SetIsDone(true);
 				}
 			}
@@ -251,7 +254,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				MoneyBags *moneybag = dynamic_cast<MoneyBags *>(e->obj);
 				if (!moneybag->GetIsDone())
 				{
-					//tang mana
+					AddScore(300);
 					moneybag->SetIsDone(true);
 				}
 			}
@@ -260,7 +263,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				MoneyBags *moneybag = dynamic_cast<MoneyBags *>(e->obj);
 				if (!moneybag->GetIsDone())
 				{
-					//tang mana
+					AddScore(500);
 					moneybag->SetIsDone(true);
 				}
 			}

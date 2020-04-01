@@ -35,9 +35,13 @@ void Texture2dManager::LoadContent()
 
 	//Static Obj
 	AddTexture(EntityType::BRICK, new Texture2d("Resources/Ground.png", 2, 1, 2));
-	AddTexture(EntityType::PLAYERHP, new Texture2d("Resources/HP.png", 3, 1, 3));
 	AddTexture(EntityType::TORCH, new Texture2d("Resources/Torch.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::CANDLE, new Texture2d("Resources/Candle.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
+
+	//UI
+	AddTexture(EntityType::BLACKBOARD, new Texture2d("Resources/BlackBoard.png", 1, 1, 1));
+	AddTexture(EntityType::PLAYERHP, new Texture2d("Resources/HP.png", 3, 1, 3));
+	AddTexture(EntityType::TEXTS, new Texture2d("Resources/Texts.png", 13, 3, 36, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
 	//Mobs and Bosses
 	AddTexture(EntityType::BAT, new Texture2d("Resources/VampireBat.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
