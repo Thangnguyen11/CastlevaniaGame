@@ -2,7 +2,7 @@
 
 GameTime::GameTime() 
 {
-	accumulationTime = 0;
+	currentTotalTime = 0;
 	gameTime = 0;
 }
 
@@ -11,13 +11,13 @@ GameTime::~GameTime() {}
 void GameTime::Update(DWORD dt)
 {
 	//Cu 1000ms thi +gametime len 1 lan
-	if (accumulationTime + dt < 1000)	
+	if (currentTotalTime + dt < 1000)	
 	{
-		accumulationTime += dt;
+		currentTotalTime += dt;
 	}
 	else
 	{
-		accumulationTime = (accumulationTime + dt) % 1000;
+		currentTotalTime = (currentTotalTime + dt) % 1000;
 		gameTime++;
 	}
 }

@@ -14,6 +14,9 @@
 #include "MoneyBags.h"
 #include "YummiChickenLeg.h"
 #include "UpgradeMorningStar.h"
+#include "Hit.h"
+#include "Fire.h"
+#include "Score.h"
 
 #include "Player.h"
 #include "Brick.h"
@@ -25,9 +28,13 @@
 #define SPAWNING_DELAY_BETWEEN_2_ZOMBIE		360	
 #define SPAWNING_BAT_DELAY					3000
 
+#define HIT_EFFECT_CUSTOMIZED_POS			8
+
 Game* game;
 Player* player;
 std::vector<LPGAMEENTITY> objects;
+std::vector<LPGAMEEFFECT> effects;
+std::vector<LPGAMEITEM> items;
 UI* gameUI;
 GameTime* gameTime;
 int counterZombie;
@@ -139,10 +146,22 @@ void LoadContent()
 
 }
 
-Item* DropItem(EntityType type, float posX, float posY)
+Effect* CreateEffect(EntityType createrType, EntityType effectType, float posX, float posY)
+{
+	if (effectType == EntityType::HITEFFECT)
+		return new Hit(posX - HIT_EFFECT_CUSTOMIZED_POS, posY - HIT_EFFECT_CUSTOMIZED_POS);
+	else if (effectType == EntityType::FIREEFFECT)
+		return new Fire(posX, posY);
+	else if (effectType == EntityType::ADDSCOREEFFECT)
+		return new Score(posX, posY, createrType);
+	else
+		return new Hit(posX - HIT_EFFECT_CUSTOMIZED_POS, posY - HIT_EFFECT_CUSTOMIZED_POS);
+}
+
+Item* DropItem(EntityType createrType, float posX, float posY)
 {
 	int bagrandom = rand() % 100;
-	if (type == EntityType::ZOMBIE || type == EntityType::BAT || type == EntityType::TORCH)
+	if (createrType == EntityType::ZOMBIE || createrType == EntityType::BAT || createrType == EntityType::TORCH)
 	{
 		int random = rand() % 1000;
 		if (random <= 200)
@@ -155,7 +174,7 @@ Item* DropItem(EntityType type, float posX, float posY)
 			return new UpgradeMorningStar(posX, posY);
 		else
 		{
-			if (bagrandom <= 33)
+			if (bagrandom <= 33) 
 				return new MoneyBags(posX, posY, EntityType::MONEYBAGRED);
 			else if (33 < bagrandom && bagrandom <= 66)
 				return new MoneyBags(posX, posY, EntityType::MONEYBAGWHITE);
@@ -167,25 +186,29 @@ Item* DropItem(EntityType type, float posX, float posY)
 		return new SmallHeart(posX, posY);
 }
 
-void WeaponCollision(vector<LPGAMEENTITY> coObjects)
+void WeaponCollision()
 {
 	if (!player->GetPlayerCurrentWeapon()->GetIsDone())
 	{
-		for (UINT i = 0; i < coObjects.size(); i++)
-			if (player->GetPlayerCurrentWeapon()->IsCollidingObject(coObjects[i]))	//weapon va cham voi obj
+		for (UINT i = 0; i < objects.size(); i++)
+		{
+			if (player->GetPlayerCurrentWeapon()->IsCollidingObject(objects[i]))	//weapon va cham voi obj
 			{
-				LPGAMEENTITY coO = coObjects[i];
-				switch (coO->GetType())
+				switch (objects[i]->GetType())
 				{
 				case EntityType::BAT:
-					coO->AddHealth(-1);
+					objects[i]->AddHealth(-1);
 					player->AddScore(500);
-					objects.push_back(DropItem(coO->GetType(), coO->GetPosX(), coO->GetPosY()));
+					effects.push_back(CreateEffect(objects[i]->GetType(), EntityType::HITEFFECT, objects[i]->GetPosX(), objects[i]->GetPosY()));
+					effects.push_back(CreateEffect(objects[i]->GetType(), EntityType::FIREEFFECT, objects[i]->GetPosX(), objects[i]->GetPosY()));
+					items.push_back(DropItem(objects[i]->GetType(), objects[i]->GetPosX(), objects[i]->GetPosY()));
 					break;
 				case EntityType::ZOMBIE:
-					coO->AddHealth(-1);
+					objects[i]->AddHealth(-1);
 					player->AddScore(100);
-					objects.push_back(DropItem(coO->GetType(), coO->GetPosX(), coO->GetPosY()));
+					effects.push_back(CreateEffect(objects[i]->GetType(), EntityType::HITEFFECT, objects[i]->GetPosX(), objects[i]->GetPosY()));
+					effects.push_back(CreateEffect(objects[i]->GetType(), EntityType::FIREEFFECT, objects[i]->GetPosX(), objects[i]->GetPosY()));
+					items.push_back(DropItem(objects[i]->GetType(), objects[i]->GetPosX(), objects[i]->GetPosY()));
 					counterZombie--;
 					if (counterZombie == 0)
 					{
@@ -195,12 +218,71 @@ void WeaponCollision(vector<LPGAMEENTITY> coObjects)
 					}
 					break;
 				case EntityType::TORCH:
-					coO->AddHealth(-1);
-					objects.push_back(DropItem(coO->GetType(), coO->GetPosX(), coO->GetPosY()));
+					objects[i]->AddHealth(-1);
+					effects.push_back(CreateEffect(objects[i]->GetType(), EntityType::HITEFFECT, objects[i]->GetPosX(), objects[i]->GetPosY()));
+					effects.push_back(CreateEffect(objects[i]->GetType(), EntityType::FIREEFFECT, objects[i]->GetPosX(), objects[i]->GetPosY()));
+					items.push_back(DropItem(objects[i]->GetType(), objects[i]->GetPosX(), objects[i]->GetPosY()));
 				default:
 					break;
 				}
 			}
+		}
+	}
+}
+
+void PlayerCollideItem()
+{
+	for (UINT i = 0; i < items.size(); i++)
+	{
+		if (!items[i]->GetIsDone())
+		{
+			if (player->IsCollidingObject(items[i]))
+			{
+				switch (items[i]->GetType())
+				{
+				case EntityType::MONEYBAGRED:
+					//Vi cai nay ma phai dem CollideItem tu Player ra ngoai -.-
+					//Ton biet bao nhieu suc
+					player->AddScore(100);
+					items[i]->SetIsDone(true);
+					effects.push_back(CreateEffect(EntityType::MONEYBAGRED, EntityType::ADDSCOREEFFECT, items[i]->GetPosX(), items[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
+					break;
+				case EntityType::MONEYBAGWHITE:
+					player->AddScore(400);
+					items[i]->SetIsDone(true);
+					effects.push_back(CreateEffect(EntityType::MONEYBAGWHITE, EntityType::ADDSCOREEFFECT, items[i]->GetPosX(), items[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
+					break;
+				case EntityType::MONEYBAGBLUE:
+					player->AddScore(700);
+					items[i]->SetIsDone(true);
+					effects.push_back(CreateEffect(EntityType::MONEYBAGBLUE, EntityType::ADDSCOREEFFECT, items[i]->GetPosX(), items[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
+					break;
+				case EntityType::SMALLHEART:
+					player->AddMana(1);
+					items[i]->SetIsDone(true);
+					break;
+				case EntityType::BIGHEART:
+					player->AddMana(5);
+					items[i]->SetIsDone(true);
+					break;
+				case EntityType::YUMMICHICKENLEG:
+					player->AddScore(1000);
+					items[i]->SetIsDone(true);
+					break;
+				case EntityType::UPGRADEMORNINGSTAR:
+				{
+					//nang cap ms
+					//Dung yen simon 1 ty
+					MorningStar* morningStarWeapon = dynamic_cast<MorningStar*>(player->GetPlayerCurrentWeapon());
+					morningStarWeapon->UpLevel();
+					items[i]->SetIsDone(true);
+					break;
+				}
+				default:
+					break;
+				}
+			}
+		}
 	}
 }
 
@@ -324,7 +406,7 @@ void Update(DWORD dt)
 		}
 	}
 #pragma endregion
-#pragma region Object Updates
+#pragma region Objects Updates
 	std::vector<LPGAMEENTITY> coObjects;
 	for (int i = 0; i < objects.size(); i++)
 	{
@@ -334,8 +416,17 @@ void Update(DWORD dt)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
+	for (int i = 0; i < effects.size(); i++)
+	{
+		effects[i]->Update(dt);
+	}
+	for (int i = 0; i < items.size(); i++)
+	{
+		items[i]->Update(dt, &objects);
+	}
 #pragma endregion
-	WeaponCollision(objects);
+	WeaponCollision();
+	PlayerCollideItem();
 #pragma region Camera
 	float cx, cy;
 	player->ReceivePos(cx, cy);
@@ -372,6 +463,10 @@ void Render()
 
 		for (int i = 0; i < objects.size(); i++)
 			objects[i]->Render();
+		for (int i = 0; i < effects.size(); i++)
+			effects[i]->Render();
+		for (int i = 0; i < items.size(); i++)
+			items[i]->Render();
 		gameUI->Render(1, SCENEGAME_GAMETIMEMAX - gameTime->GetTime(), player);
 
 		//End draw

@@ -3,7 +3,7 @@
 
 class GameTime
 {
-	DWORD accumulationTime;	//Thoi gian da tich luy duoc (+ dt)
+	DWORD currentTotalTime;	//Thoi gian da tich luy duoc (+ dt)
 	int gameTime;
 public:
 	GameTime();

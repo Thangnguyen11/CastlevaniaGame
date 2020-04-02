@@ -81,7 +81,17 @@ enum EntityType
 
 	TEXTS = 25,
 
-	BLACKBOARD = 26
+	BLACKBOARD = 26,
+
+	FIREEFFECT = 27,
+
+	HITEFFECT = 28,
+
+	BUBBLESEFFECT = 29,
+
+	BRICKEXPLODEEFFECT = 30,
+
+	ADDSCOREEFFECT = 31
 };
 
 class define

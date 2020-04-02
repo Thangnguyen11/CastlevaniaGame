@@ -1,11 +1,6 @@
 #include "Player.h"
 #include "Bat.h"
 #include "Zombie.h"
-#include "SmallHeart.h"
-#include "BigHeart.h"
-#include "MoneyBags.h"
-#include "YummiChickenLeg.h"
-#include "UpgradeMorningStar.h"
 
 Player::Player(float posX, float posY) 
 {
@@ -222,69 +217,6 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 							SetState(PLAYER_STATE_HURTING);
 						}
 					}
-				}
-			}
-			if (e->obj->GetType() == EntityType::SMALLHEART)
-			{
-				SmallHeart *smallheart = dynamic_cast<SmallHeart *>(e->obj);
-				if (!smallheart->GetIsDone())
-				{
-					AddMana(1);
-					smallheart->SetIsDone(true);
-				}
-			}
-			if (e->obj->GetType() == EntityType::BIGHEART)
-			{
-				BigHeart *bigheart = dynamic_cast<BigHeart *>(e->obj);
-				if (!bigheart->GetIsDone())
-				{
-					AddMana(5);
-					bigheart->SetIsDone(true);
-				}
-			}
-			if (e->obj->GetType() == EntityType::MONEYBAGRED)
-			{
-				MoneyBags *moneybag = dynamic_cast<MoneyBags *>(e->obj);
-				if (!moneybag->GetIsDone())
-				{
-					AddScore(100);
-					moneybag->SetIsDone(true);
-				}
-			}
-			if (e->obj->GetType() == EntityType::MONEYBAGWHITE)
-			{
-				MoneyBags *moneybag = dynamic_cast<MoneyBags *>(e->obj);
-				if (!moneybag->GetIsDone())
-				{
-					AddScore(300);
-					moneybag->SetIsDone(true);
-				}
-			}
-			if (e->obj->GetType() == EntityType::MONEYBAGBLUE)
-			{
-				MoneyBags *moneybag = dynamic_cast<MoneyBags *>(e->obj);
-				if (!moneybag->GetIsDone())
-				{
-					AddScore(500);
-					moneybag->SetIsDone(true);
-				}
-			}
-			if (e->obj->GetType() == EntityType::YUMMICHICKENLEG)
-			{
-				YummiChickenLeg *chickenleg = dynamic_cast<YummiChickenLeg *>(e->obj);
-				if (!chickenleg->GetIsDone())
-				{
-					AddScore(1000);
-					chickenleg->SetIsDone(true);
-				}
-			}
-			if (e->obj->GetType() == EntityType::UPGRADEMORNINGSTAR)
-			{
-				UpgradeMorningStar *upgrade = dynamic_cast<UpgradeMorningStar *>(e->obj);
-				if (!upgrade->GetIsDone())
-				{
-					//nang cap ms
-					upgrade->SetIsDone(true);
 				}
 			}
 		}

@@ -43,6 +43,13 @@ void Texture2dManager::LoadContent()
 	AddTexture(EntityType::PLAYERHP, new Texture2d("Resources/HP.png", 3, 1, 3));
 	AddTexture(EntityType::TEXTS, new Texture2d("Resources/Texts.png", 13, 3, 36, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
+	//Effective
+	AddTexture(EntityType::FIREEFFECT, new Texture2d("Resources/Fire.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::HITEFFECT, new Texture2d("Resources/Hit.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::BUBBLESEFFECT, new Texture2d("Resources/Bubbles.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::BRICKEXPLODEEFFECT, new Texture2d("Resources/BrickExplode.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::ADDSCOREEFFECT, new Texture2d("Resources/Score.png", 8, 1, 8, D3DCOLOR_ARGB(255, 255, 0, 255)));
+
 	//Mobs and Bosses
 	AddTexture(EntityType::BAT, new Texture2d("Resources/VampireBat.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::ZOMBIE, new Texture2d("Resources/Zombie.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));

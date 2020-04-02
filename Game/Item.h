@@ -1,6 +1,8 @@
 #pragma once
-
 #include "Entity.h"
+
+class Item;
+typedef Item* LPGAMEITEM;
 
 class Item : public Entity
 {

@@ -90,6 +90,18 @@
     <ClCompile Include="UpgradeMorningStar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Hit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fire.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Score.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -165,6 +177,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UpgradeMorningStar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Hit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fire.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Score.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
