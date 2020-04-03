@@ -45,96 +45,150 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		//update explain: state_walking: jump false (collision with brick), transfer to state_attack: walking false too -> vX = 0
 		//				state_jumping: jump true (until collision with brick) -> vX != 0
 	}
-	if (isHurting && hurtingTimer->IsTimeUp()) {
+
+#pragma region Timer
+	if (isHurting && hurtingTimer->IsTimeUp()) 
+	{
 		SetState(PLAYER_STATE_IDLE);
 		isHurting = false;
 		hurtingTimer->Reset();
 	}
-	if (isImmortaling && immortalTimer->IsTimeUp()) {
+	if (isImmortaling && immortalTimer->IsTimeUp()) 
+	{
 		isImmortaling = false;
 		immortalTimer->Reset();
 	}
+	if (isUpgrading && upgradeTimer->IsTimeUp()) 
+	{
+		SetState(PLAYER_STATE_IDLE);
+		isUpgrading = false;
+		upgradeTimer->Reset();
+	}
+#pragma endregion
 
+#pragma region Update Sprite
 	int currentFrame = sprite->GetCurrentFrame();
 	if (isDead)
+	{
 		sprite->SelectFrame(PLAYER_ANI_DIE);
+	}
+	else
+		if (isUpgrading)
+		{
+			if (currentFrame < PLAYER_ANI_UPGRADING_BEGIN) //Can be bug here
+			{
+				sprite->SelectFrame(PLAYER_ANI_UPGRADING_BEGIN);
+				sprite->currentTotalTime = dt;
+			}
+			else 
+			{
+				sprite->currentTotalTime += dt;
+				if (sprite->currentTotalTime >= PLAYER_UPGRADING_DELAY) 
+				{
+					sprite->currentTotalTime -= PLAYER_UPGRADING_DELAY;
+					sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100ms and trans to next frame
+				}
+
+				if (sprite->GetCurrentFrame() > PLAYER_ANI_UPGRADING_END) 
+				{
+					sprite->SelectFrame(PLAYER_ANI_IDLE);
+				}
+			}
+		}
 	else 
 		if (isHurting)
 		{
 			sprite->SelectFrame(PLAYER_ANI_HURTING);
 		}
 		else
-			if (isSitting) {
-				if (isAttacking) {
-					if (currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 1 && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 2) {
+			if (isSitting) 
+			{
+				if (isAttacking) 
+				{
+					if (currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 1 && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 2) 
+					{
 						sprite->SelectFrame(PLAYER_ANI_SITTING_ATTACK_BEGIN);
 						sprite->currentTotalTime = dt;
 					}
-					else {
+					else 
+					{
 						sprite->currentTotalTime += dt;
-						if (sprite->currentTotalTime >= PLAYER_ATTACKING_DELAY) {
+						if (sprite->currentTotalTime >= PLAYER_ATTACKING_DELAY) 
+						{
 							sprite->currentTotalTime -= PLAYER_ATTACKING_DELAY;
 							sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100 and trans to next frame
 						}
 
-						if (sprite->GetCurrentFrame() > PLAYER_ANI_SITTING_ATTACK_END) {
+						if (sprite->GetCurrentFrame() > PLAYER_ANI_SITTING_ATTACK_END) 
+						{
 							sprite->SelectFrame(PLAYER_ANI_SITTING);
 							isAttacking = false;
 						}
 					}
 				}
-				else {
+				else 
+				{
 					sprite->SelectFrame(PLAYER_ANI_SITTING);
 				}
 			}
-			else if (isAttacking && !isSitting) {
-				if (currentFrame < PLAYER_ANI_ATTACK_BEGIN) {
+			else if (isAttacking && !isSitting) 
+			{
+				if (currentFrame < PLAYER_ANI_ATTACK_BEGIN) 
+				{
 					sprite->SelectFrame(PLAYER_ANI_ATTACK_BEGIN);
 					sprite->currentTotalTime = dt;
 				}
-				else {
+				else 
+				{
 					sprite->currentTotalTime += dt;
-					if (sprite->currentTotalTime >= PLAYER_ATTACKING_DELAY) {
+					if (sprite->currentTotalTime >= PLAYER_ATTACKING_DELAY) 
+					{
 						sprite->currentTotalTime -= PLAYER_ATTACKING_DELAY;
 						sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100ms and trans to next frame
 					}
 
-					if (sprite->GetCurrentFrame() > PLAYER_ANI_ATTACK_END) {
+					if (sprite->GetCurrentFrame() > PLAYER_ANI_ATTACK_END) 
+					{
 						sprite->SelectFrame(PLAYER_ANI_IDLE);
 						isAttacking = false;
 					}
 				}
 			}
 			else
-				if (isWalking) {
-					if (!isJumping) {
+				if (isWalking) 
+				{
+					if (!isJumping) 
+					{
 						if (currentFrame < PLAYER_ANI_WALKING_BEGIN || currentFrame >= PLAYER_ANI_WALKING_END)
 							sprite->SelectFrame(PLAYER_ANI_WALKING_BEGIN);
 
 						sprite->Update(dt);
 					}
-					else {
+					else 
+					{
 						sprite->SelectFrame(PLAYER_ANI_JUMPING);
 					}
 				}
 				else
-					if (isJumping) {		//Nhay tai cho
+					if (isJumping) 
+					{		//Nhay tai cho
 						sprite->SelectFrame(PLAYER_ANI_JUMPING);
 					}
-					else {
+					else 
+					{
 						sprite->SelectFrame(PLAYER_ANI_IDLE);
 					}
-
-
+#pragma endregion
 
 	Entity::Update(dt);
 
 	// simple fall down
 	vY += PLAYER_GRAVITY * dt;
 
-	if (posX <= 15)
+	if (posX <= 15)	//Not go out
 		posX = 15;
 
+#pragma region Collide Logic
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 	vector<LPGAMEENTITY> listObjMayCollide;			//Khong xet va cham voi torch
@@ -223,6 +277,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+#pragma endregion
 
 	if (!currentWeapon->GetIsDone())
 	{
@@ -312,6 +367,14 @@ void Player::SetState(int state)
 		vX = PLAYER_DEFLECT_SPEED_X * direction;
 		vY = -PLAYER_DEFLECT_SPEED_Y;
 		break;
+	case PLAYER_STATE_UPGRADING:
+		isHurting = false;
+		isWalking = false;
+		isJumping = false;
+		isAttacking = false;
+		if (isSitting)	isSitting = false;
+		vX = 0;
+		vY = 0;
 	}
 }
 
@@ -333,4 +396,15 @@ void Player::Attack(EntityType weaponType)
 		isAttacking = true;
 		currentWeapon->Attack(posX, posY, direction);
 	}
+}
+
+void Player::UpgradingMorningStar()
+{
+	MorningStar* morningStar = dynamic_cast<MorningStar*>(currentWeapon);
+	if (morningStar->GetLevel() >= 3)
+		return;
+
+	upgradeTimer->Start();
+	isUpgrading = true;
+	SetState(PLAYER_STATE_UPGRADING);
 }

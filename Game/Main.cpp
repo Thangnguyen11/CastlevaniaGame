@@ -274,6 +274,7 @@ void PlayerCollideItem()
 					//nang cap ms
 					//Dung yen simon 1 ty
 					MorningStar* morningStarWeapon = dynamic_cast<MorningStar*>(player->GetPlayerCurrentWeapon());
+					player->UpgradingMorningStar();
 					morningStarWeapon->UpLevel();
 					items[i]->SetIsDone(true);
 					break;
@@ -547,12 +548,12 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		}
 		break;
 	case DIK_C:
-		if (player->IsDeadYet() || player->IsAttacking() || player->IsSitting() || player->IsHurting())
+		if (player->IsDeadYet() || player->IsAttacking() || player->IsSitting() || player->IsHurting() || player->IsUpgrading())
 			return;
 		player->SetState(PLAYER_STATE_JUMP);
 		break;
 	case DIK_X:
-		if (player->IsDeadYet() || player->IsHurting())
+		if (player->IsDeadYet() || player->IsHurting() || player->IsUpgrading())
 			return;
 		player->SetState(PLAYER_STATE_ATTACK);
 		break;
@@ -566,7 +567,7 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 
 void CSampleKeyHander::KeyState(BYTE *states)
 {
-	if (player->IsDeadYet() || player->IsAttacking() || player->IsJumping() || player->IsHurting()) {	
+	if (player->IsDeadYet() || player->IsAttacking() || player->IsJumping() || player->IsHurting() || player->IsUpgrading()) {	
 		return;
 	}
 

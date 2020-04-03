@@ -23,6 +23,7 @@
 #define PLAYER_STATE_ATTACK					400
 #define PLAYER_STATE_SITTING				500
 #define PLAYER_STATE_HURTING				600
+#define PLAYER_STATE_UPGRADING				700
 
 #define PLAYER_ANI_DIE						28
 #define PLAYER_ANI_IDLE						0
@@ -35,10 +36,14 @@
 #define PLAYER_ANI_SITTING					29
 #define PLAYER_ANI_SITTING_ATTACK_BEGIN		15
 #define PLAYER_ANI_SITTING_ATTACK_END		17
+#define PLAYER_ANI_UPGRADING_BEGIN			24
+#define PLAYER_ANI_UPGRADING_END			27
 
 #define PLAYER_ATTACKING_DELAY				110
 #define PLAYER_HURTING_DELAY				600
 #define PLAYER_IMMORTAL_TIMECOUNTER			1200
+#define PLAYER_UPGRADING_DELAY				100
+#define PLAYER_UPGRADING_TIMECOUNTER		1200
 
 class Player : public Entity
 {
@@ -48,9 +53,11 @@ class Player : public Entity
 		isAttacking,
 		isSitting,
 		isHurting,
-		isImmortaling;	//not a state, a sub-state from hurt
+		isImmortaling,		//not a state, a sub-state from hurt
+		isUpgrading;	
 	Timer* hurtingTimer = new Timer(PLAYER_HURTING_DELAY);
 	Timer* immortalTimer = new Timer(PLAYER_IMMORTAL_TIMECOUNTER);
+	Timer* upgradeTimer = new Timer(PLAYER_UPGRADING_TIMECOUNTER);
 	//Immortal != Invincible !!!!! You may be Immortal, but you are not Invincible! - a Prince of Persia said.
 
 	Weapon* currentWeapon;
@@ -74,7 +81,10 @@ public:
 	bool IsSitting() { return isSitting; }
 	bool IsHurting() { return isHurting; }
 	bool IsImmortaling() { return isImmortaling; }
+	bool IsUpgrading() { return isUpgrading; }
 
 	Weapon* GetPlayerCurrentWeapon() { return currentWeapon; }
+
+	void UpgradingMorningStar();
 };
 
