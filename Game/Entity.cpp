@@ -52,7 +52,7 @@ void Entity::RenderBoundingBox()
 
 
 /*
-	Extension of original SweptAABB to deal with two moving objects
+	Extension of original SweptAABB to deal with two moving listObjects
 */
 LPCOLLISIONEVENT Entity::SweptAABBEx(LPGAMEENTITY coO)
 {
@@ -90,9 +90,9 @@ LPCOLLISIONEVENT Entity::SweptAABBEx(LPGAMEENTITY coO)
 }
 
 /*
-	Calculate potential collisions with the list of colliable objects
+	Calculate potential collisions with the list of colliable listObjects
 
-	coObjects: the list of colliable objects
+	coObjects: the list of colliable listObjects
 	coEvents: list of potential collisions
 */
 void Entity::CalcPotentialCollisions(

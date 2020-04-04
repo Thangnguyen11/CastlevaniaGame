@@ -14,6 +14,7 @@
 #include "MoneyBags.h"
 #include "YummiChickenLeg.h"
 #include "UpgradeMorningStar.h"
+#include "ItemDagger.h"
 #include "Hit.h"
 #include "Fire.h"
 #include "Score.h"
@@ -32,9 +33,9 @@
 
 Game* game;
 Player* player;
-std::vector<LPGAMEENTITY> objects;
-std::vector<LPGAMEEFFECT> effects;
-std::vector<LPGAMEITEM> items;
+std::vector<LPGAMEENTITY> listObjects;
+std::vector<LPGAMEEFFECT> listEffects;
+std::vector<LPGAMEITEM> listItems;
 UI* gameUI;
 GameTime* gameTime;
 int counterZombie;
@@ -116,22 +117,22 @@ void LoadContent()
 	//scanningGameTimer->Start();
 #pragma region Creat Player
 	player = new Player(100, SCREEN_HEIGHT - 150);
-	objects.push_back(player);
+	listObjects.push_back(player);
 #pragma endregion
 #pragma region Creat Ground
 	for (int i = 0; i < 50; i++)
-		objects.push_back(new Brick(i * 32.0f, SCREEN_HEIGHT - 55));
+		listObjects.push_back(new Brick(i * 32.0f, SCREEN_HEIGHT - 55));
 	
 	for (int i = 0; i < 3; i++)
 	{
-		objects.push_back(new Brick(1000 + i * 200, SCREEN_HEIGHT - 110 - i * 50, 2));
-		objects.push_back(new Brick(1032 + i * 200, SCREEN_HEIGHT - 110 - i * 50, 2));
-		objects.push_back(new Brick(1064 + i * 200, SCREEN_HEIGHT - 110 - i * 50, 2));
+		listObjects.push_back(new Brick(1000 + i * 200, SCREEN_HEIGHT - 110 - i * 50, 2));
+		listObjects.push_back(new Brick(1032 + i * 200, SCREEN_HEIGHT - 110 - i * 50, 2));
+		listObjects.push_back(new Brick(1064 + i * 200, SCREEN_HEIGHT - 110 - i * 50, 2));
 	}
 
 	for (int i = 0; i < 5; i++)
 	{
-		objects.push_back(new Torch(200 + i * 250, SCREEN_HEIGHT - 105));
+		listObjects.push_back(new Torch(200 + i * 250, SCREEN_HEIGHT - 105));
 	}
 #pragma endregion
 	gameTime = new GameTime();
@@ -161,7 +162,7 @@ Effect* CreateEffect(EntityType createrType, EntityType effectType, float posX, 
 Item* DropItem(EntityType createrType, float posX, float posY)
 {
 	int bagrandom = rand() % 100;
-	if (createrType == EntityType::ZOMBIE || createrType == EntityType::BAT || createrType == EntityType::TORCH)
+	if (createrType == EntityType::ZOMBIE || createrType == EntityType::TORCH)
 	{
 		int random = rand() % 1000;
 		if (random <= 200)
@@ -182,33 +183,75 @@ Item* DropItem(EntityType createrType, float posX, float posY)
 				return new MoneyBags(posX, posY, EntityType::MONEYBAGBLUE);
 		}
 	}
+	else 
+		if (createrType == EntityType::BAT)
+		{
+			return new ItemDagger(posX, posY);
+		}
 	else
 		return new SmallHeart(posX, posY);
 }
 
+void WeaponInteractObj(UINT i)
+{
+	switch (listObjects[i]->GetType())
+	{
+	case EntityType::BAT:
+		listObjects[i]->AddHealth(-1);
+		player->AddScore(500);
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		break;
+	case EntityType::ZOMBIE:
+		listObjects[i]->AddHealth(-1);
+		player->AddScore(100);
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		counterZombie--;
+		if (counterZombie == 0)
+		{
+			spawningZombieTimer->Start();
+			triggerSpawnZombie = true;
+			isTimeToSpawnZombie = false;
+		}
+		break;
+	case EntityType::TORCH:
+		listObjects[i]->AddHealth(-1);
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+	default:
+		break;
+	}
+}
+
 void WeaponCollision()
 {
-	if (!player->GetPlayerCurrentWeapon()->GetIsDone())
+	if (!player->GetPlayerMainWeapon()->GetIsDone() || player->GetPlayerSupWeapon() != NULL)	//Hoac dang dung vu khi chinh, hoac dang co vu khi phu
 	{
-		for (UINT i = 0; i < objects.size(); i++)
+		for (UINT i = 0; i < listObjects.size(); i++)
 		{
-			if (player->GetPlayerCurrentWeapon()->IsCollidingObject(objects[i]))	//weapon va cham voi obj
+			if (player->GetPlayerMainWeapon()->IsCollidingObject(listObjects[i]))	//Main weapon va cham voi obj
 			{
-				switch (objects[i]->GetType())
+				WeaponInteractObj(i);
+				//old
+				/*switch (listObjects[i]->GetType())
 				{
 				case EntityType::BAT:
-					objects[i]->AddHealth(-1);
+					listObjects[i]->AddHealth(-1);
 					player->AddScore(500);
-					effects.push_back(CreateEffect(objects[i]->GetType(), EntityType::HITEFFECT, objects[i]->GetPosX(), objects[i]->GetPosY()));
-					effects.push_back(CreateEffect(objects[i]->GetType(), EntityType::FIREEFFECT, objects[i]->GetPosX(), objects[i]->GetPosY()));
-					items.push_back(DropItem(objects[i]->GetType(), objects[i]->GetPosX(), objects[i]->GetPosY()));
+					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+					listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 					break;
 				case EntityType::ZOMBIE:
-					objects[i]->AddHealth(-1);
+					listObjects[i]->AddHealth(-1);
 					player->AddScore(100);
-					effects.push_back(CreateEffect(objects[i]->GetType(), EntityType::HITEFFECT, objects[i]->GetPosX(), objects[i]->GetPosY()));
-					effects.push_back(CreateEffect(objects[i]->GetType(), EntityType::FIREEFFECT, objects[i]->GetPosX(), objects[i]->GetPosY()));
-					items.push_back(DropItem(objects[i]->GetType(), objects[i]->GetPosX(), objects[i]->GetPosY()));
+					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+					listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 					counterZombie--;
 					if (counterZombie == 0)
 					{
@@ -218,65 +261,77 @@ void WeaponCollision()
 					}
 					break;
 				case EntityType::TORCH:
-					objects[i]->AddHealth(-1);
-					effects.push_back(CreateEffect(objects[i]->GetType(), EntityType::HITEFFECT, objects[i]->GetPosX(), objects[i]->GetPosY()));
-					effects.push_back(CreateEffect(objects[i]->GetType(), EntityType::FIREEFFECT, objects[i]->GetPosX(), objects[i]->GetPosY()));
-					items.push_back(DropItem(objects[i]->GetType(), objects[i]->GetPosX(), objects[i]->GetPosY()));
+					listObjects[i]->AddHealth(-1);
+					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+					listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+					listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 				default:
 					break;
-				}
+				}*/
 			}
+			else
+				if (player->GetPlayerSupWeapon() != NULL //Dong nay de dam bao dong ben duoi khong bi break
+					&& player->GetPlayerSupWeapon()->IsCollidingObject(listObjects[i]))
+				{
+					WeaponInteractObj(i);
+				}
 		}
 	}
 }
 
 void PlayerCollideItem()
 {
-	for (UINT i = 0; i < items.size(); i++)
+	for (UINT i = 0; i < listItems.size(); i++)
 	{
-		if (!items[i]->GetIsDone())
+		if (!listItems[i]->GetIsDone())
 		{
-			if (player->IsCollidingObject(items[i]))
+			if (player->IsCollidingObject(listItems[i]))
 			{
-				switch (items[i]->GetType())
+				switch (listItems[i]->GetType())
 				{
 				case EntityType::MONEYBAGRED:
 					//Vi cai nay ma phai dem CollideItem tu Player ra ngoai -.-
 					//Ton biet bao nhieu suc
 					player->AddScore(100);
-					items[i]->SetIsDone(true);
-					effects.push_back(CreateEffect(EntityType::MONEYBAGRED, EntityType::ADDSCOREEFFECT, items[i]->GetPosX(), items[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
+					listItems[i]->SetIsDone(true);
+					listEffects.push_back(CreateEffect(EntityType::MONEYBAGRED, EntityType::ADDSCOREEFFECT, listItems[i]->GetPosX(), listItems[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
 					break;
 				case EntityType::MONEYBAGWHITE:
 					player->AddScore(400);
-					items[i]->SetIsDone(true);
-					effects.push_back(CreateEffect(EntityType::MONEYBAGWHITE, EntityType::ADDSCOREEFFECT, items[i]->GetPosX(), items[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
+					listItems[i]->SetIsDone(true);
+					listEffects.push_back(CreateEffect(EntityType::MONEYBAGWHITE, EntityType::ADDSCOREEFFECT, listItems[i]->GetPosX(), listItems[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
 					break;
 				case EntityType::MONEYBAGBLUE:
 					player->AddScore(700);
-					items[i]->SetIsDone(true);
-					effects.push_back(CreateEffect(EntityType::MONEYBAGBLUE, EntityType::ADDSCOREEFFECT, items[i]->GetPosX(), items[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
+					listItems[i]->SetIsDone(true);
+					listEffects.push_back(CreateEffect(EntityType::MONEYBAGBLUE, EntityType::ADDSCOREEFFECT, listItems[i]->GetPosX(), listItems[i]->GetPosY() - PLAYER_BBOX_HEIGHT));
 					break;
 				case EntityType::SMALLHEART:
 					player->AddMana(1);
-					items[i]->SetIsDone(true);
+					listItems[i]->SetIsDone(true);
 					break;
 				case EntityType::BIGHEART:
 					player->AddMana(5);
-					items[i]->SetIsDone(true);
+					listItems[i]->SetIsDone(true);
 					break;
 				case EntityType::YUMMICHICKENLEG:
 					player->AddScore(1000);
-					items[i]->SetIsDone(true);
+					listItems[i]->SetIsDone(true);
 					break;
 				case EntityType::UPGRADEMORNINGSTAR:
 				{
 					//nang cap ms
 					//Dung yen simon 1 ty
-					MorningStar* morningStarWeapon = dynamic_cast<MorningStar*>(player->GetPlayerCurrentWeapon());
+					MorningStar* morningStarWeapon = dynamic_cast<MorningStar*>(player->GetPlayerMainWeapon());
 					player->UpgradingMorningStar();
 					morningStarWeapon->UpLevel();
-					items[i]->SetIsDone(true);
+					listItems[i]->SetIsDone(true);
+					break;
+				}
+				case EntityType::ITEMDAGGER:
+				{
+					player->SetPlayerSupWeaponType(EntityType::DAGGER);
+					listItems[i]->SetIsDone(true);
 					break;
 				}
 				default:
@@ -296,7 +351,7 @@ void Update(DWORD dt)
 		isScanned = true;
 		if (isScanned) 
 		{
-			ScanEntitiesPeriodically(objects);
+			ScanEntitiesPeriodically(listObjects);
 			isScanned = false;
 		}
 		scanningGameTimer->Reset();
@@ -304,9 +359,9 @@ void Update(DWORD dt)
 	}*/
 #pragma endregion
 #pragma region Checking alive object is in screen
-	for (UINT i = 0; i < objects.size(); i++)
+	for (UINT i = 0; i < listObjects.size(); i++)
 	{
-		LPGAMEENTITY coO = objects[i];	
+		LPGAMEENTITY coO = listObjects[i];	
 		if(coO->GetHealth() > 0)	//Xet object con song	//object health < 0 con xu li o trong zombie.cpp update
 			switch (coO->GetType())
 			{
@@ -342,7 +397,7 @@ void Update(DWORD dt)
 	//	{
 	//		if (delaySpawningZombieTimer->IsTimeUp())	//IsTimeUp nay vao duoc do co Start o dieu kien duoi
 	//		{
-	//			objects.push_back(new Zombie(SCREEN_WIDTH / 2 + 400, SCREEN_HEIGHT - 150, -1));
+	//			listObjects.push_back(new Zombie(SCREEN_WIDTH / 2 + 400, SCREEN_HEIGHT - 150, -1));
 	//			counterZombie++;
 
 	//			delaySpawningZombieTimer->Reset();		//Reset va start su dung nhu 1 vong lap (ap dung ham Update)
@@ -364,39 +419,39 @@ void Update(DWORD dt)
 	//	}
 	//}
 #pragma endregion
-	if (isTimeToSpawnZombie)
-	{
-		if (delaySpawningZombieTimer->IsTimeUp()) 
-		{
-			if (counterZombie < 3)
-			{
-				objects.push_back(new Zombie(SCREEN_WIDTH / 2 + 400, SCREEN_HEIGHT - 150, -1));
-				counterZombie++;
-				if (counterZombie >= 3)
-				{
-					isTimeToSpawnZombie = false;	//out ra khoi if nay
-					triggerSpawnZombie = false;		//out ra ca if sau
-				}
-				delaySpawningZombieTimer->Start();
-			}
-		}
-	}
-	else
-	{
-		if (triggerSpawnZombie)
-		{
-			if(spawningZombieTimer->IsTimeUp())
-			{
-				isTimeToSpawnZombie = true;
-			}
-		}
-	}
+	//if (isTimeToSpawnZombie)
+	//{
+	//	if (delaySpawningZombieTimer->IsTimeUp()) 
+	//	{
+	//		if (counterZombie < 3)
+	//		{
+	//			listObjects.push_back(new Zombie(SCREEN_WIDTH / 2 + 400, SCREEN_HEIGHT - 150, -1));
+	//			counterZombie++;
+	//			if (counterZombie >= 3)
+	//			{
+	//				isTimeToSpawnZombie = false;	//out ra khoi if nay
+	//				triggerSpawnZombie = false;		//out ra ca if sau
+	//			}
+	//			delaySpawningZombieTimer->Start();
+	//		}
+	//	}
+	//}
+	//else
+	//{
+	//	if (triggerSpawnZombie)
+	//	{
+	//		if(spawningZombieTimer->IsTimeUp())
+	//		{
+	//			isTimeToSpawnZombie = true;
+	//		}
+	//	}
+	//}
 #pragma endregion
 #pragma region Spawning Bat Logic
 	if (isTimeToSpawnBat) {
 		if (spawningBatTimer->IsTimeUp())
 		{
-			objects.push_back(new Bat(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT - 150, 1));
+			listObjects.push_back(new Bat(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT - 150, 1));
 			spawningBatTimer->Reset(SPAWNING_BAT_DELAY + (rand() % 3000));
 			triggerSpawnBat = true;	//Dung 1 cho thi se spawn bat mai mai, cho den khi di den khu vuc ma trigger o do = false
 		}
@@ -409,21 +464,21 @@ void Update(DWORD dt)
 #pragma endregion
 #pragma region Objects Updates
 	std::vector<LPGAMEENTITY> coObjects;
-	for (int i = 0; i < objects.size(); i++)
+	for (int i = 0; i < listObjects.size(); i++)
 	{
-		coObjects.push_back(objects[i]);
+		coObjects.push_back(listObjects[i]);
 	}
-	for (int i = 0; i < objects.size(); i++)
+	for (int i = 0; i < listObjects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		listObjects[i]->Update(dt, &coObjects);
 	}
-	for (int i = 0; i < effects.size(); i++)
+	for (int i = 0; i < listEffects.size(); i++)
 	{
-		effects[i]->Update(dt);
+		listEffects[i]->Update(dt);
 	}
-	for (int i = 0; i < items.size(); i++)
+	for (int i = 0; i < listItems.size(); i++)
 	{
-		items[i]->Update(dt, &objects);
+		listItems[i]->Update(dt, &listObjects);
 	}
 #pragma endregion
 	WeaponCollision();
@@ -443,7 +498,7 @@ void Update(DWORD dt)
 	gameTime->Update(dt);
 	gameUI->Update(cx + 260, 35, player->GetHealth(), 16);	//move posX follow camera
 	//test
-	if (player->GetPosX() > SCREEN_WIDTH + 200)
+	if (player->GetPosX() > SCREEN_WIDTH + 500)
 		isTimeToSpawnBat = false;
 	else
 		isTimeToSpawnBat = true;
@@ -462,12 +517,12 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-		for (int i = 0; i < objects.size(); i++)
-			objects[i]->Render();
-		for (int i = 0; i < effects.size(); i++)
-			effects[i]->Render();
-		for (int i = 0; i < items.size(); i++)
-			items[i]->Render();
+		for (int i = 0; i < listObjects.size(); i++)
+			listObjects[i]->Render();
+		for (int i = 0; i < listEffects.size(); i++)
+			listEffects[i]->Render();
+		for (int i = 0; i < listItems.size(); i++)
+			listItems[i]->Render();
 		gameUI->Render(1, SCENEGAME_GAMETIMEMAX - gameTime->GetTime(), player);
 
 		//End draw
@@ -520,9 +575,7 @@ int GameLoop()
 	return 1;
 }
 
-
-
-class CSampleKeyHander : public CKeyEventHandler
+class CSampleKeyHander : public KeyboardHandler
 {
 	virtual void KeyState(BYTE *states);
 	virtual void OnKeyDown(int KeyCode);
@@ -539,12 +592,12 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_ESCAPE:
 		DestroyWindow(Game::GetInstance()->GetWindowHandle());
 	case DIK_R:
-		for (int i = 0; i < objects.size(); i++)
+		for (int i = 0; i < listObjects.size(); i++)
 		{
-			if (objects[i]->GetBBARGB() == 0)
-				objects[i]->SetBBARGB(200);
+			if (listObjects[i]->GetBBARGB() == 0)
+				listObjects[i]->SetBBARGB(200);
 			else
-				objects[i]->SetBBARGB(0);
+				listObjects[i]->SetBBARGB(0);
 		}
 		break;
 	case DIK_C:
@@ -553,7 +606,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		player->SetState(PLAYER_STATE_JUMP);
 		break;
 	case DIK_X:
-		if (player->IsDeadYet() || player->IsHurting() || player->IsUpgrading())
+		if (player->IsDeadYet() || player->IsHurting() || player->IsUpgrading() || game->IsKeyDown(DIK_UP))	//Up + X khong Whip duoc nua
 			return;
 		player->SetState(PLAYER_STATE_ATTACK);
 		break;
@@ -569,6 +622,14 @@ void CSampleKeyHander::KeyState(BYTE *states)
 {
 	if (player->IsDeadYet() || player->IsAttacking() || player->IsJumping() || player->IsHurting() || player->IsUpgrading()) {	
 		return;
+	}
+
+	if (game->IsKeyDown(DIK_UP) && game->IsKeyDown(DIK_X) && !player->IsAttacking())
+	{
+		if (player->GetPlayerSupWeaponType() != EntityType::NONE)	//Neu chua nhat duoc vu khi phu thi khong attack
+		{
+			player->SetState(PLAYER_STATE_SUPWEAPON_ATTACK);
+		}
 	}
 
 	if (game->IsKeyDown(DIK_DOWN)) {

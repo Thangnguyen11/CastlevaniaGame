@@ -21,7 +21,6 @@ public:
 
 	void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	void Update(DWORD dt, vector<LPGAMEENTITY> *coObjects = NULL);
-	void Render();
 
 	void Attack(float posX, float posY, int direction);
 	void ArticulatedPlayerPos(bool isSitting = false);

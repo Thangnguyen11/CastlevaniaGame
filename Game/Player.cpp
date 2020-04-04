@@ -26,8 +26,9 @@ Player::Player(float posX, float posY)
 	isHurting = false;
 	isImmortaling = false;
 
-	currentWeapon = new MorningStar();
-
+	mainWeapon = new MorningStar();		//Simon's main/basic weapon is MorningStar
+	supWeapon = NULL;
+	currentSupWeaponType = EntityType::NONE;		//	non ((:
 }
 
 Player::~Player(){}
@@ -279,12 +280,19 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 #pragma endregion
 
-	if (!currentWeapon->GetIsDone())
+	if (!mainWeapon->GetIsDone())
 	{
-		currentWeapon->SetPosition(posX, posY);				//Update pos per player::update
-		currentWeapon->SetSpeed(vX, vY);					//Collision
-		currentWeapon->ArticulatedPlayerPos(isSitting);		//Fixing weapon pos
-		currentWeapon->Update(dt, coObjects);
+		mainWeapon->SetPosition(posX, posY);				//Update pos per player::update
+		//mainWeapon->SetSpeed(vX, vY);					//Collision
+		mainWeapon->ArticulatedPlayerPos(isSitting);		//Fixing weapon pos
+		mainWeapon->Update(dt, coObjects);
+	}
+	if (supWeapon != NULL)
+	{
+		if (!supWeapon->GetIsDone())
+		{
+			supWeapon->Update(dt, coObjects);
+		}
 	}
 }
 
@@ -300,9 +308,16 @@ void Player::Render()
 		sprite->Draw(posX, posY, alpha);
 	}
 
-	if (!currentWeapon->GetIsDone())
+	if (!mainWeapon->GetIsDone())
 	{
-		currentWeapon->Render();
+		mainWeapon->Render();
+	}
+	if (supWeapon != NULL)
+	{
+		if (!supWeapon->GetIsDone())
+		{
+			supWeapon->Render();
+		}
 	}
 
 	RenderBoundingBox();
@@ -342,7 +357,12 @@ void Player::SetState(int state)
 		vX = 0;
 		isWalking = false;
 		isSitting = false;
+		isAttacking = false;
 		isAllowJump = true;
+		break;
+	case PLAYER_STATE_SUPWEAPON_ATTACK:
+		Attack(currentSupWeaponType);
+		isWalking = false;
 		break;
 	case PLAYER_STATE_ATTACK:
 		Attack(EntityType::MORNINGSTAR);
@@ -391,20 +411,51 @@ void Player::Attack(EntityType weaponType)
 	if (isAttacking)
 		return;
 	
-	if (currentWeapon->GetIsDone())
+	switch (weaponType)
 	{
-		isAttacking = true;
-		currentWeapon->Attack(posX, posY, direction);
+	case EntityType::MORNINGSTAR:
+	{
+		if (mainWeapon->GetIsDone())
+		{
+			isAttacking = true;
+			mainWeapon->Attack(posX, posY, direction);
+		}
+		break; 
 	}
+	case EntityType::DAGGER:
+	{
+		if (supWeapon->GetIsDone())
+		{
+			isAttacking = true;
+			supWeapon->Attack(posX, posY, direction);
+		}
+	}
+	default:
+		break;
+	}
+	
 }
 
 void Player::UpgradingMorningStar()
 {
-	MorningStar* morningStar = dynamic_cast<MorningStar*>(currentWeapon);
+	MorningStar* morningStar = dynamic_cast<MorningStar*>(mainWeapon);
 	if (morningStar->GetLevel() >= 3)
 		return;
 
 	upgradeTimer->Start();
 	isUpgrading = true;
 	SetState(PLAYER_STATE_UPGRADING);
+}
+
+void Player::SetPlayerSupWeaponType(EntityType supWeaponType)
+{
+	switch (supWeaponType)
+	{
+	case EntityType::DAGGER:
+		currentSupWeaponType = EntityType::DAGGER;
+		supWeapon = new Dagger();
+		break;
+	default:
+		break;
+	}
 }

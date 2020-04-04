@@ -14,7 +14,7 @@ public:
 	virtual void Render();
 
 	virtual void Attack(float posX, float posY, int direction);
-	virtual void ArticulatedPlayerPos(bool isSitting) = 0;	//Fix pos to fit player base on each weapon
+	virtual void ArticulatedPlayerPos(bool isSitting) {}
 
 	bool GetIsDone() { return isDone; }
 	void SetIsDone(bool isdone) { isDone = isdone; }

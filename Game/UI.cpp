@@ -33,4 +33,9 @@ void UI::Render(int currentStage, int remainingTime, Player* playerInfo)
 	playerHB->Render();
 	bossHB->Render();
 
+	if (playerInfo->GetPlayerSupWeaponType() == EntityType::DAGGER)
+	{
+		playerSubWeaponSprite = new Sprite(Texture2dManager::GetInstance()->GetTexture(EntityType::ITEMDAGGER), MaxFrameRate);
+		playerSubWeaponSprite->Draw(posX + 68, posY + 8);
+	}
 }

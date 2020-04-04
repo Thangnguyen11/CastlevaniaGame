@@ -46,11 +46,6 @@ void MorningStar::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 }
 
-void MorningStar::Render()
-{
-	Weapon::Render();
-}
-
 void MorningStar::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	//Weapon::GetBoundingBox(left, top, right, bottom);

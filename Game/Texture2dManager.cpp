@@ -56,6 +56,7 @@ void Texture2dManager::LoadContent()
 
 	//Weapons
 	AddTexture(EntityType::MORNINGSTAR, new Texture2d("Resources/MorningStar.png", 4, 3, 12, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::DAGGER, new Texture2d("Resources/Dagger.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
 	//Items
 	AddTexture(EntityType::SMALLHEART, new Texture2d("Resources/SmallHeart.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
@@ -71,4 +72,6 @@ void Texture2dManager::LoadContent()
 	AddTexture(EntityType::AXE, new Texture2d("Resources/Axe.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::BOOMERANG, new Texture2d("Resources/Boomerang.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::WATERPOTION, new Texture2d("Resources/WaterPotion.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::ITEMDAGGER, new Texture2d("Resources/Dagger.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+
 }

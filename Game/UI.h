@@ -22,6 +22,7 @@ class UI
 	Text text;
 	HealthBar* playerHB;
 	HealthBar* bossHB;
+	Sprite* playerSubWeaponSprite;
 public:
 	UI(int initPlayerHealth = 16, int initBossHealth = 16);
 	~UI();

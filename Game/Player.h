@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include "MorningStar.h"
+#include "Dagger.h"
 #include "Timer.h"
 #include <map>
 
@@ -24,6 +25,7 @@
 #define PLAYER_STATE_SITTING				500
 #define PLAYER_STATE_HURTING				600
 #define PLAYER_STATE_UPGRADING				700
+#define PLAYER_STATE_SUPWEAPON_ATTACK		800
 
 #define PLAYER_ANI_DIE						28
 #define PLAYER_ANI_IDLE						0
@@ -60,10 +62,10 @@ class Player : public Entity
 	Timer* upgradeTimer = new Timer(PLAYER_UPGRADING_TIMECOUNTER);
 	//Immortal != Invincible !!!!! You may be Immortal, but you are not Invincible! - a Prince of Persia said.
 
-	Weapon* currentWeapon;
+	Weapon* mainWeapon;
+	Weapon* supWeapon;
+	EntityType currentSupWeaponType;
 public:
-	//testing
-	//std::unordered_map<EntityType, Weapon*> weapons;
 
 	Player(float posX, float posY);
 	~Player();
@@ -73,7 +75,7 @@ public:
 	void Render();
 	void SetState(int state);
 
-	void Attack(EntityType weaponType);	//Ve sau xet weapon type
+	void Attack(EntityType weaponType);	
 	bool IsWalking() { return isWalking; }
 	bool IsJumping() { return isJumping; }
 	bool IsAllowJump() { return isAllowJump; }
@@ -83,8 +85,12 @@ public:
 	bool IsImmortaling() { return isImmortaling; }
 	bool IsUpgrading() { return isUpgrading; }
 
-	Weapon* GetPlayerCurrentWeapon() { return currentWeapon; }
+	Weapon* GetPlayerMainWeapon() { return mainWeapon; }
+	Weapon* GetPlayerSupWeapon() { return supWeapon; }
 
 	void UpgradingMorningStar();
+
+	EntityType GetPlayerSupWeaponType() { return currentSupWeaponType; }
+	void SetPlayerSupWeaponType(EntityType supWeaponType);
 };
 

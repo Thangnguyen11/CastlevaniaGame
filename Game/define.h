@@ -29,6 +29,8 @@
 
 enum EntityType
 {
+	NONE = -1,
+
 	BBOX = 0,
 
 	PLAYER = 1,
@@ -63,7 +65,7 @@ enum EntityType
 
 	INVIPOTION = 16,
 
-	DAGGER = 17,
+	ITEMDAGGER = 17,
 
 	STOPWATCH = 18,
 
@@ -91,7 +93,9 @@ enum EntityType
 
 	BRICKEXPLODEEFFECT = 30,
 
-	ADDSCOREEFFECT = 31
+	ADDSCOREEFFECT = 31,
+
+	DAGGER = 32
 };
 
 class define
