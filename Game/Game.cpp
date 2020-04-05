@@ -1,4 +1,5 @@
 ﻿#include "Game.h"
+#include "PlayScene.h"
 
 Game * Game::__instance = NULL;
 
@@ -68,7 +69,7 @@ int Game::IsKeyDown(int KeyCode)
 	return (keyStates[KeyCode] & 0x80) > 0;
 }
 
-void Game::InitKeyboard(LPKEYEVENTHANDLER handler)
+void Game::InitKeyboard()
 {
 	HRESULT
 		hr = DirectInput8Create
@@ -132,7 +133,7 @@ void Game::InitKeyboard(LPKEYEVENTHANDLER handler)
 		return;
 	}
 
-	this->keyHandler = handler;
+	//this->keyHandler = handler;
 
 	DebugOut(L"[INFO] Keyboard has been initialized successfully\n");
 }
@@ -301,4 +302,84 @@ void Game::SweptAABB(
 		dy > 0 ? ny = -1.0f : ny = 1.0f;
 	}
 
+}
+
+
+void Game::_ParseSection_SETTINGS(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 2) return;
+	if (tokens[0] == "start")
+		idCurrentScene = atoi(tokens[1].c_str());
+	else
+		DebugOut(L"[ERROR] Unknown game setting %s\n", ToWSTR(tokens[0]).c_str());
+}
+
+void Game::_ParseSection_SCENES(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 2) return;
+	int id = atoi(tokens[0].c_str());
+	LPCWSTR path = ToLPCWSTR("Resources/Scene/" + tokens[1]);
+	LPSCENE scene = new PlayScene(id, path);
+	scenes[id] = scene;
+}
+
+/*
+	Load game campaign file and load/initiate first scene
+*/
+void Game::Load(LPCWSTR gameFile)
+{
+	DebugOut(L"[INFO] Start loading game file : %s\n", gameFile);
+
+	ifstream f;
+	f.open(gameFile);
+	char str[MAX_GAME_LINE];
+
+	// current resource section flag
+	int section = GAME_FILE_SECTION_UNKNOWN;
+
+	while (f.getline(str, MAX_GAME_LINE))
+	{
+		string line(str);
+
+		if (line[0] == '#') continue;	// skip comment lines	
+
+		if (line == "[SETTINGS]") { section = GAME_FILE_SECTION_SETTINGS; continue; }
+		if (line == "[SCENES]") { section = GAME_FILE_SECTION_SCENES; continue; }
+
+		//
+		// data section
+		//
+		switch (section)
+		{
+		case GAME_FILE_SECTION_SETTINGS: _ParseSection_SETTINGS(line); break;
+		case GAME_FILE_SECTION_SCENES: _ParseSection_SCENES(line); break;
+		}
+	}
+	f.close();
+
+
+	//LPSCENE scene = new CPlayScene(1, L"scene1.txt");
+	//scenes[1] = scene;
+	//scene = new CPlayScene(2, L"scene2.txt");
+	//scenes[2] = scene;
+
+	DebugOut(L"[INFO] Loading game file : %s has been loaded successfully\n", gameFile);
+
+	SwitchScene(idCurrentScene);
+}
+
+void Game::SwitchScene(int scene_id)
+{
+	// IMPORTANT: has to implement "unload" previous scene assets to avoid duplicate resources
+	LPSCENE s = scenes[idCurrentScene];
+	s->Unload();
+
+	idCurrentScene = scene_id;
+
+	Game::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
+	s->Load();
 }

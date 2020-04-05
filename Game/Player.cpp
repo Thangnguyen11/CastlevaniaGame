@@ -14,9 +14,9 @@ Player::Player(float posX, float posY)
 	this->SetState(PLAYER_STATE_IDLE);
 
 	health = PLAYER_MAXHEALTH;
-	mana = 0;
+	mana = 5;
 	score = 0;
-	live = 1;
+	live = 3;
 	isDead = false;
 	isWalking = false;
 	isJumping = false;
@@ -424,10 +424,14 @@ void Player::Attack(EntityType weaponType)
 	}
 	case EntityType::DAGGER:
 	{
-		if (supWeapon->GetIsDone())
+		if (mana > 0)
 		{
-			isAttacking = true;
-			supWeapon->Attack(posX, posY, direction);
+			if (supWeapon->GetIsDone())
+			{
+				AddMana(-1);
+				isAttacking = true;
+				supWeapon->Attack(posX, posY, direction);
+			}
 		}
 	}
 	default:

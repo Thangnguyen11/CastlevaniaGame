@@ -1,6 +1,29 @@
-﻿  Bat.cpp
-c:\users\pc\documents\github\castlevaniagame\game\bat.cpp(37): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\bat.cpp(63): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  BigHeart.cpp
+﻿  Game.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\pc\documents\github\castlevaniagame\game\define.h(30): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+c:\users\pc\documents\github\castlevaniagame\game\timer.h(20): warning C4018: '>=': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\game.cpp(264): warning C4305: '=': truncation from '__int64' to 'float'
+c:\users\pc\documents\github\castlevaniagame\game\game.cpp(265): warning C4305: '=': truncation from '__int64' to 'float'
+c:\users\pc\documents\github\castlevaniagame\game\game.cpp(275): warning C4305: '=': truncation from '__int64' to 'float'
+c:\users\pc\documents\github\castlevaniagame\game\game.cpp(276): warning C4305: '=': truncation from '__int64' to 'float'
+  PlayScene.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\pc\documents\github\castlevaniagame\game\define.h(30): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+c:\users\pc\documents\github\castlevaniagame\game\timer.h(20): warning C4018: '>=': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(33): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(34): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(453): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(457): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(461): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(465): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(499): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(501): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(503): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(510): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(512): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(514): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(537): warning C4018: '<': signed/unsigned mismatch
   Generating Code...
   Game.vcxproj -> C:\Users\PC\Documents\GitHub\CastlevaniaGame\Debug\Game.exe

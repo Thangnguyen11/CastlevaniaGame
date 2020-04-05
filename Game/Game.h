@@ -1,17 +1,18 @@
 #pragma once
+#include <unordered_map>
 #include <Windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
 
-#define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
-
-#define KEYBOARD_BUFFER_SIZE 1024
 
 #include "debug.h"
 #include "define.h"
 #include "KeyboardHandler.h"
 #include "Camera.h"
+#include "Scene.h"
+
+using namespace std;
 
 class Game
 {
@@ -32,16 +33,29 @@ class Game
 
 	LPKEYEVENTHANDLER keyHandler;
 
+	unordered_map<int, LPSCENE> scenes;
+	int idCurrentScene;
+
+	void _ParseSection_SETTINGS(string line);
+	void _ParseSection_SCENES(string line);
+
 public:
 
 	Game();
 	~Game();
 
-	void InitKeyboard(LPKEYEVENTHANDLER handler);
+	void InitKeyboard();
+	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }
 	void Init(HWND hWnd);
 
 	int IsKeyDown(int KeyCode);
 	void ProcessKeyboard();
+
+
+	void Load(LPCWSTR gameFile);
+	LPSCENE GetCurrentScene() { return scenes[idCurrentScene]; }
+	void SwitchScene(int scene_id);
+
 
 	LPDIRECT3DDEVICE9 GetDirect3DDevice() { return this->d3ddv; }
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }

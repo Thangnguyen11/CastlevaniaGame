@@ -38,4 +38,5 @@ void UI::Render(int currentStage, int remainingTime, Player* playerInfo)
 		playerSubWeaponSprite = new Sprite(Texture2dManager::GetInstance()->GetTexture(EntityType::ITEMDAGGER), MaxFrameRate);
 		playerSubWeaponSprite->Draw(posX + 68, posY + 8);
 	}
+
 }
