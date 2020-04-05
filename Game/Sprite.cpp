@@ -43,7 +43,7 @@ RECT Sprite::GetRectFrame(int CURRENTFRAME)
 void Sprite::Draw(float posX, float posY, int alpha, int R, int G, int B)
 {
 	RECT rec = GetRectFrame(currentFrame);
-	D3DXVECTOR3 pos(floor(posX - Game::GetInstance()->GetCamX()), floor(posY - Game::GetInstance()->GetCamY()), 0);
+	D3DXVECTOR3 pos(floor(posX - Camera::GetInstance()->GetCamPosX()), floor(posY - Camera::GetInstance()->GetCamPosY()), 0);
 	//Origin set center (position) is the center of frame, instead of left-top
 	D3DXVECTOR3 origin((float)texture->getFrameWidth() / 2, (float)texture->getFrameHeight() / 2, 0);
 	spriteHandler->Draw(texture->Texture, &rec, &origin, &pos, D3DCOLOR_ARGB(alpha, R, G, B));
@@ -52,7 +52,7 @@ void Sprite::Draw(float posX, float posY, int alpha, int R, int G, int B)
 void Sprite::DrawFlipVertical(float posX, float posY, int alpha, int R, int G, int B)
 {
 	RECT rec = GetRectFrame(currentFrame);
-	D3DXVECTOR3 pos(floor(posX - Game::GetInstance()->GetCamX()), floor(posY - Game::GetInstance()->GetCamY()), 0);
+	D3DXVECTOR3 pos(floor(posX - Camera::GetInstance()->GetCamPosX()), floor(posY - Camera::GetInstance()->GetCamPosY()), 0);
 	D3DXVECTOR3 origin((float)texture->getFrameWidth() / 2, (float)texture->getFrameHeight() / 2, 0);
 
 	D3DXMATRIX oldMatrix, newMatrix;

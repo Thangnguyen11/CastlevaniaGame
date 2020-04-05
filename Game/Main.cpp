@@ -7,6 +7,7 @@
 #include "define.h"
 #include "Game.h"
 #include "GameTime.h"
+#include "Camera.h"
 #include "Timer.h"
 #include "UI.h"
 #include "SmallHeart.h"
@@ -38,6 +39,7 @@ std::vector<LPGAMEEFFECT> listEffects;
 std::vector<LPGAMEITEM> listItems;
 UI* gameUI;
 GameTime* gameTime;
+Camera* camera;
 int counterZombie;
 bool isTimeToSpawnZombie;
 bool triggerSpawnZombie;
@@ -493,7 +495,7 @@ void Update(DWORD dt)
 		cx -= SCREEN_WIDTH / 2;
 	cy -= SCREEN_HEIGHT / 2;
 
-	Game::GetInstance()->SetCamPos(cx, 0.0f);//cy khi muon camera move theo y player //castlevania chua can
+	camera->GetInstance()->SetCamPos(cx, 0.0f);//cy khi muon camera move theo y player //castlevania chua can
 #pragma endregion
 	gameTime->Update(dt);
 	gameUI->Update(cx + 260, 35, player->GetHealth(), 16);	//move posX follow camera
@@ -654,6 +656,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	HWND hWnd = InitWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	game = Game::GetInstance();
+	camera = Camera::GetInstance();
 	game->Init(hWnd);
 
 	keyHandler = new CSampleKeyHander();

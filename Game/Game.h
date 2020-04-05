@@ -11,6 +11,7 @@
 #include "debug.h"
 #include "define.h"
 #include "KeyboardHandler.h"
+#include "Camera.h"
 
 class Game
 {
@@ -32,8 +33,6 @@ class Game
 	LPKEYEVENTHANDLER keyHandler;
 
 public:
-	float cam_x = 0.0f;
-	float cam_y = 0.0f;
 
 	Game();
 	~Game();
@@ -51,9 +50,6 @@ public:
 
 	static Game * GetInstance();
 
-	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
-	float GetCamX() { return this->cam_x; }	//Not neccesary but fetish
-	float GetCamY() { return this->cam_y; }
 	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, D3DXVECTOR3 origin = D3DXVECTOR3(0,0,0), int alpha = 255);
 
 	static bool IsCollidingAABB(

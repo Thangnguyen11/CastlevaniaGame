@@ -45,7 +45,7 @@ void Dagger::Render()
 	RenderBoundingBox();
 	
 }
-	
+
 bool Dagger::CheckIsOutCamera(float posX)
 {
 	if (vX > 0)	//Walking Right
