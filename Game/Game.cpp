@@ -361,12 +361,6 @@ void Game::Load(LPCWSTR gameFile)
 	}
 	f.close();
 
-
-	//LPSCENE scene = new CPlayScene(1, L"scene1.txt");
-	//scenes[1] = scene;
-	//scene = new CPlayScene(2, L"scene2.txt");
-	//scenes[2] = scene;
-
 	DebugOut(L"[INFO] Loading game file : %s has been loaded successfully\n", gameFile);
 
 	SwitchScene(idCurrentScene);
@@ -375,10 +369,12 @@ void Game::Load(LPCWSTR gameFile)
 void Game::SwitchScene(int scene_id)
 {
 	// IMPORTANT: has to implement "unload" previous scene assets to avoid duplicate resources
+	DebugOut(L"[INFO] idCurrentScene: %d\n", idCurrentScene);
 	LPSCENE s = scenes[idCurrentScene];
 	s->Unload();
 
 	idCurrentScene = scene_id;
+	s = scenes[idCurrentScene];
 
 	Game::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
 	s->Load();

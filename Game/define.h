@@ -36,6 +36,8 @@
 #define GAME_FILE_SECTION_SETTINGS 1
 #define GAME_FILE_SECTION_SCENES 2
 
+//Nen define thanh nhieu lop type
+//Vd Zombie thuoc EntityType, EnemyType
 enum EntityType
 {
 	NONE = -1,
@@ -104,7 +106,9 @@ enum EntityType
 
 	ADDSCOREEFFECT = 31,
 
-	DAGGER = 32
+	DAGGER = 32,
+
+	GATE = 33
 };
 
 class define

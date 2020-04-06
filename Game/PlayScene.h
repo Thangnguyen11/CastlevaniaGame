@@ -25,6 +25,7 @@
 #include "Bat.h"
 #include "Zombie.h"
 #include "Torch.h"
+#include "Gate.h"
 
 #define SPAWNING_ZOMBIE_DELAY				3000
 #define SPAWNING_DELAY_BETWEEN_2_ZOMBIE		360	
@@ -59,6 +60,7 @@ protected:
 public:
 	PlayScene(int id, LPCWSTR filePath);
 
+	void Init();
 	virtual void Load();
 	virtual void Update(DWORD dt);
 	virtual void Render();

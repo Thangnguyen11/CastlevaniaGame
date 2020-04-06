@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Bat.h"
 #include "Zombie.h"
+#include "Gate.h"
 
 Player::Player(float posX, float posY) 
 {
@@ -273,6 +274,15 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 						}
 					}
 				}
+			}
+			if (e->obj->GetType() == EntityType::GATE)
+			{
+				Gate* gate = dynamic_cast<Gate*>(e->obj);
+				DebugOut(L"[INFO] Switching to scene %d\n", gate->GetIdScene());
+				Game::GetInstance()->SwitchScene(gate->GetIdScene());
+
+				if (gate->GetIdScene() == 2)
+					SetPosition(100, 100);
 			}
 		}
 	}

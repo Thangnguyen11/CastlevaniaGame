@@ -37,6 +37,7 @@ void Texture2dManager::LoadContent()
 	AddTexture(EntityType::BRICK, new Texture2d("Resources/Ground.png", 2, 1, 2));
 	AddTexture(EntityType::TORCH, new Texture2d("Resources/Torch.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::CANDLE, new Texture2d("Resources/Candle.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::GATE, new Texture2d("Resources/Gate.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
 	//UI
 	AddTexture(EntityType::BLACKBOARD, new Texture2d("Resources/BlackBoard.png", 1, 1, 1));

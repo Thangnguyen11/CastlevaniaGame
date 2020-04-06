@@ -5,9 +5,9 @@
 #define SCENE_SECTION_UNKNOWN		-1
 #define SCENE_SECTION_OBJECTS		1
 
-#define OBJECT_TYPE_PLAYER			0
 #define OBJECT_TYPE_BRICK			1
 #define OBJECT_TYPE_TORCH			2
+#define OBJECT_TYPE_GATE			3
 
 #define MAX_SCENE_LINE 1024
 
@@ -16,6 +16,28 @@ using namespace std;
 PlayScene::PlayScene(int id, LPCWSTR filePath) : Scene(id, filePath)
 {
 	keyHandler = new PlayScenceKeyHandler(this);
+	Init();
+}
+
+void PlayScene::Init()
+{
+	player = new Player(100, 330);
+	//listObjects.push_back(player);
+	DebugOut(L"[INFO] Simon object created! \n");
+	gameTime = new GameTime();
+	gameUI = new UI(player->GetHealth(), 16);
+	camera = Camera::GetInstance();
+
+	//Stage 2	//Thiet ke lai cho tung stage
+	if (idScene == 1) {
+		//Zombie Logic
+		counterZombie = 0;
+		isTimeToSpawnZombie = true;		//vua vao spawn luon
+		triggerSpawnZombie = false;
+		//Bat Logic
+		isTimeToSpawnBat = true;
+		triggerSpawnBat = true;
+	}
 }
 
 /*
@@ -35,16 +57,6 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_PLAYER:
-		if (player != NULL)
-		{
-			DebugOut(L"[ERROR] Simon object was created before! \n");
-			return;
-		}
-		player = new Player(x, y);
-		listObjects.push_back(player);
-		DebugOut(L"[INFO] Simon object created! \n");
-		break;
 	case OBJECT_TYPE_BRICK:
 	{
 		int extras = atoi(tokens[3].c_str());
@@ -54,6 +66,12 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_TORCH:
 		listObjects.push_back(new Torch(x, y));
 		break;
+	case OBJECT_TYPE_GATE:
+	{
+		int extras = atoi(tokens[3].c_str());
+		listObjects.push_back(new Gate(x, y, extras));
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -95,19 +113,7 @@ void PlayScene::Load()
 
 	f.close();
 
-	gameTime = new GameTime();
-	gameUI = new UI(player->GetHealth(), 16);
-	camera = Camera::GetInstance();
-
-	//Stage 2
-	//Zombie Logic
-	counterZombie = 0;
-	isTimeToSpawnZombie = true;		//vua vao spawn luon
-	triggerSpawnZombie = false;
-	//Bat Logic
-	isTimeToSpawnBat = true;
-	triggerSpawnBat = true;
-
+	
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
@@ -454,6 +460,7 @@ void PlayScene::Update(DWORD dt)
 	{
 		coObjects.push_back(listObjects[i]);
 	}
+	player->Update(dt, &coObjects);
 	for (int i = 0; i < listObjects.size(); i++)
 	{
 		listObjects[i]->Update(dt, &coObjects);
@@ -496,6 +503,7 @@ void PlayScene::Update(DWORD dt)
 
 void PlayScene::Render()
 {
+	player->Render();
 	for (int i = 0; i < listObjects.size(); i++)
 		listObjects[i]->Render();
 	for (int i = 0; i < listEffects.size(); i++)
@@ -516,15 +524,14 @@ void PlayScene::Unload()
 	listObjects.clear();
 	listEffects.clear();
 	listItems.clear();
-	player = NULL;
-	gameUI = NULL;
+	/*gameUI = NULL;
 	gameTime = NULL;
-	camera = NULL;
+	camera = NULL;*/
 }
 
 void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
-	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Player* simon = ((PlayScene*)scence)->player;
 	vector<LPGAMEENTITY> listObj = ((PlayScene*)scence)->listObjects;
@@ -557,7 +564,7 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 
 void PlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
-	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+	//DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
 }
 
 void PlayScenceKeyHandler::KeyState(BYTE *states)

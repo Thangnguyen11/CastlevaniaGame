@@ -144,6 +144,7 @@
     <ClCompile Include="Fire.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameTime.cpp" />
+    <ClCompile Include="Gate.cpp" />
     <ClCompile Include="Hit.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemDagger.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Fire.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameTime.h" />
+    <ClInclude Include="Gate.h" />
     <ClInclude Include="Hit.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemDagger.h" />
