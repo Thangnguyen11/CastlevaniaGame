@@ -5,6 +5,7 @@ class Camera
 {
 	static Camera * __instance;
 	float camPosX, camPosY;
+
 	Camera();
 	~Camera();
 public:

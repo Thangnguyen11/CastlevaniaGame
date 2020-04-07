@@ -2,6 +2,9 @@
 #include <iostream>
 #include <fstream>
 
+#define STAGE_1						1
+#define STAGE_2						2
+
 #define SCENE_SECTION_UNKNOWN		-1
 #define SCENE_SECTION_OBJECTS		1
 
@@ -9,27 +12,48 @@
 #define OBJECT_TYPE_TORCH			2
 #define OBJECT_TYPE_GATE			3
 
-#define MAX_SCENE_LINE 1024
-
 using namespace std;
 
-PlayScene::PlayScene(int id, LPCWSTR filePath) : Scene(id, filePath)
+PlayScene::PlayScene() : Scene()
 {
 	keyHandler = new PlayScenceKeyHandler(this);
-	Init();
+	LoadBaseObjects();
+	ChooseMap(STAGE_1);
 }
 
-void PlayScene::Init()
+void PlayScene::LoadBaseObjects()
 {
-	player = new Player(100, 330);
-	//listObjects.push_back(player);
-	DebugOut(L"[INFO] Simon object created! \n");
-	gameTime = new GameTime();
+	if (player == NULL)
+	{
+		player = new Player(100, 330);
+		//listObjects.push_back(player);
+		DebugOut(L"[INFO] Simon object created! \n");
+	}
 	gameUI = new UI(player->GetHealth(), 16);
+	gameTime = GameTime::GetInstance();		//That ra khong can 2 buoc nay vi ca 2 deu thiet ke Singleton
 	camera = Camera::GetInstance();
+}
 
-	//Stage 2	//Thiet ke lai cho tung stage
-	if (idScene == 1) {
+void PlayScene::ChooseMap(int whatMap)	
+//Muc dich chinh ham nay la chon ra sceneFilePath can thiet, co the kh dung ham nay ma tao if else o ham Load cung duoc
+{
+	switch (whatMap)
+	{
+	case STAGE_1:
+	{
+		idStage = STAGE_1;
+		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
+
+		sceneFilePath = ToLPCWSTR("Resources/Scene/scene1.txt");
+		Load();
+		break;
+	}
+	case STAGE_2:
+	{
+		idStage = STAGE_2;
+
+		gameTime->ResetGameTime();	//Reset lai gameTime
+
 		//Zombie Logic
 		counterZombie = 0;
 		isTimeToSpawnZombie = true;		//vua vao spawn luon
@@ -37,84 +61,16 @@ void PlayScene::Init()
 		//Bat Logic
 		isTimeToSpawnBat = true;
 		triggerSpawnBat = true;
-	}
-}
 
-/*
-	Parse a line in section [OBJECTS]
-*/
-void PlayScene::_ParseSection_OBJECTS(string line)
-{
-	vector<string> tokens = split(line);
+		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
 
-	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
-
-	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
-
-	int object_type = atoi(tokens[0].c_str());
-	float x = atof(tokens[1].c_str());
-	float y = atof(tokens[2].c_str());
-
-	switch (object_type)
-	{
-	case OBJECT_TYPE_BRICK:
-	{
-		int extras = atoi(tokens[3].c_str());
-		listObjects.push_back(new Brick(x, y, extras));
-		break; 
-	}
-	case OBJECT_TYPE_TORCH:
-		listObjects.push_back(new Torch(x, y));
-		break;
-	case OBJECT_TYPE_GATE:
-	{
-		int extras = atoi(tokens[3].c_str());
-		listObjects.push_back(new Gate(x, y, extras));
+		sceneFilePath = ToLPCWSTR("Resources/Scene/scene2.txt");
+		Load();
 		break;
 	}
 	default:
-		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
-		return;
+		break;
 	}
-}
-
-void PlayScene::Load()
-{
-	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
-
-	ifstream f;
-	f.open(sceneFilePath);
-
-	// current resource section flag
-	int section = SCENE_SECTION_UNKNOWN;
-
-	char str[MAX_SCENE_LINE];
-	while (f.getline(str, MAX_SCENE_LINE))
-	{
-		string line(str);
-
-		if (line[0] == '#') continue;	// skip comment lines	
-
-		if (line == "[OBJECTS]") {
-			section = SCENE_SECTION_OBJECTS; continue;
-		}
-		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
-
-		//
-		// data section
-		//
-		switch (section)
-		{
-		case SCENE_SECTION_OBJECTS: 
-			_ParseSection_OBJECTS(line); 
-			break;
-		}
-	}
-
-	f.close();
-
-	
-	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
 Effect* PlayScene::CreateEffect(EntityType createrType, EntityType effectType, float posX, float posY)
@@ -329,6 +285,27 @@ void PlayScene::PlayerCollideItem()
 	}
 }
 
+void PlayScene::PlayerGotGate()
+{
+	for (UINT i = 0; i < listObjects.size(); i++)
+	{
+		if (listObjects[i]->GetType() == EntityType::GATE)
+		{
+			if (player->IsCollidingObject(listObjects[i]))
+			{
+				Unload();
+				if (idStage == STAGE_1)
+				{
+					ChooseMap(STAGE_2);
+					player->SetPosition(100, 130);
+					player->SetVx(0);
+					player->SetVy(0);
+				}
+			}
+		}
+	}
+}
+
 void PlayScene::CheckObjAlive()
 {
 	for (UINT i = 0; i < listObjects.size(); i++)
@@ -484,21 +461,16 @@ void PlayScene::Update(DWORD dt)
 		cx -= SCREEN_WIDTH / 2;
 	cy -= SCREEN_HEIGHT / 2;
 
-	camera->GetInstance()->SetCamPos(cx, 0.0f);//cy khi muon camera move theo y player //castlevania chua can
+	camera->SetCamPos(cx, 0.0f);//cy khi muon camera move theo y player //castlevania chua can
 #pragma endregion
 
 	WeaponCollision();
 	PlayerCollideItem();
+	PlayerGotGate();
+
 	gameTime->Update(dt);
 	gameUI->Update(cx + 260, 35, player->GetHealth(), 16);	//move posX follow camera
 
-	//test
-	if (player->GetPosX() > SCREEN_WIDTH + 500)
-		isTimeToSpawnBat = false;
-	else
-		isTimeToSpawnBat = true;
-
-	
 }
 
 void PlayScene::Render()
@@ -510,23 +482,7 @@ void PlayScene::Render()
 		listEffects[i]->Render();
 	for (int i = 0; i < listItems.size(); i++)
 		listItems[i]->Render();
-	gameUI->Render(1, SCENEGAME_GAMETIMEMAX - gameTime->GetTime(), player);
-}
-
-void PlayScene::Unload()
-{
-	for (int i = 0; i < listObjects.size(); i++)
-		delete listObjects[i];
-	for (int i = 0; i < listEffects.size(); i++)
-		delete listEffects[i];
-	for (int i = 0; i < listItems.size(); i++)
-		delete listItems[i];
-	listObjects.clear();
-	listEffects.clear();
-	listItems.clear();
-	/*gameUI = NULL;
-	gameTime = NULL;
-	camera = NULL;*/
+	gameUI->Render(idStage, SCENEGAME_GAMETIMEMAX - gameTime->GetTime(), player);
 }
 
 void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
@@ -601,3 +557,91 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 	else simon->SetState(PLAYER_STATE_IDLE);
 }
 
+/*
+	Parse a line in section [OBJECTS]
+*/
+void PlayScene::_ParseSection_OBJECTS(string line)
+{
+	vector<string> tokens = split(line);
+
+	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
+
+	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
+
+	int object_type = atoi(tokens[0].c_str());
+	float x = atof(tokens[1].c_str());
+	float y = atof(tokens[2].c_str());
+
+	switch (object_type)
+	{
+	case OBJECT_TYPE_BRICK:
+	{
+		int extras = atoi(tokens[3].c_str());
+		listObjects.push_back(new Brick(x, y, extras));
+		break;
+	}
+	case OBJECT_TYPE_TORCH:
+		listObjects.push_back(new Torch(x, y));
+		break;
+	case OBJECT_TYPE_GATE:
+	{
+		int extras = atoi(tokens[3].c_str());
+		listObjects.push_back(new Gate(x, y, extras));
+		break;
+	}
+	default:
+		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
+		return;
+	}
+}
+
+void PlayScene::Load()
+{
+	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
+
+	ifstream f;
+	f.open(sceneFilePath);
+
+	// current resource section flag
+	int section = SCENE_SECTION_UNKNOWN;
+
+	char str[MAX_SCENE_LINE];
+	while (f.getline(str, MAX_SCENE_LINE))
+	{
+		string line(str);
+
+		if (line[0] == '#') continue;	// skip comment lines	
+
+		if (line == "[OBJECTS]") {
+			section = SCENE_SECTION_OBJECTS; continue;
+		}
+		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
+
+		//
+		// data section
+		//
+		switch (section)
+		{
+		case SCENE_SECTION_OBJECTS:
+			_ParseSection_OBJECTS(line);
+			break;
+		}
+	}
+
+	f.close();
+
+	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
+}
+
+void PlayScene::Unload()
+{
+	for (int i = 0; i < listObjects.size(); i++)
+		delete listObjects[i];
+	for (int i = 0; i < listEffects.size(); i++)
+		delete listEffects[i];
+	for (int i = 0; i < listItems.size(); i++)
+		delete listItems[i];
+	listObjects.clear();
+	listEffects.clear();
+	listItems.clear();
+}

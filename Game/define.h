@@ -30,11 +30,8 @@
 #define DIRECTINPUT_VERSION 0x0800
 #define KEYBOARD_BUFFER_SIZE 1024
 
-#define MAX_GAME_LINE 1024
 
-#define GAME_FILE_SECTION_UNKNOWN -1
-#define GAME_FILE_SECTION_SETTINGS 1
-#define GAME_FILE_SECTION_SCENES 2
+#define MAX_SCENE_LINE 1024
 
 //Nen define thanh nhieu lop type
 //Vd Zombie thuoc EntityType, EnemyType
@@ -108,7 +105,17 @@ enum EntityType
 
 	DAGGER = 32,
 
-	GATE = 33
+	GATE = 33,
+
+	TITLESCENE = 34,
+
+	TITLEBAT = 35,
+	
+	INTROSCENE = 36,
+
+	INTROSIMON = 37,
+
+	PLAYSCENE = 38
 };
 
 class define

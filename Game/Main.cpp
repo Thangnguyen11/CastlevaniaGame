@@ -4,8 +4,10 @@
 #include <stdio.h>
 
 #include "Game.h"
+#include "SceneManager.h"
 
 Game* game;
+SceneManager* sceneManager;
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -69,7 +71,7 @@ HWND InitWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreenHe
 
 void Update(DWORD dt)
 {
-	Game::GetInstance()->GetCurrentScene()->Update(dt);
+	sceneManager->Update(dt);
 }
 
 void Render()
@@ -85,7 +87,7 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-		Game::GetInstance()->GetCurrentScene()->Render();
+		sceneManager->Render();
 
 		//End draw
 		spriteHandler->End();
@@ -137,89 +139,16 @@ int GameLoop()
 	return 1;
 }
 
-//class CSampleKeyHander : public KeyboardHandler
-//{
-//	virtual void KeyState(BYTE *states);
-//	virtual void OnKeyDown(int KeyCode);
-//	virtual void OnKeyUp(int KeyCode);
-//};
-//
-//CSampleKeyHander * keyHandler;
-//
-//void CSampleKeyHander::OnKeyDown(int KeyCode)
-//{
-//	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-//	switch (KeyCode)
-//	{
-//	case DIK_ESCAPE:
-//		DestroyWindow(Game::GetInstance()->GetWindowHandle());
-//	case DIK_R:
-//		for (int i = 0; i < listObjects.size(); i++)
-//		{
-//			if (listObjects[i]->GetBBARGB() == 0)
-//				listObjects[i]->SetBBARGB(200);
-//			else
-//				listObjects[i]->SetBBARGB(0);
-//		}
-//		break;
-//	case DIK_C:
-//		if (player->IsDeadYet() || player->IsAttacking() || player->IsSitting() || player->IsHurting() || player->IsUpgrading())
-//			return;
-//		player->SetState(PLAYER_STATE_JUMP);
-//		break;
-//	case DIK_X:
-//		if (player->IsDeadYet() || player->IsHurting() || player->IsUpgrading() || game->IsKeyDown(DIK_UP))	//Up + X khong Whip duoc nua
-//			return;
-//		player->SetState(PLAYER_STATE_ATTACK);
-//		break;
-//	}
-//}
-//
-//void CSampleKeyHander::OnKeyUp(int KeyCode)
-//{
-//	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
-//}
-//
-//void CSampleKeyHander::KeyState(BYTE *states)
-//{
-//	if (player->IsDeadYet() || player->IsAttacking() || player->IsJumping() || player->IsHurting() || player->IsUpgrading()) {	
-//		return;
-//	}
-//
-//	if (game->IsKeyDown(DIK_UP) && game->IsKeyDown(DIK_X) && !player->IsAttacking())
-//	{
-//		if (player->GetPlayerSupWeaponType() != EntityType::NONE)	//Neu chua nhat duoc vu khi phu thi khong attack
-//		{
-//			player->SetState(PLAYER_STATE_SUPWEAPON_ATTACK);
-//		}
-//	}
-//
-//	if (game->IsKeyDown(DIK_DOWN)) {
-//		player->SetState(PLAYER_STATE_SITTING);
-//		if (game->IsKeyDown(DIK_RIGHT))
-//			player->SetDirection(1);
-//		else if (game->IsKeyDown(DIK_LEFT))
-//			player->SetDirection(-1);
-//		return;				//Important return //Dont change state while sitting
-//	}
-//	else player->SetState(PLAYER_STATE_IDLE);
-//
-//	if (game->IsKeyDown(DIK_RIGHT))
-//		player->SetState(PLAYER_STATE_WALKING_RIGHT);
-//	else if (game->IsKeyDown(DIK_LEFT))
-//		player->SetState(PLAYER_STATE_WALKING_LEFT);
-//	else player->SetState(PLAYER_STATE_IDLE);
-//}
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	HWND hWnd = InitWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	game = Game::GetInstance();
+	sceneManager = SceneManager::GetInstance();
 	game->Init(hWnd);
 	game->InitKeyboard();
 
-	game->Load(L"Resources/Scene/Castlevania-scenemanager.txt");
+	sceneManager->SetScene(new PlayScene());
 	GameLoop();
 
 	return 0;

@@ -1,15 +1,15 @@
 #pragma once
 #include <d3dx9.h>
 #include "KeyboardHandler.h"
+#include "define.h"
 
 class Scene
 {
 protected:
 	KeyboardHandler *keyHandler;
-	int idScene;
 	LPCWSTR sceneFilePath;
 public:
-	Scene(int id, LPCWSTR filePath);
+	Scene();
 
 	KeyboardHandler * GetKeyEventHandler() { return keyHandler; }
 	virtual void Load() = 0;

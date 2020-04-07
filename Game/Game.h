@@ -10,7 +10,6 @@
 #include "define.h"
 #include "KeyboardHandler.h"
 #include "Camera.h"
-#include "Scene.h"
 
 using namespace std;
 
@@ -33,12 +32,6 @@ class Game
 
 	LPKEYEVENTHANDLER keyHandler;
 
-	unordered_map<int, LPSCENE> scenes;
-	int idCurrentScene;
-
-	void _ParseSection_SETTINGS(string line);
-	void _ParseSection_SCENES(string line);
-
 public:
 
 	Game();
@@ -50,12 +43,6 @@ public:
 
 	int IsKeyDown(int KeyCode);
 	void ProcessKeyboard();
-
-
-	void Load(LPCWSTR gameFile);
-	LPSCENE GetCurrentScene() { return scenes[idCurrentScene]; }
-	void SwitchScene(int scene_id);
-
 
 	LPDIRECT3DDEVICE9 GetDirect3DDevice() { return this->d3ddv; }
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }

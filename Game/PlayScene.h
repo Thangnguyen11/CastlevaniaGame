@@ -41,8 +41,10 @@ protected:
 	std::vector<LPGAMEEFFECT> listEffects;
 	std::vector<LPGAMEITEM> listItems;
 	UI* gameUI;
-	GameTime* gameTime;
+	GameTime* gameTime;		
 	Camera* camera;
+
+	int idStage;
 
 	int counterZombie;
 	bool isTimeToSpawnZombie;
@@ -58,9 +60,10 @@ protected:
 	void _ParseSection_OBJECTS(string line);
 
 public:
-	PlayScene(int id, LPCWSTR filePath);
+	PlayScene();
 
-	void Init();
+	void LoadBaseObjects();
+	void ChooseMap(int whatStage);	//Co the thay bien int thanh EntityType
 	virtual void Load();
 	virtual void Update(DWORD dt);
 	virtual void Render();
@@ -73,6 +76,7 @@ public:
 	void PlayerCollideItem();
 	void CheckObjAlive();
 	void SetSubWeaponDone(UINT i);
+	void PlayerGotGate();
 
 	friend class PlayScenceKeyHandler;
 };

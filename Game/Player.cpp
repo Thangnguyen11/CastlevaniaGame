@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "Bat.h"
 #include "Zombie.h"
-#include "Gate.h"
 
 Player::Player(float posX, float posY) 
 {
@@ -275,15 +274,15 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					}
 				}
 			}
-			if (e->obj->GetType() == EntityType::GATE)
+			/*if (e->obj->GetType() == EntityType::GATE)
 			{
 				Gate* gate = dynamic_cast<Gate*>(e->obj);
 				DebugOut(L"[INFO] Switching to scene %d\n", gate->GetIdScene());
 				Game::GetInstance()->SwitchScene(gate->GetIdScene());
 
 				if (gate->GetIdScene() == 2)
-					SetPosition(100, 100);
-			}
+					SetPosition(1000, 100);
+			}*/
 		}
 	}
 	// clean up collision events
@@ -418,7 +417,7 @@ void Player::GetBoundingBox(float &left, float &top, float &right, float &bottom
 
 void Player::Attack(EntityType weaponType)
 {
-	if (isAttacking)
+	if (isAttacking || isUpgrading)	//Co 1 bug khi dang danh ma rot item thi van danh tiep
 		return;
 	
 	switch (weaponType)
