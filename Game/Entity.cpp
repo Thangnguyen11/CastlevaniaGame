@@ -23,17 +23,6 @@ void Entity::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	dy = vY * dt;
 }
 
-void Entity::SetTexture(Texture2d * Texture)
-{
-	texture = Texture;
-	sprite->texture = Texture;
-}
-
-Sprite * Entity::GetSprite()
-{
-	return sprite;
-}
-
 void Entity::RenderBoundingBox() 
 {
 	Texture2d* bbox = Texture2dManager::GetInstance()->GetTexture(EntityType::BBOX);

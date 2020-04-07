@@ -96,8 +96,6 @@ public:
 	void AddVx(float VX) { this->SetVx(this->GetVx() + VX); }
 	void AddVy(float VY) { this->SetVy(this->GetVy() + VY); }
 
-	void SetTexture(Texture2d * Texture);
-	Sprite* GetSprite();
 	int GetWidth() { return this->texture->getFrameWidth(); }
 	int GetHeight() { return this->texture->getFrameHeight(); }
 

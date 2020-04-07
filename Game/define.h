@@ -23,7 +23,7 @@
 #define SCREEN_WIDTH 530
 #define SCREEN_HEIGHT 480
 
-#define MaxFrameRate 100
+#define MaxFrameRate 100	//default Frame Rate is the truth
 
 #define SCENEGAME_GAMETIMEMAX		300
 
@@ -110,12 +110,14 @@ enum EntityType
 	TITLESCENE = 34,
 
 	TITLEBAT = 35,
+
+	STARTTEXT = 36,
 	
-	INTROSCENE = 36,
+	INTROSCENE = 37,
 
-	INTROSIMON = 37,
+	INTROSIMON = 38,
 
-	PLAYSCENE = 38
+	PLAYSCENE = 39
 };
 
 class define

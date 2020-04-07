@@ -35,7 +35,8 @@ void Texture2dManager::LoadContent()
 
 	//Scene
 	AddTexture(EntityType::TITLESCENE, new Texture2d("Resources/Scene/TitleScene.png"));
-	AddTexture(EntityType::TITLEBAT, new Texture2d("Resources/Scene/TitleBat.png"));
+	AddTexture(EntityType::TITLEBAT, new Texture2d("Resources/Scene/TitleBat.png", 5, 3, 15));
+	AddTexture(EntityType::STARTTEXT, new Texture2d("Resources/Scene/StartText.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::INTROSCENE, new Texture2d("Resources/Scene/IntroScene.png"));
 	AddTexture(EntityType::INTROSIMON, new Texture2d("Resources/Simon.png", 8, 7, 56, D3DCOLOR_ARGB(255, 255, 0, 255)));
 

@@ -29,15 +29,17 @@ void Zombie::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	
 	int currentFrame = sprite->GetCurrentFrame();
 	if (!isDead) {
-		if (currentFrame < ZOMBIE_ANI_WALKING_BEGIN) {
+		if (currentFrame < ZOMBIE_ANI_WALKING_BEGIN) 
+		{
 			sprite->SelectFrame(ZOMBIE_ANI_WALKING_BEGIN);
 			sprite->currentTotalTime = dt;
 		}
 		else {
 			sprite->currentTotalTime += dt;
-			if (sprite->currentTotalTime >= ZOMBIE_DRESSDANCE_SPEED) {
+			if (sprite->currentTotalTime >= ZOMBIE_DRESSDANCE_SPEED) 
+			{
 				sprite->currentTotalTime -= ZOMBIE_DRESSDANCE_SPEED;
-				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
+				sprite->SelectFrame(currentFrame + 1);
 			}
 
 			if (sprite->GetCurrentFrame() > ZOMBIE_ANI_WALKING_END) {

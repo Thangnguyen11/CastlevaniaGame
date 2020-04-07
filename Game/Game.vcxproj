@@ -146,6 +146,7 @@
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="Hit.cpp" />
+    <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemDagger.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture2d.cpp" />
     <ClCompile Include="Texture2dManager.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Torch.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="UpgradeMorningStar.cpp" />
@@ -184,6 +186,7 @@
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="Hit.h" />
+    <ClInclude Include="IntroScene.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemDagger.h" />
     <ClInclude Include="KeyboardHandler.h" />
@@ -201,6 +204,7 @@
     <ClInclude Include="Texture2d.h" />
     <ClInclude Include="Texture2dManager.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Torch.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="UpgradeMorningStar.h" />
