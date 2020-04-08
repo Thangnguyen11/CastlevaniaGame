@@ -5,6 +5,8 @@
 #define STAGE_1						1
 #define STAGE_2						2
 
+#define STAGE_1_MAX_WIDTH			1250
+
 #define SCENE_SECTION_UNKNOWN		-1
 #define SCENE_SECTION_OBJECTS		1
 
@@ -25,13 +27,14 @@ void PlayScene::LoadBaseObjects()
 {
 	if (player == NULL)
 	{
-		player = new Player(100, 330);
+		player = new Player(100, 280);
 		//listObjects.push_back(player);
 		DebugOut(L"[INFO] Simon object created! \n");
 	}
 	gameUI = new UI(player->GetHealth(), 16);
 	gameTime = GameTime::GetInstance();		//That ra khong can 2 buoc nay vi ca 2 deu thiet ke Singleton
 	camera = Camera::GetInstance();
+	map = new Map();
 }
 
 void PlayScene::ChooseMap(int whatMap)	
@@ -43,6 +46,7 @@ void PlayScene::ChooseMap(int whatMap)
 	{
 		idStage = STAGE_1;
 		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
+		map->LoadMap(MAPSTAGE1);
 
 		sceneFilePath = ToLPCWSTR("Resources/Scene/scene1.txt");
 		Load();
@@ -63,6 +67,7 @@ void PlayScene::ChooseMap(int whatMap)
 		triggerSpawnBat = true;
 
 		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
+		map->LoadMap(MAPSTAGE2);
 
 		sceneFilePath = ToLPCWSTR("Resources/Scene/scene2.txt");
 		Load();
@@ -454,11 +459,16 @@ void PlayScene::Update(DWORD dt)
 #pragma region Camera
 	float cx, cy;
 	player->ReceivePos(cx, cy);
-
-	if (player->GetPosX() < SCREEN_WIDTH / 2)
-		cx -= SCREEN_WIDTH / 2 - (SCREEN_WIDTH / 2 - player->GetPosX());
+	//1250
+	if (idStage == STAGE_1 && player->GetPosX() >= STAGE_1_MAX_WIDTH)
+		cx -= SCREEN_WIDTH / 2 - (STAGE_1_MAX_WIDTH - player->GetPosX());
 	else
-		cx -= SCREEN_WIDTH / 2;
+	{
+		if (player->GetPosX() < SCREEN_WIDTH / 2)
+			cx -= SCREEN_WIDTH / 2 - (SCREEN_WIDTH / 2 - player->GetPosX());
+		else
+			cx -= SCREEN_WIDTH / 2;
+	}
 	cy -= SCREEN_HEIGHT / 2;
 
 	camera->SetCamPos(cx, 0.0f);//cy khi muon camera move theo y player //castlevania chua can
@@ -475,6 +485,7 @@ void PlayScene::Update(DWORD dt)
 
 void PlayScene::Render()
 {
+	map->Draw();
 	player->Render();
 	for (int i = 0; i < listObjects.size(); i++)
 		listObjects[i]->Render();

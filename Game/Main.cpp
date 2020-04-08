@@ -5,6 +5,8 @@
 
 #include "Game.h"
 #include "SceneManager.h"
+//Bat cai nay de test nhanh
+#include "PlayScene.h"
 
 Game* game;
 SceneManager* sceneManager;
@@ -148,6 +150,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	game->Init(hWnd);
 	game->InitKeyboard();
 
+	//Test nhanh
+	//sceneManager->SetScene(new PlayScene());
 	sceneManager->SetScene(new TitleScene());
 	GameLoop();
 

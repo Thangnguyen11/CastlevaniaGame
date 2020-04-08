@@ -10,6 +10,7 @@
 #include "Camera.h"
 #include "Timer.h"
 #include "UI.h"
+#include "Map.h"
 #include "SmallHeart.h"
 #include "BigHeart.h"
 #include "MoneyBags.h"
@@ -43,6 +44,7 @@ protected:
 	UI* gameUI;
 	GameTime* gameTime;		
 	Camera* camera;
+	Map* map;
 
 	int idStage;
 

@@ -40,6 +40,10 @@ void Texture2dManager::LoadContent()
 	AddTexture(EntityType::INTROSCENE, new Texture2d("Resources/Scene/IntroScene.png"));
 	AddTexture(EntityType::INTROSIMON, new Texture2d("Resources/Simon.png", 8, 7, 56, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
+	//Map
+	AddTexture(EntityType::MAPSTAGE1, new Texture2d("Resources/TileMap/TilesetStage1.png", 8, 4, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::MAPSTAGE2, new Texture2d("Resources/TileMap/TilesetStage2.png", 22, 4, 88, D3DCOLOR_ARGB(255, 255, 0, 255)));
+
 	//Static Obj
 	AddTexture(EntityType::BRICK, new Texture2d("Resources/Objects/Ground.png", 2, 1, 2));
 	AddTexture(EntityType::TORCH, new Texture2d("Resources/Objects/Torch.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));

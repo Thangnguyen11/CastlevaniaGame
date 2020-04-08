@@ -117,7 +117,11 @@ enum EntityType
 
 	INTROSIMON = 38,
 
-	PLAYSCENE = 39
+	PLAYSCENE = 39,
+
+	MAPSTAGE1 = 40,
+
+	MAPSTAGE2 = 41
 };
 
 class define

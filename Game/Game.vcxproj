@@ -150,6 +150,7 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemDagger.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="MoneyBags.cpp" />
     <ClCompile Include="MorningStar.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemDagger.h" />
     <ClInclude Include="KeyboardHandler.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="MoneyBags.h" />
     <ClInclude Include="MorningStar.h" />
     <ClInclude Include="Player.h" />

@@ -36,6 +36,17 @@ void IntroScene::Load()
 
 void IntroScene::Unload()
 {
+	introSimonPosX = 0;
+	introSimonPosY = 0;
+	timeBeginSimonDelay = 0;
+	timeBeginSimonDelayMax = 0;
+	isDelayPhase1End = 0;
+	isAllowToPlayPhase1 = 0;
+	triggerStartPhase2 = 0;
+	isAllowToPlayPhase2 = 0;
+	isGoingOutside = 0;
+	isAllowToPlayPhase3 = 0;
+	triggerPlay = 0;
 
 }
 

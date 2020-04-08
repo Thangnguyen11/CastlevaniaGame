@@ -21,8 +21,8 @@ void Gate::Render()
 {
 	RenderBoundingBox();
 
-	//if (gateSwitchSceneId == 2)	//Gate tai stage 1 khong ve~
-	//	return;
+	if (gateSwitchSceneId == 2)	//Gate tai stage 1 khong ve~
+		return;
 
 	sprite->Draw(posX, posY);
 }

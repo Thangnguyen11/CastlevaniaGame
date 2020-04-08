@@ -1,10 +1,8 @@
-﻿  IntroScene.cpp
+﻿  Main.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\pc\documents\github\castlevaniagame\game\define.h(30): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
 c:\users\pc\documents\github\castlevaniagame\game\timer.h(20): warning C4018: '>=': signed/unsigned mismatch
 c:\users\pc\documents\github\castlevaniagame\game\bat.h(17): warning C4005: 'BAT_FLAPPING_SPEED': macro redefinition
   c:\users\pc\documents\github\castlevaniagame\game\titlescene.h(10): note: see previous definition of 'BAT_FLAPPING_SPEED'
-  TitleScene.cpp
-c:\users\pc\documents\github\castlevaniagame\game\timer.h(20): warning C4018: '>=': signed/unsigned mismatch
-c:\users\pc\documents\github\castlevaniagame\game\titlescene.cpp(38): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\titlescene.cpp(62): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
-  Generating Code...
   Game.vcxproj -> C:\Users\PC\Documents\GitHub\CastlevaniaGame\Debug\Game.exe
