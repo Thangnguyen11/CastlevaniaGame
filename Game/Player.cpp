@@ -25,6 +25,8 @@ Player::Player(float posX, float posY)
 	isSitting = false;
 	isHurting = false;
 	isImmortaling = false;
+	isPassingStage = false;
+	isRespawning = false;
 
 	mainWeapon = new MorningStar();		//Simon's main/basic weapon is MorningStar
 	supWeapon = NULL;
@@ -35,8 +37,18 @@ Player::~Player(){}
 
 void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {	
-	if (health <= 0)
-		isDead = true;
+	if (health <= 0 && !isRespawning)
+	{
+		respawningTimer->Start();
+		isRespawning = true;
+		immortalTimer->Start();
+		isImmortaling = true;
+		live -= 1;
+		if (live <= 0)
+		{
+			isDead = true;
+		}
+	}
 
 	if (!isWalking && !isJumping)	//Attack tren mat dat thi dung yen, attack khi dang jump thi di chuyen duoc
 	{
@@ -65,11 +77,17 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		isUpgrading = false;
 		upgradeTimer->Reset();
 	}
+	if (isRespawning && respawningTimer->IsTimeUp())
+	{
+		Respawn();
+		isRespawning = false;
+		respawningTimer->Reset();
+	}
 #pragma endregion
 
 #pragma region Update Sprite
 	int currentFrame = sprite->GetCurrentFrame();
-	if (isDead)
+	if (isDead || isRespawning)
 	{
 		sprite->SelectFrame(PLAYER_ANI_DIE);
 	}
@@ -274,15 +292,6 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					}
 				}
 			}
-			/*if (e->obj->GetType() == EntityType::GATE)
-			{
-				Gate* gate = dynamic_cast<Gate*>(e->obj);
-				DebugOut(L"[INFO] Switching to scene %d\n", gate->GetIdScene());
-				Game::GetInstance()->SwitchScene(gate->GetIdScene());
-
-				if (gate->GetIdScene() == 2)
-					SetPosition(1000, 100);
-			}*/
 		}
 	}
 	// clean up collision events
@@ -368,6 +377,7 @@ void Player::SetState(int state)
 		isSitting = false;
 		isAttacking = false;
 		isAllowJump = true;
+		isPassingStage = false;		//set simon not blocking
 		break;
 	case PLAYER_STATE_SUPWEAPON_ATTACK:
 		Attack(currentSupWeaponType);
@@ -404,6 +414,15 @@ void Player::SetState(int state)
 		if (isSitting)	isSitting = false;
 		vX = 0;
 		vY = 0;
+		break;
+	case PLAYER_STATE_PASSING_STAGE:
+		direction = 1;
+		isWalking = true;
+		//isSitting = false;
+		vX = PLAYER_PASSING_STAGE_SPEED * direction; 
+		posX += dx;	//Khi trong state nay tuc la da va cham voi gate, o ngoai update cua simon khi co va cham kh update posX
+		isPassingStage = true;	//block control simon
+		break;
 	}
 }
 
@@ -471,4 +490,18 @@ void Player::SetPlayerSupWeaponType(EntityType supWeaponType)
 	default:
 		break;
 	}
+}
+
+void Player::Respawn()
+{
+	posX = 100;
+	posY = 280;
+	vX = 0;
+	isJumping = false;
+	isHurting = false;
+	isImmortaling = false;
+	SetState(PLAYER_STATE_IDLE);
+	health = PLAYER_MAXHEALTH;
+	immortalTimer->Start();
+	isImmortaling = true;
 }

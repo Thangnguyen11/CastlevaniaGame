@@ -5,4 +5,5 @@ c:\users\pc\documents\github\castlevaniagame\game\define.h(30): warning C4005: '
 c:\users\pc\documents\github\castlevaniagame\game\timer.h(20): warning C4018: '>=': signed/unsigned mismatch
 c:\users\pc\documents\github\castlevaniagame\game\bat.h(17): warning C4005: 'BAT_FLAPPING_SPEED': macro redefinition
   c:\users\pc\documents\github\castlevaniagame\game\titlescene.h(10): note: see previous definition of 'BAT_FLAPPING_SPEED'
+c:\users\pc\documents\github\castlevaniagame\game\main.cpp(147): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Game.vcxproj -> C:\Users\PC\Documents\GitHub\CastlevaniaGame\Debug\Game.exe

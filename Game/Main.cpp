@@ -2,6 +2,7 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <stdio.h>
+#include <ctime>
 
 #include "Game.h"
 #include "SceneManager.h"
@@ -143,6 +144,7 @@ int GameLoop()
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	srand(time(NULL));		//Make sure we have true random
 	HWND hWnd = InitWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	game = Game::GetInstance();

@@ -55,6 +55,8 @@ void PlayScene::ChooseMap(int whatMap)
 	case STAGE_2:
 	{
 		idStage = STAGE_2;
+		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
+		map->LoadMap(MAPSTAGE2);
 
 		gameTime->ResetGameTime();	//Reset lai gameTime
 
@@ -65,9 +67,6 @@ void PlayScene::ChooseMap(int whatMap)
 		//Bat Logic
 		isTimeToSpawnBat = true;
 		triggerSpawnBat = true;
-
-		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-		map->LoadMap(MAPSTAGE2);
 
 		sceneFilePath = ToLPCWSTR("Resources/Scene/scene2.txt");
 		Load();
@@ -290,6 +289,16 @@ void PlayScene::PlayerCollideItem()
 	}
 }
 
+bool PlayScene::PlayerPassingStage(float DistanceXWant)
+{
+	if (player->GetPosX() < DistanceXWant)
+	{
+		player->SetState(PLAYER_STATE_PASSING_STAGE);
+		return false;
+	}
+	return true;
+}
+
 void PlayScene::PlayerGotGate()
 {
 	for (UINT i = 0; i < listObjects.size(); i++)
@@ -298,13 +307,17 @@ void PlayScene::PlayerGotGate()
 		{
 			if (player->IsCollidingObject(listObjects[i]))
 			{
-				Unload();
-				if (idStage == STAGE_1)
+				if (PlayerPassingStage(listObjects[i]->GetPosX() + 20.0f))
 				{
-					ChooseMap(STAGE_2);
-					player->SetPosition(100, 130);
-					player->SetVx(0);
-					player->SetVy(0);
+					Unload();
+					if (idStage == STAGE_1)
+					{
+						ChooseMap(STAGE_2);
+						player->SetPosition(100, 130);
+						player->SetVx(0);
+						player->SetVy(0);
+						player->SetState(PLAYER_STATE_IDLE);
+					}
 				}
 			}
 		}
@@ -517,12 +530,12 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		}
 		break;
 	case DIK_C:
-		if (simon->IsDeadYet() || simon->IsAttacking() || simon->IsSitting() || simon->IsHurting() || simon->IsUpgrading())
+		if (simon->IsDeadYet() || simon->IsAttacking() || simon->IsSitting() || simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage())
 			return;
 		simon->SetState(PLAYER_STATE_JUMP);
 		break;
 	case DIK_X:
-		if (simon->IsDeadYet() || simon->IsHurting() || simon->IsUpgrading() || Game::GetInstance()->IsKeyDown(DIK_UP))	//Up + X khong Whip duoc nua
+		if (simon->IsDeadYet() || simon->IsHurting() || simon->IsUpgrading() || Game::GetInstance()->IsKeyDown(DIK_UP) || simon->IsPassingStage())	//Up + X khong Whip duoc nua
 			return;
 		simon->SetState(PLAYER_STATE_ATTACK);
 		break;
@@ -538,7 +551,7 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 {
 	Player* simon = ((PlayScene*)scence)->player;
 
-	if (simon->IsDeadYet() || simon->IsAttacking() || simon->IsJumping() || simon->IsHurting() || simon->IsUpgrading()) 
+	if (simon->IsDeadYet() || simon->IsAttacking() || simon->IsJumping() || simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage()) 
 	{
 		return;
 	}

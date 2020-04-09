@@ -78,6 +78,7 @@ public:
 	void PlayerCollideItem();
 	void CheckObjAlive();
 	void SetSubWeaponDone(UINT i);
+	bool PlayerPassingStage(float DistanceXWant);
 	void PlayerGotGate();
 
 	friend class PlayScenceKeyHandler;

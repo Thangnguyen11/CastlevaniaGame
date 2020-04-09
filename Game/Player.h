@@ -7,6 +7,7 @@
 #include <map>
 
 #define PLAYER_WALKING_SPEED				0.20f	//0.25
+#define PLAYER_PASSING_STAGE_SPEED			0.035f
 #define PLAYER_JUMP_SPEED_Y					0.5f	//0.8
 #define PLAYER_GRAVITY						0.002f	//0.025
 #define PLAYER_DEFLECT_SPEED_X				0.8f
@@ -26,6 +27,7 @@
 #define PLAYER_STATE_HURTING				600
 #define PLAYER_STATE_UPGRADING				700
 #define PLAYER_STATE_SUPWEAPON_ATTACK		800
+#define PLAYER_STATE_PASSING_STAGE			900
 
 #define PLAYER_ANI_DIE						28
 #define PLAYER_ANI_IDLE						0
@@ -46,6 +48,7 @@
 #define PLAYER_IMMORTAL_TIMECOUNTER			1200
 #define PLAYER_UPGRADING_DELAY				100
 #define PLAYER_UPGRADING_TIMECOUNTER		1200
+#define PLAYER_RESPAWNING_TIMECOUNTER		2400
 
 class Player : public Entity
 {
@@ -56,11 +59,14 @@ class Player : public Entity
 		isSitting,
 		isHurting,
 		isImmortaling,		//not a state, a sub-state from hurt
-		isUpgrading;	
+		isUpgrading,
+		isPassingStage,
+		isRespawning;	
 	Timer* hurtingTimer = new Timer(PLAYER_HURTING_DELAY);
 	Timer* immortalTimer = new Timer(PLAYER_IMMORTAL_TIMECOUNTER);
-	Timer* upgradeTimer = new Timer(PLAYER_UPGRADING_TIMECOUNTER);
 	//Immortal != Invincible !!!!! You may be Immortal, but you are not Invincible! - a Prince of Persia said.
+	Timer* upgradeTimer = new Timer(PLAYER_UPGRADING_TIMECOUNTER);
+	Timer* respawningTimer = new Timer(PLAYER_RESPAWNING_TIMECOUNTER);
 
 	Weapon* mainWeapon;
 	Weapon* supWeapon;
@@ -84,6 +90,8 @@ public:
 	bool IsHurting() { return isHurting; }
 	bool IsImmortaling() { return isImmortaling; }
 	bool IsUpgrading() { return isUpgrading; }
+	bool IsPassingStage() { return isPassingStage; }
+	bool IsRespawning() { return isRespawning; }
 
 	Weapon* GetPlayerMainWeapon() { return mainWeapon; }
 	Weapon* GetPlayerSupWeapon() { return supWeapon; }
@@ -92,5 +100,7 @@ public:
 
 	EntityType GetPlayerSupWeaponType() { return currentSupWeaponType; }
 	void SetPlayerSupWeaponType(EntityType supWeaponType);
+
+	void Respawn();
 };
 
