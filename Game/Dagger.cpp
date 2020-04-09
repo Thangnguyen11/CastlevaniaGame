@@ -48,6 +48,9 @@ void Dagger::Render()
 
 bool Dagger::CheckIsOutCamera(float posX)
 {
+	//Dieu nay thuc te hon trong game
+	//Trong game la con trong ban kinh camera thi isdone = false
+	//Nhung thuc te thi o ngoai dau co cai camera nao ? ma la khoang cach nhat dinh dua vao nguoi nem 
 	if (vX > 0)	//Walking Right
 	{
 		if (this->posX - posX >= (SCREEN_WIDTH / 2))

@@ -12,6 +12,8 @@ SmallHeart::SmallHeart(float posX, float posY)
 
 	timeDisplayed = 0;
 	timeDisplayMax = SMALLHEART_TIMEDISPLAYMAX;
+	timeDelayDisplayed = 0;
+	timeDelayDisplayMax = SMALLHEART_TIMEDELAYMAX;
 	//Dat vX o day de vi kh co state va co the dung yen khi gap mat dat
 	vX = SMALLHEART_SPEED_X * direction;
 }
@@ -21,6 +23,11 @@ SmallHeart::~SmallHeart(){}
 void SmallHeart::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
 	//Khong dung lai Item::Update duoc do khac nhau
+	timeDelayDisplayed += dt;
+	if (timeDelayDisplayed < timeDelayDisplayMax)
+	{
+		return;
+	}
 	timeDisplayed += dt;
 	if (timeDisplayed >= timeDisplayMax)	//xong trach nhiem
 	{

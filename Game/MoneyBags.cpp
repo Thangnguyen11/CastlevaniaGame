@@ -12,12 +12,16 @@ MoneyBags::MoneyBags(float posX, float posY, EntityType typeBag)
 	vY = BAGS_GRAVITY;
 	timeDisplayed = 0;
 	timeDisplayMax = BAGS_TIMEDISPLAYMAX;
+	timeDelayDisplayed = 0;
+	timeDelayDisplayMax = BAGS_TIMEDELAYMAX;
 }
 
 MoneyBags::~MoneyBags(){}
 
 void MoneyBags::Render()
 {
+	if (timeDelayDisplayed < timeDelayDisplayMax)
+		return;
 	if (isDone)
 		return;
 	//khong dung lai Item::Render do muon return som tai day 

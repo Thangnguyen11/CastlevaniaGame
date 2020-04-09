@@ -12,6 +12,8 @@ UpgradeMorningStar::UpgradeMorningStar(float posX, float posY)
 	vY = UPGRADEMS_GRAVITY;
 	timeDisplayed = 0;
 	timeDisplayMax = UPGRADEMS_TIMEDISPLAYMAX;
+	timeDelayDisplayed = 0;
+	timeDelayDisplayMax = UPGRADEMS_TIMEDELAYMAX;
 }
 
 UpgradeMorningStar::~UpgradeMorningStar() {}

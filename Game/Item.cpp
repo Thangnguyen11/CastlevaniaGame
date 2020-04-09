@@ -5,6 +5,8 @@ Item::Item()
 	isDone = false;
 	timeDisplayed = 0;
 	timeDisplayMax = 0;
+	timeDelayDisplayed = 0;
+	timeDelayDisplayMax = 0;
 }
 
 Item::~Item(){}
@@ -12,6 +14,11 @@ Item::~Item(){}
 void Item::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
 	//thoat khoi tinh trang doi
+	timeDelayDisplayed += dt;
+	if (timeDelayDisplayed < timeDelayDisplayMax)
+	{
+		return;
+	}
 	timeDisplayed += dt;
 	if (timeDisplayed >= timeDisplayMax)	//xong trach nhiem
 	{
@@ -59,6 +66,9 @@ void Item::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 void Item::Render()
 {
+	//Dung ra thi khi het delay moi tao item chu khong phai tao roi nhung het delay moi ve
+	if (timeDelayDisplayed < timeDelayDisplayMax)
+		return;
 	if (isDone)
 		return;
 

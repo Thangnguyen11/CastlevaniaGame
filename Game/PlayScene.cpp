@@ -119,11 +119,13 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY)
 			return new ItemDagger(posX, posY);
 		}
 		else
-			return new SmallHeart(posX, posY);
+			return new BigHeart(posX, posY);
 }
 
 void PlayScene::WeaponInteractObj(UINT i)
 {
+	//Co 1 phuong an de delay DropItem la trigger Start timer o day, o update thi lien tuc check timer de push
+	//Van de la timer co hoat dong dung khong khi giet nhieu target 1 luc ?
 	switch (listObjects[i]->GetType())
 	{
 	case EntityType::BAT:

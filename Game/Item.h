@@ -10,6 +10,8 @@ protected:
 	bool isDone;
 	DWORD	timeDisplayed,
 			timeDisplayMax;		//duoc define rieng
+	DWORD	timeDelayDisplayed,
+			timeDelayDisplayMax;
 public:
 	Item();
 	~Item();

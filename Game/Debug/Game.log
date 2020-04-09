@@ -1,4 +1,17 @@
-﻿  Main.cpp
+﻿  Game.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\pc\documents\github\castlevaniagame\game\define.h(30): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+c:\users\pc\documents\github\castlevaniagame\game\timer.h(20): warning C4018: '>=': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\game.cpp(264): warning C4305: '=': truncation from '__int64' to 'float'
+c:\users\pc\documents\github\castlevaniagame\game\game.cpp(265): warning C4305: '=': truncation from '__int64' to 'float'
+c:\users\pc\documents\github\castlevaniagame\game\game.cpp(275): warning C4305: '=': truncation from '__int64' to 'float'
+c:\users\pc\documents\github\castlevaniagame\game\game.cpp(276): warning C4305: '=': truncation from '__int64' to 'float'
+  IntroScene.cpp
+c:\users\pc\documents\github\castlevaniagame\game\timer.h(20): warning C4018: '>=': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\bat.h(17): warning C4005: 'BAT_FLAPPING_SPEED': macro redefinition
+  c:\users\pc\documents\github\castlevaniagame\game\titlescene.h(10): note: see previous definition of 'BAT_FLAPPING_SPEED'
+  Main.cpp
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 c:\users\pc\documents\github\castlevaniagame\game\define.h(30): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
@@ -6,4 +19,20 @@ c:\users\pc\documents\github\castlevaniagame\game\timer.h(20): warning C4018: '>
 c:\users\pc\documents\github\castlevaniagame\game\bat.h(17): warning C4005: 'BAT_FLAPPING_SPEED': macro redefinition
   c:\users\pc\documents\github\castlevaniagame\game\titlescene.h(10): note: see previous definition of 'BAT_FLAPPING_SPEED'
 c:\users\pc\documents\github\castlevaniagame\game\main.cpp(147): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  PlayScene.cpp
+c:\users\pc\documents\github\castlevaniagame\game\timer.h(20): warning C4018: '>=': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(456): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(461): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(465): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(469): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(505): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(507): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(509): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(526): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(598): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(599): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(664): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(666): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(668): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
   Game.vcxproj -> C:\Users\PC\Documents\GitHub\CastlevaniaGame\Debug\Game.exe
