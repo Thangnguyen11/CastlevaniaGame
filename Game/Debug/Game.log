@@ -1,6 +1,16 @@
-﻿  Player.cpp
+﻿  PlayScene.cpp
 c:\users\pc\documents\github\castlevaniagame\game\timer.h(20): warning C4018: '>=': signed/unsigned mismatch
-c:\users\pc\documents\github\castlevaniagame\game\player.cpp(101): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\player.cpp(131): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
-c:\users\pc\documents\github\castlevaniagame\game\player.cpp(159): warning C4244: '=': conversion from 'DWORD' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(482): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(487): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(491): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(495): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(532): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(534): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(536): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(553): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(660): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(661): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(732): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(734): warning C4018: '<': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\playscene.cpp(736): warning C4018: '<': signed/unsigned mismatch
   Game.vcxproj -> C:\Users\PC\Documents\GitHub\CastlevaniaGame\Debug\Game.exe
