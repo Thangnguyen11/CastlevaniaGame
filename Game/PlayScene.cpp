@@ -13,6 +13,7 @@
 #define OBJECT_TYPE_BRICK			1
 #define OBJECT_TYPE_TORCH			2
 #define OBJECT_TYPE_GATE			3
+#define OBJECT_TYPE_STAIRS			4
 
 using namespace std;
 
@@ -326,6 +327,31 @@ void PlayScene::PlayerGotGate()
 	}
 }
 
+void PlayScene::PlayerGotStairs()
+{
+	for (UINT i = 0; i < listObjects.size(); i++)
+	{
+		if (listObjects[i]->GetType() == EntityType::STAIRS)
+		{
+			if (player->IsCollidingObject(listObjects[i]))
+			{
+				if (listObjects[i]->GetDirection() == 1)
+				{
+					player->SetState(PLAYER_STATE_GOING_UP_STAIRS);
+				}
+				else
+				{
+					player->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
+				}
+			}
+			else
+			{
+				player->SetOnStair(false);
+			}
+		}
+	}
+}
+
 void PlayScene::CheckObjAlive()
 {
 	for (UINT i = 0; i < listObjects.size(); i++)
@@ -491,7 +517,8 @@ void PlayScene::Update(DWORD dt)
 
 	WeaponCollision();
 	PlayerCollideItem();
-	PlayerGotGate();
+	PlayerGotGate(); 
+	PlayerGotStairs();
 
 	gameTime->Update(dt);
 	gameUI->Update(cx + 260, 35, player->GetHealth(), 16);	//move posX follow camera
@@ -557,30 +584,65 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 	{
 		return;
 	}
-
-	if (Game::GetInstance()->IsKeyDown(DIK_UP) && Game::GetInstance()->IsKeyDown(DIK_X) && !simon->IsAttacking())
+	
+	if (!simon->IsOnStairs())
 	{
-		if (simon->GetPlayerSupWeaponType() != EntityType::NONE)	//Neu chua nhat duoc vu khi phu thi khong attack
+		if (Game::GetInstance()->IsKeyDown(DIK_UP) && Game::GetInstance()->IsKeyDown(DIK_X) && !simon->IsAttacking())
 		{
-			simon->SetState(PLAYER_STATE_SUPWEAPON_ATTACK);
+			if (simon->GetPlayerSupWeaponType() != EntityType::NONE)	//Neu chua nhat duoc vu khi phu thi khong attack
+			{
+				simon->SetState(PLAYER_STATE_SUPWEAPON_ATTACK);
+			}
 		}
-	}
 
-	if (Game::GetInstance()->IsKeyDown(DIK_DOWN)) {
-		simon->SetState(PLAYER_STATE_SITTING);
+		if (Game::GetInstance()->IsKeyDown(DIK_DOWN)) {
+			simon->SetState(PLAYER_STATE_SITTING);
+			if (Game::GetInstance()->IsKeyDown(DIK_RIGHT))
+				simon->SetDirection(1);
+			else if (Game::GetInstance()->IsKeyDown(DIK_LEFT))
+				simon->SetDirection(-1);
+			return;				//Important return //Dont change state while sitting
+		}
+		else simon->SetState(PLAYER_STATE_IDLE);
+
 		if (Game::GetInstance()->IsKeyDown(DIK_RIGHT))
-			simon->SetDirection(1);
+			simon->SetState(PLAYER_STATE_WALKING_RIGHT);
 		else if (Game::GetInstance()->IsKeyDown(DIK_LEFT))
-			simon->SetDirection(-1);
-		return;				//Important return //Dont change state while sitting
+			simon->SetState(PLAYER_STATE_WALKING_LEFT);
+		else simon->SetState(PLAYER_STATE_IDLE);
 	}
-	else simon->SetState(PLAYER_STATE_IDLE);
-
-	if (Game::GetInstance()->IsKeyDown(DIK_RIGHT))
-		simon->SetState(PLAYER_STATE_WALKING_RIGHT);
-	else if (Game::GetInstance()->IsKeyDown(DIK_LEFT))
-		simon->SetState(PLAYER_STATE_WALKING_LEFT);
-	else simon->SetState(PLAYER_STATE_IDLE);
+	else
+	{
+		if (Game::GetInstance()->IsKeyDown(DIK_RIGHT))
+		{
+			if (simon->GetDirectionY() == 1)
+			{
+				simon->SetDirection(1);
+				simon->SetState(PLAYER_STATE_GOING_UP_STAIRS);
+			}
+			else
+				if(simon->GetDirectionY() == -1)
+			{
+					simon->SetDirection(1);
+					simon->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
+			}
+		}
+		else 
+			if (Game::GetInstance()->IsKeyDown(DIK_LEFT))
+			{
+				if (simon->GetDirectionY() == 1)
+				{
+					simon->SetDirection(-1);
+					simon->SetState(PLAYER_STATE_GOING_UP_STAIRS);
+				}
+				else
+					if (simon->GetDirectionY() == -1)
+					{
+						simon->SetDirection(-1);
+						simon->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
+					}
+			}
+	}
 }
 
 /*
@@ -613,6 +675,12 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	{
 		int extras = atoi(tokens[3].c_str());
 		listObjects.push_back(new Gate(x, y, extras));
+		break;
+	}
+	case OBJECT_TYPE_STAIRS:
+	{
+		int extras = atoi(tokens[3].c_str());
+		listObjects.push_back(new Stairs(x, y, extras));
 		break;
 	}
 	default:

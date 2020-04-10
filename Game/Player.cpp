@@ -27,6 +27,7 @@ Player::Player(float posX, float posY)
 	isImmortaling = false;
 	isPassingStage = false;
 	isRespawning = false;
+	isOnStairs = false;
 
 	mainWeapon = new MorningStar();		//Simon's main/basic weapon is MorningStar
 	supWeapon = NULL;
@@ -214,7 +215,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	coEvents.clear();
 	listObjMayCollide.clear();
 	for (UINT i = 0; i < coObjects->size(); i++)
-		if (coObjects->at(i)->GetType() != EntityType::TORCH)
+		if (coObjects->at(i)->GetType() != EntityType::TORCH &&
+			coObjects->at(i)->GetType() != EntityType::STAIRS)
 			listObjMayCollide.push_back(coObjects->at(i));
 
 	// turn off collision when die 
@@ -355,13 +357,31 @@ void Player::SetState(int state)
 		direction = 1;
 		isWalking = true;
 		//isSitting = false;
+		isOnStairs = false;
 		vX = PLAYER_WALKING_SPEED * direction;
 		break;
 	case PLAYER_STATE_WALKING_LEFT:
 		direction = -1;
 		isWalking = true;
 		//isSitting = false;
+		isOnStairs = false;
 		vX = PLAYER_WALKING_SPEED * direction;
+		break; 
+	case PLAYER_STATE_GOING_UP_STAIRS:
+		isOnStairs = true;
+		directionY = 1;
+		vX = PLAYER_ON_STAIRS_SPEED_X * direction;
+		vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
+		isJumping = false;
+		isSitting = false;
+		break;
+	case PLAYER_STATE_GOING_DOWN_STAIRS:
+		isOnStairs = true;
+		directionY = -1;
+		vX = PLAYER_ON_STAIRS_SPEED_X * direction;
+		vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
+		isJumping = false;
+		isSitting = false;
 		break;
 	case PLAYER_STATE_JUMP:
 		if (!isAllowJump)
@@ -369,6 +389,7 @@ void Player::SetState(int state)
 		isJumping = true;
 		isAllowJump = false;
 		//isSitting = false;
+		isOnStairs = false;
 		vY = -PLAYER_JUMP_SPEED_Y;
 		break;
 	case PLAYER_STATE_IDLE:
@@ -378,22 +399,26 @@ void Player::SetState(int state)
 		isAttacking = false;
 		isAllowJump = true;
 		isPassingStage = false;		//set simon not blocking
+		isOnStairs = false;
 		break;
 	case PLAYER_STATE_SUPWEAPON_ATTACK:
 		Attack(currentSupWeaponType);
 		isWalking = false;
+		isOnStairs = false;
 		break;
 	case PLAYER_STATE_ATTACK:
 		Attack(EntityType::MORNINGSTAR);
 		//vX = 0;		//While attacking cant walking until the attack is done
 		isWalking = false;
 		//isJumping = false;
+		isOnStairs = false;
 		//testing
 		break;
 	case PLAYER_STATE_SITTING:
 		vX = 0;		//Vi phim return khi dang ngoi nen set vX = 0 de khi moving -> sit se khong bi truot
 		isSitting = true;
 		isWalking = false;
+		isOnStairs = false;
 		break;
 	case PLAYER_STATE_HURTING:
 		if (isHurting == true)
@@ -403,6 +428,7 @@ void Player::SetState(int state)
 		isJumping = false;
 		isAttacking = false;
 		if (isSitting)	isSitting = false;
+		isOnStairs = false;
 		vX = PLAYER_DEFLECT_SPEED_X * direction;
 		vY = -PLAYER_DEFLECT_SPEED_Y;
 		break;
@@ -412,6 +438,7 @@ void Player::SetState(int state)
 		isJumping = false;
 		isAttacking = false;
 		if (isSitting)	isSitting = false;
+		isOnStairs = false;
 		vX = 0;
 		vY = 0;
 		break;
@@ -422,6 +449,7 @@ void Player::SetState(int state)
 		vX = PLAYER_PASSING_STAGE_SPEED * direction; 
 		posX += dx;	//Khi trong state nay tuc la da va cham voi gate, o ngoai update cua simon khi co va cham kh update posX
 		isPassingStage = true;	//block control simon
+		isOnStairs = false;
 		break;
 	}
 }

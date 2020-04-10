@@ -121,7 +121,9 @@ enum EntityType
 
 	MAPSTAGE1 = 40,
 
-	MAPSTAGE2 = 41
+	MAPSTAGE2 = 41,
+
+	STAIRS = 42
 };
 
 class define

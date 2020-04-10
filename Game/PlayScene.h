@@ -27,6 +27,7 @@
 #include "Zombie.h"
 #include "Torch.h"
 #include "Gate.h"
+#include "Stairs.h"
 
 #define SPAWNING_ZOMBIE_DELAY				3000
 #define SPAWNING_DELAY_BETWEEN_2_ZOMBIE		450	
@@ -80,6 +81,7 @@ public:
 	void SetSubWeaponDone(UINT i);
 	bool PlayerPassingStage(float DistanceXWant);
 	void PlayerGotGate();
+	void PlayerGotStairs();
 
 	friend class PlayScenceKeyHandler;
 };

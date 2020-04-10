@@ -161,6 +161,7 @@
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="SmallHeart.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Stairs.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture2d.cpp" />
     <ClCompile Include="Texture2dManager.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="Score.h" />
     <ClInclude Include="SmallHeart.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="Stairs.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture2d.h" />
     <ClInclude Include="Texture2dManager.h" />
