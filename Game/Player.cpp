@@ -128,6 +128,14 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 					if (currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 1 && currentFrame != PLAYER_ANI_SITTING_ATTACK_BEGIN + 2) 
 					{
 						sprite->SelectFrame(PLAYER_ANI_SITTING_ATTACK_BEGIN);
+						if (supWeapon != NULL)
+						{
+							if (supWeapon->GetType() == EntityType::DAGGER)
+							{
+								Dagger* dagger = dynamic_cast<Dagger*>(supWeapon);
+								dagger->ResetDelay();
+							}
+						}
 						sprite->currentTotalTime = dt;
 					}
 					else 
@@ -156,6 +164,14 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 				if (currentFrame < PLAYER_ANI_ATTACK_BEGIN) 
 				{
 					sprite->SelectFrame(PLAYER_ANI_ATTACK_BEGIN);
+					if (supWeapon != NULL)
+					{
+						if (supWeapon->GetType() == EntityType::DAGGER)
+						{
+							Dagger* dagger = dynamic_cast<Dagger*>(supWeapon);
+							dagger->ResetDelay();
+						}
+					}
 					sprite->currentTotalTime = dt;
 				}
 				else 
@@ -203,7 +219,10 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	Entity::Update(dt);
 
 	// simple fall down
-	vY += PLAYER_GRAVITY * dt;
+	if (!isOnStairs) 
+	{
+		vY += PLAYER_GRAVITY * dt;
+	}
 
 	if (posX <= 15)	//Not go out
 		posX = 15;
@@ -221,7 +240,7 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 	// turn off collision when die 
 	//if (state != PLAYER_STATE_DIE)
-		CalcPotentialCollisions(&listObjMayCollide, coEvents);
+	CalcPotentialCollisions(&listObjMayCollide, coEvents);
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -255,7 +274,12 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		if (nx != 0) vX = 0;
 		if (ny != 0) vY = 0;
 		if (nx != 0 && ny != 0)
+		{
+			vX = 0;
+			vY = 0;
 			isHurting = false;
+			//isOnStairs = false;
+		}
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
@@ -298,7 +322,21 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	
 #pragma endregion
+
+	if (isOnStairs)
+	{
+		DebugOut(L"ON STAIRs \n");
+		/*if (direction == 1)
+		{
+			DebugOut(L"Simon Up Stair \n");
+		}
+		else
+		{
+			DebugOut(L"Simon Down Stair \n");
+		}*/
+	}
 
 	if (!mainWeapon->GetIsDone())
 	{
@@ -314,6 +352,55 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			supWeapon->Update(dt, coObjects);
 		}
 	}
+
+
+	if (triggerAuto)
+	{
+		DebugOut(L"Process Auto Start \n");
+		vX = processAutoSpeedX * direction;
+		vY = processAutoSpeedY * -directionY;
+		posX += vX * dt;
+		posY += vY * dt;
+		if (direction == 1)	//huong di ben phai -> targetX > posX
+		{
+			if (directionY == 1)	//cheo' tren trai qua phai
+			{
+				if (posX >= targetPosX && posY <= targetPosY)
+				{
+					DebugOut(L"Process Auto End \n");
+					triggerAuto = false;
+				}
+			}
+			else	//cheo' duoi trai qua phai
+			{
+				if (posX >= targetPosX && posY >= targetPosY)
+				{
+					DebugOut(L"Process Auto End \n");
+					triggerAuto = false;
+				}
+			}
+		}
+		else
+		{
+			if (directionY == 1) //cheo' tren phai qua trai
+			{
+				if (posX <= targetPosX  && posY <= targetPosY)
+				{
+					DebugOut(L"Process Auto End \n");
+					triggerAuto = false;
+				}
+			}
+			else	//cheo' duoi phai qua trai
+			{
+				if (posX <= targetPosX  && posY >= targetPosY)
+				{
+					DebugOut(L"Process Auto End \n");
+					triggerAuto = false;
+				}
+			}
+		}
+	}
+
 }
 
 void Player::Render()
@@ -370,16 +457,16 @@ void Player::SetState(int state)
 	case PLAYER_STATE_GOING_UP_STAIRS:
 		isOnStairs = true;
 		directionY = 1;
-		vX = PLAYER_ON_STAIRS_SPEED_X * direction;
-		vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
+		//vX = PLAYER_ON_STAIRS_SPEED_X * direction;
+		//vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
 		isJumping = false;
 		isSitting = false;
 		break;
 	case PLAYER_STATE_GOING_DOWN_STAIRS:
 		isOnStairs = true;
 		directionY = -1;
-		vX = PLAYER_ON_STAIRS_SPEED_X * direction;
-		vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
+		//vX = PLAYER_ON_STAIRS_SPEED_X * direction;
+		//vY = PLAYER_ON_STAIRS_SPEED_Y * -directionY;
 		isJumping = false;
 		isSitting = false;
 		break;
@@ -393,7 +480,7 @@ void Player::SetState(int state)
 		vY = -PLAYER_JUMP_SPEED_Y;
 		break;
 	case PLAYER_STATE_IDLE:
-		vX = 0;
+		//vX = 0;
 		isWalking = false;
 		isSitting = false;
 		isAttacking = false;
@@ -433,10 +520,10 @@ void Player::SetState(int state)
 		vY = -PLAYER_DEFLECT_SPEED_Y;
 		break;
 	case PLAYER_STATE_UPGRADING:
+		if (isAttacking) isAttacking = false;
 		isHurting = false;
 		isWalking = false;
 		isJumping = false;
-		isAttacking = false;
 		if (isSitting)	isSitting = false;
 		isOnStairs = false;
 		vX = 0;
@@ -532,4 +619,30 @@ void Player::Respawn()
 	health = PLAYER_MAXHEALTH;
 	immortalTimer->Start();
 	isImmortaling = true;
+}
+
+void Player::KnownTargetMovement(float targetX, float targetY, float speedX, float speedY, int directionX, int directionY)
+{
+	if (triggerAuto)
+		return;
+
+	//SetState(PLAYER_STATE_WALKING_RIGHT);
+
+	DebugOut(L"KDM \n");
+	triggerAuto = true;
+	targetPosX = targetX;
+	targetPosY = targetY;
+	processAutoSpeedX = speedX;
+	processAutoSpeedY = speedY;
+	this->direction = directionX;
+	this->directionY = directionY;
+
+	isWalking = true;	//true to make not vX = 0 when updating
+	isSitting = false;
+	isAttacking = false;
+	isAllowJump = false;
+	isJumping = false;
+	isHurting = false;
+	isImmortaling = false;
+	isPassingStage = false;
 }

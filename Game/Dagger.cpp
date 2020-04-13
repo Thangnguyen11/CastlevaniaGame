@@ -6,12 +6,19 @@ Dagger::Dagger()
 	sprite = new Sprite(texture, MaxFrameRate);
 	tag = EntityType::DAGGER;
 	ownerPosX = 0;
+	timeDelayed = 0;
+	timeDelayMax = MAX_DAGGER_DELAY;
 }
 
 Dagger::~Dagger(){}
 
 void Dagger::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
+	timeDelayed += dt;
+	if (timeDelayed <= timeDelayMax)
+	{
+		return;
+	}
 	if (CheckIsOutCamera(ownerPosX))
 	{
 		isDone = true;
@@ -31,6 +38,10 @@ void Dagger::Attack(float posX, float posY, int direction)
 
 void Dagger::Render()
 {
+	if (timeDelayed <= timeDelayMax)
+	{
+		return;
+	}
 	if (isDone)
 		return;
 	if (direction == -1) //Right direction

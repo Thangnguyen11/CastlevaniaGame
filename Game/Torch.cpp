@@ -1,6 +1,6 @@
 #include "Torch.h"
 
-Torch::Torch(float posX, float posY)
+Torch::Torch(float posX, float posY, int id)
 {
 	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::TORCH);
 	this->sprite = new Sprite(texture, MaxFrameRate);
@@ -10,6 +10,7 @@ Torch::Torch(float posX, float posY)
 	this->posY = posY;
 	health = 1;
 	isDead = false;
+	idTorch = id;
 }
 
 Torch::~Torch(){}

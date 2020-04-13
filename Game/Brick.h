@@ -6,6 +6,7 @@
 
 #define BRICK_TYPE1		0
 #define BRICK_TYPE2		1
+#define BRICK_TYPE3		2
 
 class Brick : public Entity
 {

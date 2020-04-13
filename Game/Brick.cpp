@@ -15,10 +15,12 @@ Brick::~Brick() {}
 
 void Brick::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {
-	if (brickType == 2)
-		sprite->SelectFrame(BRICK_TYPE2);
-	else
+	if (brickType == 1)
 		sprite->SelectFrame(BRICK_TYPE1);
+	else if(brickType == 2)
+		sprite->SelectFrame(BRICK_TYPE2);
+	else if(brickType == 3)
+		sprite->SelectFrame(BRICK_TYPE3);
 }
 
 void Brick::Render()

@@ -1,6 +1,6 @@
 #include "Stairs.h"
 
-Stairs::Stairs(float posX, float posY, int stairDirection)
+Stairs::Stairs(float posX, float posY, int stairDirection, int stairDirectionY)
 {
 	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::STAIRS);
 	this->sprite = new Sprite(texture, MaxFrameRate);
@@ -9,6 +9,7 @@ Stairs::Stairs(float posX, float posY, int stairDirection)
 	this->posX = posX;
 	this->posY = posY;
 	this->direction = stairDirection;
+	this->directionY = stairDirectionY;
 }
 
 Stairs::~Stairs(){}

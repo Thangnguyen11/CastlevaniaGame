@@ -16,16 +16,22 @@ void Map::LoadMap(EntityType typeMap)
 		mapFilePath = ToLPCWSTR("Resources/TileMap/TilesetStage1Text.txt");
 		RowMap = STAGE1_ROWMAP;
 		ColumnMap = STAGE1_COLUMNMAP;
-		BottomDist = STAGE1_BOTTOMDIST;
 		Load();
 		break; 
 	}
-	case MAPSTAGE2:
+	case MAPSTAGE2_1:
 	{
-		mapFilePath = ToLPCWSTR("Resources/TileMap/TilesetStage2Text.txt");
-		RowMap = STAGE2_ROWMAP;
-		ColumnMap = STAGE2_COLUMNMAP;
-		BottomDist = STAGE2_BOTTOMDIST;
+		mapFilePath = ToLPCWSTR("Resources/TileMap/TilesetStage2-1Text.txt");
+		RowMap = STAGE2_1_ROWMAP;
+		ColumnMap = STAGE2_1_COLUMNMAP;
+		Load();
+		break;
+	}
+	case MAPSTAGE2_2:
+	{
+		mapFilePath = ToLPCWSTR("Resources/TileMap/TilesetStage2-2Text.txt");
+		RowMap = STAGE2_2_ROWMAP;
+		ColumnMap = STAGE2_2_COLUMNMAP;
 		Load();
 		break;
 	}
@@ -82,7 +88,7 @@ void Map::Draw()
 			//Do lech CameraPosX % FrameWidth de tinh so du cua phan thua` phia sau tung tile 
 			//(vi firstCol la int nen se co 1 doan du* o giua thisColumn va nextColumn, day la de can bang dieu do)
 			float tileMapPosX = (float)FrameWidthTexture * (j - firstColumn) + Camera::GetInstance()->GetCamPosX() - (float)((int)Camera::GetInstance()->GetCamPosX() % FrameWidthTexture) + originX;
-			float tileMapPosY = (float)FrameHeightTexture * i + 89 + originY - BottomDist;
+			float tileMapPosY = (float)FrameHeightTexture * i + BLACKBOARDHEIGHT + originY ;
 
 			tileMapSprite->Draw1Frame(TileMap[i][j], tileMapPosX, tileMapPosY);
 		}

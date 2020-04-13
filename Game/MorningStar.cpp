@@ -117,4 +117,5 @@ void MorningStar::UpLevel()
 		return;
 
 	level++;
+	isDone = true;	//ngan khi vua up level thi update va render them lan nua
 }

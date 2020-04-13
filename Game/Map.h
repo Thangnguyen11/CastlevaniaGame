@@ -3,15 +3,20 @@
 #include "Sprite.h"
 #include "Camera.h"
 
-#define STAGE1_ROWMAP			6
-#define STAGE1_COLUMNMAP		24
-#define STAGE1_BOTTOMDIST		48
+#define BLACKBOARDHEIGHT		72
 
-#define STAGE2_ROWMAP			12
-#define STAGE2_COLUMNMAP		88
-#define STAGE2_BOTTOMDIST		48
+#define STAGE1_ROWMAP			12
+#define STAGE1_COLUMNMAP		48
+#define STAGE1_BOTTOMDIST		18
 
-//Co the chia class ra thanh MapStage1, MapStage2
+#define STAGE2_1_ROWMAP			12
+#define STAGE2_1_COLUMNMAP		16
+#define STAGE2_1_BOTTOMDIST		24
+
+#define STAGE2_2_ROWMAP			12
+#define STAGE2_2_COLUMNMAP		32
+#define STAGE2_2_BOTTOMDIST		48
+
 class Map
 {
 	Texture2d* tileMapTexture;	//Tileset
@@ -19,7 +24,7 @@ class Map
 
 	LPCWSTR mapFilePath;
 
-	int ColumnMap, RowMap, BottomDist;	//So cot, hang cua map, Khoang cach voi day screen cua map
+	int ColumnMap, RowMap;	//So cot, hang cua map, Khoang cach voi day screen cua map
 
 	int ColumnTexture, RowTexture, TotalFrameTexture, FrameWidthTexture, FrameHeightTexture;
 

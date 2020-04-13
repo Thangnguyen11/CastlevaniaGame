@@ -3,9 +3,12 @@
 #include <fstream>
 
 #define STAGE_1						1
-#define STAGE_2						2
+#define STAGE_2_1					2
+#define STAGE_2_2					3
 
 #define STAGE_1_MAX_WIDTH			1250
+#define STAGE_2_1_MAX_WIDTH			262
+#define STAGE_2_2_MAX_WIDTH			776
 
 #define SCENE_SECTION_UNKNOWN		-1
 #define SCENE_SECTION_OBJECTS		1
@@ -53,23 +56,35 @@ void PlayScene::ChooseMap(int whatMap)
 		Load();
 		break;
 	}
-	case STAGE_2:
+	case STAGE_2_1:
 	{
-		idStage = STAGE_2;
+		idStage = STAGE_2_1;
 		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-		map->LoadMap(MAPSTAGE2);
+		map->LoadMap(MAPSTAGE2_1);
 
 		gameTime->ResetGameTime();	//Reset lai gameTime
 
-		//Zombie Logic
-		counterZombie = 0;
-		isTimeToSpawnZombie = true;		//vua vao spawn luon
-		triggerSpawnZombie = false;
-		//Bat Logic
-		isTimeToSpawnBat = true;
-		triggerSpawnBat = true;
+		////Zombie Logic
+		//counterZombie = 0;
+		//isTimeToSpawnZombie = true;		//vua vao spawn luon
+		//triggerSpawnZombie = false;
+		////Bat Logic
+		//isTimeToSpawnBat = true;
+		//triggerSpawnBat = true;
 
-		sceneFilePath = ToLPCWSTR("Resources/Scene/scene2.txt");
+		sceneFilePath = ToLPCWSTR("Resources/Scene/scene2_1.txt");
+		Load();
+		break;
+	}
+	case STAGE_2_2:
+	{
+		idStage = STAGE_2_2;
+		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
+		map->LoadMap(MAPSTAGE2_2);
+
+		gameTime->ResetGameTime();	//Reset lai gameTime
+
+		sceneFilePath = ToLPCWSTR("Resources/Scene/scene2_2.txt");
 		Load();
 		break;
 	}
@@ -90,10 +105,49 @@ Effect* PlayScene::CreateEffect(EntityType createrType, EntityType effectType, f
 		return new Hit(posX - HIT_EFFECT_CUSTOMIZED_POS, posY - HIT_EFFECT_CUSTOMIZED_POS);
 }
 
-Item* PlayScene::DropItem(EntityType createrType, float posX, float posY)
+Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int idCreater)
 {
 	int bagrandom = rand() % 100;
-	if (createrType == EntityType::ZOMBIE || createrType == EntityType::TORCH)
+	if (createrType == EntityType::TORCH)
+	{
+		if (idCreater == 1)
+		{
+			return new BigHeart(posX, posY);
+		}
+		else 
+			if (idCreater == 2) 
+			{
+				return new UpgradeMorningStar(posX, posY);
+			}
+			else 
+				if (idCreater == 3) 
+				{
+					return new ItemDagger(posX, posY);
+				}
+				else
+				{
+					int random = rand() % 1000;
+					if (random <= 200)
+						return new SmallHeart(posX, posY);
+					else if (200 < random && random <= 400)
+						return new BigHeart(posX, posY);
+					else if (400 < random && random <= 600)
+						return new YummiChickenLeg(posX, posY);
+					else if (600 < random && random <= 800)
+						return new UpgradeMorningStar(posX, posY);
+					else
+					{
+						if (bagrandom <= 33)
+							return new MoneyBags(posX, posY, EntityType::MONEYBAGRED);
+						else if (33 < bagrandom && bagrandom <= 66)
+							return new MoneyBags(posX, posY, EntityType::MONEYBAGWHITE);
+						else
+							return new MoneyBags(posX, posY, EntityType::MONEYBAGBLUE);
+					}
+				}
+	}
+	else 
+		if (createrType == EntityType::ZOMBIE)
 	{
 		int random = rand() % 1000;
 		if (random <= 200)
@@ -151,10 +205,13 @@ void PlayScene::WeaponInteractObj(UINT i)
 		}
 		break;
 	case EntityType::TORCH:
+	{
+		Torch* torch = dynamic_cast<Torch*>(listObjects[i]);	//Extension cua DropItem
 		listObjects[i]->AddHealth(-1);
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), torch->GetIdTorch()));
+	}
 	default:
 		break;
 	}
@@ -315,7 +372,7 @@ void PlayScene::PlayerGotGate()
 					Unload();
 					if (idStage == STAGE_1)
 					{
-						ChooseMap(STAGE_2);
+						ChooseMap(STAGE_2_1);
 						player->SetPosition(100, 130);
 						player->SetVx(0);
 						player->SetVy(0);
@@ -327,29 +384,43 @@ void PlayScene::PlayerGotGate()
 	}
 }
 
-void PlayScene::PlayerGotStairs()
+bool PlayScene::PlayerGotStairs()
 {
 	for (UINT i = 0; i < listObjects.size(); i++)
 	{
 		if (listObjects[i]->GetType() == EntityType::STAIRS)
 		{
+			Stairs* stair = dynamic_cast<Stairs*>(listObjects[i]);
 			if (player->IsCollidingObject(listObjects[i]))
 			{
-				if (listObjects[i]->GetDirection() == 1)
+				player->SetDirection(stair->GetDirection());
+				/*if (listObjects[i]->GetDirection() == 1)
 				{
+
+				}
+				else
+				{
+
+				}*/
+				/*if (player->GetDirection() == 1)
+				{
+					DebugOut(L"Up Stair \n");
 					player->SetState(PLAYER_STATE_GOING_UP_STAIRS);
 				}
 				else
 				{
+					DebugOut(L"Down Stair \n");
 					player->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
-				}
+				}*/
+				return true;
 			}
-			else
+			/*else
 			{
 				player->SetOnStair(false);
-			}
+			}*/
 		}
 	}
+	return false;
 }
 
 void PlayScene::CheckObjAlive()
@@ -502,7 +573,19 @@ void PlayScene::Update(DWORD dt)
 	player->ReceivePos(cx, cy);
 	//1250
 	if (idStage == STAGE_1 && player->GetPosX() >= STAGE_1_MAX_WIDTH)
+	{
 		cx -= SCREEN_WIDTH / 2 - (STAGE_1_MAX_WIDTH - player->GetPosX());
+	}
+	else
+		if (idStage == STAGE_2_1 && player->GetPosX() >= STAGE_2_1_MAX_WIDTH)
+		{
+			cx -= SCREEN_WIDTH / 2 - (STAGE_2_1_MAX_WIDTH - player->GetPosX());
+		}
+		else
+			if (idStage == STAGE_2_2 && player->GetPosX() >= STAGE_2_2_MAX_WIDTH)
+			{
+				cx -= SCREEN_WIDTH / 2 - (STAGE_2_2_MAX_WIDTH - player->GetPosX());
+			}
 	else
 	{
 		if (player->GetPosX() < SCREEN_WIDTH / 2)
@@ -518,7 +601,7 @@ void PlayScene::Update(DWORD dt)
 	WeaponCollision();
 	PlayerCollideItem();
 	PlayerGotGate(); 
-	PlayerGotStairs();
+	//PlayerGotStairs();
 
 	gameTime->Update(dt);
 	gameUI->Update(cx + 260, 35, player->GetHealth(), 16);	//move posX follow camera
@@ -543,12 +626,28 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Player* simon = ((PlayScene*)scence)->player;
+	PlayScene* playScene = dynamic_cast<PlayScene*>(scence);
 	vector<LPGAMEENTITY> listObj = ((PlayScene*)scence)->listObjects;
 
 	switch (KeyCode)
 	{
 	case DIK_ESCAPE:
 		DestroyWindow(Game::GetInstance()->GetWindowHandle());
+	case DIK_1:	//test auto
+		simon->KnownTargetMovement(simon->GetPosX() + 200, simon->GetPosY(), PLAYER_WALKING_SPEED, 0);
+		break;
+	case DIK_2:	//test jump stage
+		playScene->Unload();
+		playScene->ChooseMap(playScene->idStage + 1);
+		if(playScene->idStage == STAGE_2_1)
+			simon->SetPosition(100, 150);
+		else
+			if (playScene->idStage == STAGE_2_2)
+				simon->SetPosition(800, 150);
+		simon->SetVx(0);
+		simon->SetVy(0);
+		simon->SetState(PLAYER_STATE_IDLE);
+		break;
 	case DIK_R:
 		for (int i = 0; i < listObj.size(); i++)
 		{
@@ -559,12 +658,12 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		}
 		break;
 	case DIK_C:
-		if (simon->IsDeadYet() || simon->IsAttacking() || simon->IsSitting() || simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage())
+		if (simon->IsDeadYet() || simon->IsAttacking() || simon->IsSitting() || simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage() || simon->IsProcessingAuto())
 			return;
 		simon->SetState(PLAYER_STATE_JUMP);
 		break;
 	case DIK_X:
-		if (simon->IsDeadYet() || simon->IsHurting() || simon->IsUpgrading() || Game::GetInstance()->IsKeyDown(DIK_UP) || simon->IsPassingStage())	//Up + X khong Whip duoc nua
+		if (simon->IsDeadYet() || simon->IsHurting() || simon->IsUpgrading() || Game::GetInstance()->IsKeyDown(DIK_UP) || simon->IsPassingStage() || simon->IsProcessingAuto())	//Up + X khong Whip duoc nua
 			return;
 		simon->SetState(PLAYER_STATE_ATTACK);
 		break;
@@ -579,14 +678,16 @@ void PlayScenceKeyHandler::OnKeyUp(int KeyCode)
 void PlayScenceKeyHandler::KeyState(BYTE *states)
 {
 	Player* simon = ((PlayScene*)scence)->player;
+	PlayScene* playScene = dynamic_cast<PlayScene*>(scence);
+	vector<LPGAMEENTITY> listObjects = ((PlayScene*)scence)->listObjects;
 
-	if (simon->IsDeadYet() || simon->IsAttacking() || simon->IsJumping() || simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage()) 
+	if (simon->IsDeadYet() ||  simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage()) 
 	{
 		return;
 	}
 	
-	if (!simon->IsOnStairs())
-	{
+	//if (!simon->IsOnStairs())
+	//{
 		if (Game::GetInstance()->IsKeyDown(DIK_UP) && Game::GetInstance()->IsKeyDown(DIK_X) && !simon->IsAttacking())
 		{
 			if (simon->GetPlayerSupWeaponType() != EntityType::NONE)	//Neu chua nhat duoc vu khi phu thi khong attack
@@ -594,6 +695,89 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 				simon->SetState(PLAYER_STATE_SUPWEAPON_ATTACK);
 			}
 		}
+		else
+			if (!simon->IsJumping() && !simon->IsAttacking())	//tranh simon nhay len stair
+			{
+				if (Game::GetInstance()->IsKeyDown(DIK_UP))
+				{
+					if (simon->IsOnStairs())
+					{
+						for (UINT i = 0; i < listObjects.size(); i++)
+						{
+							if (listObjects[i]->GetType() == EntityType::STAIRS)
+							{
+								if (simon->IsCollidingObject(listObjects[i]))
+								{
+									DebugOut(L"Reach Stair \n");
+									simon->SetDirection(listObjects[i]->GetDirection());
+									DebugOut(L"Up Stair \n");
+									simon->SetState(PLAYER_STATE_GOING_UP_STAIRS);
+									simon->KnownTargetMovement(listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), PLAYER_ON_STAIRS_SPEED_X, PLAYER_ON_STAIRS_SPEED_Y, listObjects[i]->GetDirection(), 1);
+								}
+							}
+						}
+					}
+					else
+					{
+						for (UINT i = 0; i < listObjects.size(); i++)
+						{
+							if (listObjects[i]->GetType() == EntityType::STAIRS)
+							{
+								if (simon->IsCollidingObject(listObjects[i]))
+								{
+									DebugOut(L"Reach Stair \n");
+									DebugOut(L"Up Stair \n");
+									simon->SetState(PLAYER_STATE_GOING_UP_STAIRS);
+								}
+							}
+						}
+					}
+				}
+				else
+					if (Game::GetInstance()->IsKeyDown(DIK_DOWN))
+					{
+						if (simon->IsOnStairs())
+						{
+							for (UINT i = 0; i < listObjects.size(); i++)
+							{
+								if (listObjects[i]->GetType() == EntityType::STAIRS)
+								{
+									if (simon->IsCollidingObject(listObjects[i]))
+									{
+										DebugOut(L"Reach Stair \n");
+										simon->SetDirection(-listObjects[i]->GetDirection());
+										DebugOut(L"Down Stair \n");
+										simon->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
+										simon->KnownTargetMovement(listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), PLAYER_ON_STAIRS_SPEED_X, PLAYER_ON_STAIRS_SPEED_Y, -listObjects[i]->GetDirection(), -1);
+									}
+								}
+							}
+						}
+						else
+						{
+							for (UINT i = 0; i < listObjects.size(); i++)
+							{
+								if (listObjects[i]->GetType() == EntityType::STAIRS)
+								{
+									if (simon->IsCollidingObject(listObjects[i]))
+									{
+										DebugOut(L"Reach Stair \n");
+										DebugOut(L"Down Stair \n");
+										simon->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
+									}
+								}
+							}
+						}
+					}
+					//else
+					//{
+					//	//DebugOut(L"Not Stair \n");
+					//	simon->SetState(PLAYER_STATE_IDLE);
+					//}
+			}
+
+		if (simon->IsOnStairs() || simon->IsProcessingAuto() || simon->IsAttacking() || simon->IsJumping() )
+			return;
 
 		if (Game::GetInstance()->IsKeyDown(DIK_DOWN)) {
 			simon->SetState(PLAYER_STATE_SITTING);
@@ -610,8 +794,8 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 		else if (Game::GetInstance()->IsKeyDown(DIK_LEFT))
 			simon->SetState(PLAYER_STATE_WALKING_LEFT);
 		else simon->SetState(PLAYER_STATE_IDLE);
-	}
-	else
+	//}
+	/*else
 	{
 		if (Game::GetInstance()->IsKeyDown(DIK_RIGHT))
 		{
@@ -627,7 +811,8 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 					simon->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
 			}
 		}
-		else 
+		else
+		{
 			if (Game::GetInstance()->IsKeyDown(DIK_LEFT))
 			{
 				if (simon->GetDirectionY() == 1)
@@ -642,7 +827,12 @@ void PlayScenceKeyHandler::KeyState(BYTE *states)
 						simon->SetState(PLAYER_STATE_GOING_DOWN_STAIRS);
 					}
 			}
-	}
+			else
+			{
+				simon->SetState(PLAYER_STATE_IDLE);
+			}
+		}
+	}*/
 }
 
 /*
@@ -669,8 +859,11 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 	case OBJECT_TYPE_TORCH:
-		listObjects.push_back(new Torch(x, y));
-		break;
+	{
+		int extras = atoi(tokens[3].c_str());
+		listObjects.push_back(new Torch(x, y, extras));
+		break; 
+	}
 	case OBJECT_TYPE_GATE:
 	{
 		int extras = atoi(tokens[3].c_str());
@@ -679,8 +872,9 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_STAIRS:
 	{
-		int extras = atoi(tokens[3].c_str());
-		listObjects.push_back(new Stairs(x, y, extras));
+		int extras1 = atoi(tokens[3].c_str());
+		int extras2 = atoi(tokens[4].c_str());
+		listObjects.push_back(new Stairs(x, y, extras1, extras2));
 		break;
 	}
 	default:

@@ -20,8 +20,8 @@
 #define WIN_TITLE L"NewbieGame"
 
 #define BGColor D3DCOLOR_XRGB(0,0,0)
-#define SCREEN_WIDTH 530
-#define SCREEN_HEIGHT 480
+#define SCREEN_WIDTH 525	//530
+#define SCREEN_HEIGHT 490	//480
 
 #define MaxFrameRate 100	//default Frame Rate is the truth
 
@@ -121,9 +121,11 @@ enum EntityType
 
 	MAPSTAGE1 = 40,
 
-	MAPSTAGE2 = 41,
+	MAPSTAGE2_1 = 41,
 
-	STAIRS = 42
+	MAPSTAGE2_2 = 42,
+
+	STAIRS = 43
 };
 
 class define

@@ -73,7 +73,7 @@ public:
 	virtual void Unload();
 
 	Effect* CreateEffect(EntityType createrType, EntityType effectType, float posX, float posY);
-	Item* DropItem(EntityType createrType, float posX, float posY);
+	Item* DropItem(EntityType createrType, float posX, float posY, int idCreater = 0);
 	void WeaponInteractObj(UINT i);
 	void WeaponCollision();
 	void PlayerCollideItem();
@@ -81,7 +81,7 @@ public:
 	void SetSubWeaponDone(UINT i);
 	bool PlayerPassingStage(float DistanceXWant);
 	void PlayerGotGate();
-	void PlayerGotStairs();
+	bool PlayerGotStairs();
 
 	friend class PlayScenceKeyHandler;
 };

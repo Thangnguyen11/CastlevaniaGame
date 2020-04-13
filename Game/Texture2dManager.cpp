@@ -41,11 +41,12 @@ void Texture2dManager::LoadContent()
 	AddTexture(EntityType::INTROSIMON, new Texture2d("Resources/Simon.png", 8, 7, 56, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
 	//Map
-	AddTexture(EntityType::MAPSTAGE1, new Texture2d("Resources/TileMap/TilesetStage1.png", 8, 4, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
-	AddTexture(EntityType::MAPSTAGE2, new Texture2d("Resources/TileMap/TilesetStage2.png", 22, 4, 88, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::MAPSTAGE1, new Texture2d("Resources/TileMap/TilesetStage1.png", 17, 4, 68, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::MAPSTAGE2_1, new Texture2d("Resources/TileMap/TilesetStage2-1.png", 7, 4, 28, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::MAPSTAGE2_2, new Texture2d("Resources/TileMap/TilesetStage2-1.png", 7, 4, 28, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
 	//Static Obj
-	AddTexture(EntityType::BRICK, new Texture2d("Resources/Objects/Ground.png", 2, 1, 2));
+	AddTexture(EntityType::BRICK, new Texture2d("Resources/Objects/Ground.png", 3, 1, 3));
 	AddTexture(EntityType::TORCH, new Texture2d("Resources/Objects/Torch.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::CANDLE, new Texture2d("Resources/Objects/Candle.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::GATE, new Texture2d("Resources/Objects/Gate.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));

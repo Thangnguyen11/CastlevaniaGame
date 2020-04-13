@@ -14,7 +14,7 @@
 #define PLAYER_DEFLECT_SPEED_Y					0.3f
 #define PLAYER_MAXHEALTH						16
 #define PLAYER_ON_STAIRS_SPEED_X				0.05f
-#define PLAYER_ON_STAIRS_SPEED_Y				0.15f
+#define PLAYER_ON_STAIRS_SPEED_Y				0.05f
 
 #define PLAYER_BBOX_WIDTH						45		//60
 #define PLAYER_BBOX_HEIGHT						63		//66
@@ -74,7 +74,13 @@ class Player : public Entity
 		isUpgrading,
 		isPassingStage,
 		isRespawning,
-		isOnStairs;	
+		isOnStairs;
+
+	bool triggerAuto;	//trigger make player cant use input
+	float targetPosX;
+	float targetPosY;
+	float processAutoSpeedX;
+	float processAutoSpeedY;
 
 	int directionY;	//1 = up, -1 = down
 
@@ -88,7 +94,6 @@ class Player : public Entity
 	Weapon* supWeapon;
 	EntityType currentSupWeaponType;
 public:
-
 	Player(float posX, float posY);
 	~Player();
 
@@ -110,6 +115,8 @@ public:
 	bool IsRespawning() { return isRespawning; }
 	bool IsOnStairs() { return isOnStairs; }
 
+	bool IsProcessingAuto() { return triggerAuto; }
+
 	int GetDirectionY() { return directionY; }
 	void SetOnStair(bool onStair) { isOnStairs = onStair; }
 	
@@ -122,5 +129,9 @@ public:
 	void SetPlayerSupWeaponType(EntityType supWeaponType);
 
 	void Respawn();
+
+	void KnownTargetMovement(float targetX, float targetY, float speedX, float speedY, int directionX = 1, int directionY = 1);
+	//1 co che khong duoc dieu khien
+	//target Pos nen la 1 cap vector de khi su dung khong xay ra nhung loi lien quan nhap lieu
 };
 
