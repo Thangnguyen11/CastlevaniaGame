@@ -20,6 +20,7 @@
 #include "Hit.h"
 #include "Fire.h"
 #include "Score.h"
+#include "Crown.h"
 
 #include "Player.h"
 #include "Brick.h"
@@ -28,6 +29,9 @@
 #include "Torch.h"
 #include "Gate.h"
 #include "Stairs.h"
+#include "DarkenBat.h"
+#include "Knight.h"
+#include "BreakableBrick.h"
 
 #define SPAWNING_ZOMBIE_DELAY				3000
 #define SPAWNING_DELAY_BETWEEN_2_ZOMBIE		450	
@@ -60,6 +64,9 @@ protected:
 	//testing Scan
 	//bool isScanned;
 	//Timer* scanningGameTimer = new Timer(SCANING_GAME_DELAY);
+
+	int countHiddenQuestDone_Stage2_1;	//bien dem khi pha gach stage 2-1
+
 	void _ParseSection_OBJECTS(string line);
 
 public:
@@ -74,7 +81,7 @@ public:
 
 	Effect* CreateEffect(EntityType createrType, EntityType effectType, float posX, float posY);
 	Item* DropItem(EntityType createrType, float posX, float posY, int idCreater = 0);
-	void WeaponInteractObj(UINT i);
+	void WeaponInteractObj(UINT i, bool isMainWeapon);
 	void WeaponCollision();
 	void PlayerCollideItem();
 	void CheckObjAlive();
@@ -82,6 +89,7 @@ public:
 	bool PlayerPassingStage(float DistanceXWant);
 	void PlayerGotGate();
 	bool PlayerGotStairs();
+	void HiddenItemOpen();
 
 	friend class PlayScenceKeyHandler;
 };

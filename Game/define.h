@@ -125,7 +125,25 @@ enum EntityType
 
 	MAPSTAGE2_2 = 42,
 
-	STAIRS = 43
+	STAIRS = 43,
+
+	DARKENBAT = 44,
+
+	KNIGHT = 45,
+
+	GHOST = 46,
+
+	RAVEN = 47,
+
+	HUNCHMAN = 48,
+
+	EAGLE = 49,
+
+	BREAKABLEBRICK = 50,
+
+	CROWN = 51,
+
+	ITEMEXTRASHOT = 52
 };
 
 class define

@@ -31,7 +31,8 @@ void Bat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 
 	int currentFrame = sprite->GetCurrentFrame();
-	if (!isDead) {
+	if (!isDead) 
+	{
 		if (currentFrame < BAT_ANI_FLYING_BEGIN) {
 			sprite->SelectFrame(BAT_ANI_FLYING_BEGIN);
 			sprite->currentTotalTime = dt;

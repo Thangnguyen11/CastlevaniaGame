@@ -51,6 +51,7 @@ void Texture2dManager::LoadContent()
 	AddTexture(EntityType::CANDLE, new Texture2d("Resources/Objects/Candle.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::GATE, new Texture2d("Resources/Objects/Gate.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::STAIRS, new Texture2d("Resources/Objects/Stair.png", 2, 1, 2));
+	AddTexture(EntityType::BREAKABLEBRICK, new Texture2d("Resources/Objects/Ground.png", 3, 1, 3));
 
 	//UI
 	AddTexture(EntityType::BLACKBOARD, new Texture2d("Resources/UI/BlackBoard.png", 1, 1, 1));
@@ -67,6 +68,13 @@ void Texture2dManager::LoadContent()
 	//Mobs and Bosses
 	AddTexture(EntityType::BAT, new Texture2d("Resources/Enemies/VampireBat.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::ZOMBIE, new Texture2d("Resources/Enemies/Zombie.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::DARKENBAT, new Texture2d("Resources/Enemies/DarkenBat.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::KNIGHT, new Texture2d("Resources/Enemies/Knight.png", 3, 1, 3, D3DCOLOR_ARGB(255, 116, 116, 116)));
+	AddTexture(EntityType::RAVEN, new Texture2d("Resources/Enemies/Raven.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::HUNCHMAN, new Texture2d("Resources/Enemies/Hunchman.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::GHOST, new Texture2d("Resources/Enemies/Ghost.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::EAGLE, new Texture2d("Resources/Enemies/Eagle.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
+
 
 	//Weapons
 	AddTexture(EntityType::MORNINGSTAR, new Texture2d("Resources/Weapons/MorningStar.png", 4, 3, 12, D3DCOLOR_ARGB(255, 255, 0, 255)));
@@ -86,5 +94,7 @@ void Texture2dManager::LoadContent()
 	AddTexture(EntityType::BOOMERANG, new Texture2d("Resources/Items/Boomerang.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::WATERPOTION, new Texture2d("Resources/Items/WaterPotion.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::ITEMDAGGER, new Texture2d("Resources/Items/Dagger.png", 1, 1, 1, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::CROWN, new Texture2d("Resources/Items/Crown.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::ITEMEXTRASHOT, new Texture2d("Resources/Items/ExtraShot.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
 }

@@ -18,8 +18,6 @@
 
 class Zombie : public Entity
 {
-	float tempX;
-
 public:
 	Zombie(float posX, float posY, int direction = 1);
 	~Zombie();

@@ -13,10 +13,14 @@
 #define SCENE_SECTION_UNKNOWN		-1
 #define SCENE_SECTION_OBJECTS		1
 
+//tam thoi, co the thay the = EntityType
 #define OBJECT_TYPE_BRICK			1
 #define OBJECT_TYPE_TORCH			2
 #define OBJECT_TYPE_GATE			3
 #define OBJECT_TYPE_STAIRS			4
+#define OBJECT_TYPE_DARKENBAT		5
+#define OBJECT_TYPE_KNIGHT			6
+#define OBJECT_TYPE_BREAKABLEBRICK	7
 
 using namespace std;
 
@@ -64,6 +68,7 @@ void PlayScene::ChooseMap(int whatMap)
 
 		gameTime->ResetGameTime();	//Reset lai gameTime
 
+		countHiddenQuestDone_Stage2_1 = 0;
 		////Zombie Logic
 		//counterZombie = 0;
 		//isTimeToSpawnZombie = true;		//vua vao spawn luon
@@ -108,6 +113,11 @@ Effect* PlayScene::CreateEffect(EntityType createrType, EntityType effectType, f
 Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int idCreater)
 {
 	int bagrandom = rand() % 100;
+	if (createrType == EntityType::NONE)		//special case
+	{
+		return new Crown(posX, posY);
+	}
+
 	if (createrType == EntityType::TORCH)
 	{
 		if (idCreater == 1)
@@ -177,25 +187,42 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 			return new BigHeart(posX, posY);
 }
 
-void PlayScene::WeaponInteractObj(UINT i)
+void PlayScene::WeaponInteractObj(UINT i, bool isMainWeapon)
 {
 	//Co 1 phuong an de delay DropItem la trigger Start timer o day, o update thi lien tuc check timer de push
-	//Van de la timer co hoat dong dung khong khi giet nhieu target 1 luc ?
+	//Van de la timer co hoat dong dung khong khi giet nhieu target 1 luc ?	//Phuong an la dat timer trong class cua item
 	switch (listObjects[i]->GetType())
 	{
 	case EntityType::BAT:
+		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
+		{
+			player->AddScore(500);
+			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		}
 		listObjects[i]->AddHealth(-1);
-		player->AddScore(500);
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		break;
+	case EntityType::DARKENBAT:
+		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
+		{
+			player->AddScore(500);
+			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		}
+		listObjects[i]->AddHealth(-1);
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		break;
 	case EntityType::ZOMBIE:
+		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
+		{
+			player->AddScore(100);
+			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		}
 		listObjects[i]->AddHealth(-1);
-		player->AddScore(100);
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
-		listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		
 		counterZombie--;
 		if (counterZombie == 0)
 		{
@@ -204,6 +231,16 @@ void PlayScene::WeaponInteractObj(UINT i)
 			isTimeToSpawnZombie = false;
 		}
 		break;
+	case EntityType::KNIGHT:
+		if (listObjects[i]->GetHealth() == 1)	//Hit nay se chet 
+		{
+			player->AddScore(200);
+			listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		}
+		listObjects[i]->AddHealth(-1);
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		break;
 	case EntityType::TORCH:
 	{
 		Torch* torch = dynamic_cast<Torch*>(listObjects[i]);	//Extension cua DropItem
@@ -211,6 +248,19 @@ void PlayScene::WeaponInteractObj(UINT i)
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), torch->GetIdTorch()));
+	}
+	case EntityType::BREAKABLEBRICK:
+	{
+		if (isMainWeapon)
+		{
+			if (idStage == STAGE_2_1)
+			{
+				countHiddenQuestDone_Stage2_1++;
+			}
+			listObjects[i]->AddHealth(-1);
+			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		}
 	}
 	default:
 		break;
@@ -221,7 +271,10 @@ void PlayScene::SetSubWeaponDone(UINT i)
 {
 	if (listObjects[i]->GetType() == EntityType::BAT ||
 		listObjects[i]->GetType() == EntityType::ZOMBIE ||
-		listObjects[i]->GetType() == EntityType::TORCH)
+		listObjects[i]->GetType() == EntityType::TORCH ||
+		listObjects[i]->GetType() == EntityType::DARKENBAT ||
+		listObjects[i]->GetType() == EntityType::KNIGHT ||
+		listObjects[i]->GetType() == EntityType::BREAKABLEBRICK)
 	{
 		switch (player->GetPlayerSupWeaponType())
 		{
@@ -241,7 +294,7 @@ void PlayScene::WeaponCollision()
 		{
 			if (player->GetPlayerMainWeapon()->IsCollidingObject(listObjects[i]))	//Main weapon va cham voi obj
 			{
-				WeaponInteractObj(i);
+				WeaponInteractObj(i, true);
 				//old
 				/*switch (listObjects[i]->GetType())
 				{
@@ -279,7 +332,7 @@ void PlayScene::WeaponCollision()
 				if (player->GetPlayerSupWeapon() != NULL //Dong nay de dam bao dong ben duoi khong bi break
 					&& player->GetPlayerSupWeapon()->IsCollidingObject(listObjects[i]))
 				{
-					WeaponInteractObj(i);
+					WeaponInteractObj(i, false);
 					SetSubWeaponDone(i);
 				}
 		}
@@ -323,6 +376,10 @@ void PlayScene::PlayerCollideItem()
 					break;
 				case EntityType::YUMMICHICKENLEG:
 					player->AddScore(1000);
+					listItems[i]->SetIsDone(true);
+					break;
+				case EntityType::CROWN:
+					player->AddScore(10000);
 					listItems[i]->SetIsDone(true);
 					break;
 				case EntityType::UPGRADEMORNINGSTAR:
@@ -421,6 +478,18 @@ bool PlayScene::PlayerGotStairs()
 		}
 	}
 	return false;
+}
+
+void PlayScene::HiddenItemOpen()
+{
+	if (idStage == STAGE_2_1)
+	{
+		if (countHiddenQuestDone_Stage2_1 == 2)
+		{
+			listItems.push_back(DropItem(EntityType::NONE, 240.0f, 441.0f));
+			countHiddenQuestDone_Stage2_1 = 0;
+		}
+	}
 }
 
 void PlayScene::CheckObjAlive()
@@ -602,6 +671,7 @@ void PlayScene::Update(DWORD dt)
 	PlayerCollideItem();
 	PlayerGotGate(); 
 	//PlayerGotStairs();
+	HiddenItemOpen();
 
 	gameTime->Update(dt);
 	gameUI->Update(cx + 260, 35, player->GetHealth(), 16);	//move posX follow camera
@@ -640,7 +710,7 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		playScene->Unload();
 		playScene->ChooseMap(playScene->idStage + 1);
 		if(playScene->idStage == STAGE_2_1)
-			simon->SetPosition(100, 150);
+			simon->SetPosition(400, 150);
 		else
 			if (playScene->idStage == STAGE_2_2)
 				simon->SetPosition(800, 150);
@@ -656,6 +726,10 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			else
 				listObj[i]->SetBBARGB(0);
 		}
+		if (simon->GetBBARGB() == 0)
+			simon->SetBBARGB(200);
+		else
+			simon->SetBBARGB(0);
 		break;
 	case DIK_C:
 		if (simon->IsDeadYet() || simon->IsAttacking() || simon->IsSitting() || simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage() || simon->IsProcessingAuto())
@@ -875,6 +949,25 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		int extras1 = atoi(tokens[3].c_str());
 		int extras2 = atoi(tokens[4].c_str());
 		listObjects.push_back(new Stairs(x, y, extras1, extras2));
+		break;
+	}
+	case OBJECT_TYPE_DARKENBAT:
+	{
+		//player tao truoc nen kh sao
+		int extras1 = atoi(tokens[3].c_str());
+		listObjects.push_back(new DarkenBat(x, y, extras1, player));
+		break;
+	}
+	case OBJECT_TYPE_KNIGHT:
+	{
+		int extras1 = atoi(tokens[3].c_str());
+		listObjects.push_back(new Knight(x, y, extras1));
+		break;
+	}
+	case OBJECT_TYPE_BREAKABLEBRICK:
+	{
+		int extras1 = atoi(tokens[3].c_str());
+		listObjects.push_back(new BreakableBrick(x, y, extras1));
 		break;
 	}
 	default:

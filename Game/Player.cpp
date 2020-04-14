@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "Bat.h"
 #include "Zombie.h"
+#include "DarkenBat.h"
+#include "Knight.h"
 
 Player::Player(float posX, float posY) 
 {
@@ -302,10 +304,42 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 						}
 					}
 				}
+				if (e->obj->GetType() == EntityType::DARKENBAT)
+				{
+					DarkenBat *darkenBat = dynamic_cast<DarkenBat *>(e->obj);
+
+					if (e->nx != 0 || e->ny != 0)
+					{
+						if (darkenBat->GetState() != DARKBAT_STATE_DIE)
+						{
+							this->AddHealth(-2);
+							hurtingTimer->Start();
+							immortalTimer->Start();
+							isImmortaling = true;
+							SetState(PLAYER_STATE_HURTING);
+							darkenBat->AddHealth(-1);
+						}
+					}
+				}
 				if (e->obj->GetType() == EntityType::ZOMBIE)
 				{
 					Zombie *zombie = dynamic_cast<Zombie *>(e->obj);
 					if (zombie->GetState() != ZOMBIE_STATE_DIE)
+					{
+						if (e->nx != 0 || e->ny != 0)
+						{
+							this->AddHealth(-2);
+							hurtingTimer->Start();
+							immortalTimer->Start();
+							isImmortaling = true;
+							SetState(PLAYER_STATE_HURTING);
+						}
+					}
+				}
+				if (e->obj->GetType() == EntityType::KNIGHT)
+				{
+					Knight *knight = dynamic_cast<Knight *>(e->obj);
+					if (knight->GetState() != KNIGHT_STATE_DIE)
 					{
 						if (e->nx != 0 || e->ny != 0)
 						{

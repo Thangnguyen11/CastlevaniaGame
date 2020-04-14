@@ -8,7 +8,6 @@ Zombie::Zombie(float posX, float posY, int direction)
 
 	this->posX = posX;
 	this->posY = posY;
-	tempX = posX;
 	this->direction = direction;
 
 	this->SetState(ZOMBIE_STATE_WALKING);
