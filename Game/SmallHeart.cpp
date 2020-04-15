@@ -36,9 +36,15 @@ void SmallHeart::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 
 	if (posX - tempX >= SMALLHEART_AMPLITUDE_VERTICAL)
-		direction = -1;
-	else if(tempX - posX >= SMALLHEART_AMPLITUDE_VERTICAL)
-		direction = 1;
+	{
+		direction *= -1;
+		vX *= -1;
+	}
+	else if (tempX - posX >= SMALLHEART_AMPLITUDE_VERTICAL)
+	{
+		direction *= -1;
+		vX *= -1;
+	}
 
 	Entity::Update(dt);
 	vY = SMALLHEART_GRAVITY * dt;
@@ -50,7 +56,8 @@ void SmallHeart::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	coEvents.clear();
 	bricks.clear();
 	for (UINT i = 0; i < coObjects->size(); i++)
-		if (coObjects->at(i)->GetType() == EntityType::BRICK)
+		if (coObjects->at(i)->GetType() == EntityType::BRICK ||
+			coObjects->at(i)->GetType() == EntityType::BREAKABLEBRICK)
 			bricks.push_back(coObjects->at(i));
 
 	CalcPotentialCollisions(&bricks, coEvents);

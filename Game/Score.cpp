@@ -24,12 +24,12 @@ void Score::Update(DWORD dt)
 	{
 		if (currentFrame < SCORE_100_ANI_BEGIN) {
 			sprite->SelectFrame(SCORE_100_ANI_BEGIN);
-			sprite->currentTotalTime = dt;
+			sprite->SetCurrentTotalTime(dt);
 		}
 		else {
-			sprite->currentTotalTime += dt;
-			if (sprite->currentTotalTime >= SCORE_TIME_OF_PER_EFFECT) {
-				sprite->currentTotalTime -= SCORE_TIME_OF_PER_EFFECT;
+			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+			if (sprite->GetCurrentTotalTime() >= SCORE_TIME_OF_PER_EFFECT) {
+				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - SCORE_TIME_OF_PER_EFFECT);
 				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
 			}
 
@@ -42,12 +42,12 @@ void Score::Update(DWORD dt)
 	{
 		if (currentFrame < SCORE_400_ANI_BEGIN) {
 			sprite->SelectFrame(SCORE_400_ANI_BEGIN);
-			sprite->currentTotalTime = dt;
+			sprite->SetCurrentTotalTime(dt);
 		}
 		else {
-			sprite->currentTotalTime += dt;
-			if (sprite->currentTotalTime >= SCORE_TIME_OF_PER_EFFECT) {
-				sprite->currentTotalTime -= SCORE_TIME_OF_PER_EFFECT;
+			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+			if (sprite->GetCurrentTotalTime() >= SCORE_TIME_OF_PER_EFFECT) {
+				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - SCORE_TIME_OF_PER_EFFECT);
 				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
 			}
 
@@ -60,12 +60,12 @@ void Score::Update(DWORD dt)
 	{
 		if (currentFrame < SCORE_700_ANI_BEGIN) {
 			sprite->SelectFrame(SCORE_700_ANI_BEGIN);
-			sprite->currentTotalTime = dt;
+			sprite->SetCurrentTotalTime(dt);
 		}
 		else {
-			sprite->currentTotalTime += dt;
-			if (sprite->currentTotalTime >= SCORE_TIME_OF_PER_EFFECT) {
-				sprite->currentTotalTime -= SCORE_TIME_OF_PER_EFFECT;
+			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+			if (sprite->GetCurrentTotalTime() >= SCORE_TIME_OF_PER_EFFECT) {
+				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - SCORE_TIME_OF_PER_EFFECT);
 				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
 			}
 
@@ -78,12 +78,12 @@ void Score::Update(DWORD dt)
 	{
 		if (currentFrame < SCORE_1000_ANI_BEGIN) {
 			sprite->SelectFrame(SCORE_1000_ANI_BEGIN);
-			sprite->currentTotalTime = dt;
+			sprite->SetCurrentTotalTime(dt);
 		}
 		else {
-			sprite->currentTotalTime += dt;
-			if (sprite->currentTotalTime >= SCORE_TIME_OF_PER_EFFECT) {
-				sprite->currentTotalTime -= SCORE_TIME_OF_PER_EFFECT;
+			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+			if (sprite->GetCurrentTotalTime() >= SCORE_TIME_OF_PER_EFFECT) {
+				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - SCORE_TIME_OF_PER_EFFECT);
 				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
 			}
 

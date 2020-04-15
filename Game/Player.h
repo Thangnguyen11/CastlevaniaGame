@@ -8,7 +8,7 @@
 
 #define PLAYER_WALKING_SPEED					0.20f	//0.25
 #define PLAYER_PASSING_STAGE_SPEED				0.035f
-#define PLAYER_JUMP_SPEED_Y						0.5f	//0.8
+#define PLAYER_JUMP_SPEED_Y						0.55f	//0.8
 #define PLAYER_GRAVITY							0.002f	//0.025
 #define PLAYER_DEFLECT_SPEED_X					0.8f
 #define PLAYER_DEFLECT_SPEED_Y					0.3f
@@ -84,6 +84,8 @@ class Player : public Entity
 
 	int directionY;	//1 = up, -1 = down
 
+	int currentStageLiving;
+
 	Timer* hurtingTimer = new Timer(PLAYER_HURTING_DELAY);
 	Timer* immortalTimer = new Timer(PLAYER_IMMORTAL_TIMECOUNTER);
 	//Immortal != Invincible !!!!! You may be Immortal, but you are not Invincible! - a Prince of Persia said.
@@ -127,6 +129,8 @@ public:
 
 	EntityType GetPlayerSupWeaponType() { return currentSupWeaponType; }
 	void SetPlayerSupWeaponType(EntityType supWeaponType);
+
+	void ReceiveCurrentStage(int info) { currentStageLiving = info; }
 
 	void Respawn();
 

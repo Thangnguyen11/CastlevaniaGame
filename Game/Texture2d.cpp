@@ -7,6 +7,9 @@ Texture2d::Texture2d(char* filePath, int COLUMN, int ROW, int TOTALFRAME, D3DCOL
 	this->totalFrame = TOTALFRAME;
 
 	D3DXIMAGE_INFO info;
+	this->frameWidth = info.Width / column;
+	this->frameHeight = info.Height / row;
+
 	HRESULT result = D3DXGetImageInfoFromFileA(filePath, &info);
 
 	if (result != D3D_OK)
@@ -14,9 +17,6 @@ Texture2d::Texture2d(char* filePath, int COLUMN, int ROW, int TOTALFRAME, D3DCOL
 		DebugOut(L"[ERROR] GetImageInfoFromFile failed: %s\n", filePath);
 		return;
 	}
-
-	this->frameWidth = info.Width / column;
-	this->frameHeight = info.Height / row;
 
 	LPDIRECT3DDEVICE9 d3ddv = Game::GetInstance()->GetDirect3DDevice();
 	result = D3DXCreateTextureFromFileExA(

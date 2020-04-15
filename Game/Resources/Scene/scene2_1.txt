@@ -1,17 +1,22 @@
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 1 = Brick, 2 = Torch, 3 = Gate, 4 = Stairs, 5 = DarkenBat, 6 = Knight, 
-# 7 = BreakableBrick
+# 7 = BreakableBrick, 8 = Candle
 
 #DarkenBat
 5	112	110	1
 
 #Knight
-6	285	185	-1
+6	285	185	-1	1000
 
 #BreakableBrick
 7	464	281	3
 7	496	281	3
+
+#Candle
+8	160	329	1
+8	416	329	1
+8	288	120	1
 
 #Brick
 1	16	441	3

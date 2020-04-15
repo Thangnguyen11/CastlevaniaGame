@@ -30,8 +30,19 @@
 #define DIRECTINPUT_VERSION 0x0800
 #define KEYBOARD_BUFFER_SIZE 1024
 
-
 #define MAX_SCENE_LINE 1024
+
+#define STAGE_1						1
+#define STAGE_2_1					2
+#define STAGE_2_2					3
+
+#define STAGE_1_MAX_WIDTH			1250
+#define STAGE_2_1_MAX_WIDTH			262
+#define STAGE_2_2_MAX_WIDTH			776
+
+#define SCENE_SECTION_UNKNOWN		-1
+#define SCENE_SECTION_OBJECTS		1
+
 
 //Nen define thanh nhieu lop type
 //Vd Zombie thuoc EntityType, EnemyType
@@ -143,7 +154,9 @@ enum EntityType
 
 	CROWN = 51,
 
-	ITEMEXTRASHOT = 52
+	ITEMEXTRASHOT = 52,
+
+	MOVINGPLATFORM = 53
 };
 
 class define

@@ -39,13 +39,13 @@ void Crown::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	if (currentFrame < CROWN_ANI_BEGIN)
 	{
 		sprite->SelectFrame(CROWN_ANI_BEGIN);
-		sprite->currentTotalTime = dt;
+		sprite->SetCurrentTotalTime(dt);
 	}
 	else {
-		sprite->currentTotalTime += dt;
-		if (sprite->currentTotalTime >= CROWN_TWINKLE_SPEED)
+		sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+		if (sprite->GetCurrentTotalTime() >= CROWN_TWINKLE_SPEED)
 		{
-			sprite->currentTotalTime -= CROWN_TWINKLE_SPEED;
+			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - CROWN_TWINKLE_SPEED);
 			sprite->SelectFrame(currentFrame + 1);
 		}
 
@@ -66,7 +66,8 @@ void Crown::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		coEvents.clear();
 		bricks.clear();
 		for (UINT i = 0; i < coObjects->size(); i++)
-			if (coObjects->at(i)->GetType() == EntityType::BRICK)
+			if (coObjects->at(i)->GetType() == EntityType::BRICK ||
+				coObjects->at(i)->GetType() == EntityType::BREAKABLEBRICK)
 				bricks.push_back(coObjects->at(i));
 
 		CalcPotentialCollisions(&bricks, coEvents);

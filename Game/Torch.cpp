@@ -27,12 +27,12 @@ void Torch::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	if (!isDead) {
 		if (currentFrame < TORCH_ANI_BEGIN) {
 			sprite->SelectFrame(TORCH_ANI_BEGIN);
-			sprite->currentTotalTime = dt;
+			sprite->SetCurrentTotalTime(dt);
 		}
 		else {
-			sprite->currentTotalTime += dt;
-			if (sprite->currentTotalTime >= TORCH_BURN_SPEED) {
-				sprite->currentTotalTime -= TORCH_BURN_SPEED;
+			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+			if (sprite->GetCurrentTotalTime() >= TORCH_BURN_SPEED) {
+				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - TORCH_BURN_SPEED);
 				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
 			}
 

@@ -31,13 +31,13 @@ void Zombie::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		if (currentFrame < ZOMBIE_ANI_WALKING_BEGIN) 
 		{
 			sprite->SelectFrame(ZOMBIE_ANI_WALKING_BEGIN);
-			sprite->currentTotalTime = dt;
+			sprite->SetCurrentTotalTime(dt);
 		}
 		else {
-			sprite->currentTotalTime += dt;
-			if (sprite->currentTotalTime >= ZOMBIE_DRESSDANCE_SPEED) 
+			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+			if (sprite->GetCurrentTotalTime() >= ZOMBIE_DRESSDANCE_SPEED)
 			{
-				sprite->currentTotalTime -= ZOMBIE_DRESSDANCE_SPEED;
+				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - ZOMBIE_DRESSDANCE_SPEED);
 				sprite->SelectFrame(currentFrame + 1);
 			}
 
@@ -57,7 +57,8 @@ void Zombie::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	coEvents.clear();
 	bricks.clear();
 	for (UINT i = 0; i < coObjects->size(); i++)
-		if (coObjects->at(i)->GetType() == EntityType::BRICK)
+		if (coObjects->at(i)->GetType() == EntityType::BRICK ||
+			coObjects->at(i)->GetType() == EntityType::BREAKABLEBRICK)
 			bricks.push_back(coObjects->at(i));
 
 	// turn off collision when die 

@@ -40,7 +40,7 @@ void Map::LoadMap(EntityType typeMap)
 	}
 	RowTexture = tileMapTexture->getRow();
 	ColumnTexture = tileMapTexture->getColumn();
-	TotalFrameTexture = tileMapTexture->totalFrame;
+	TotalFrameTexture = tileMapTexture->GetTotalFrame();
 	FrameWidthTexture = tileMapTexture->getFrameWidth();
 	FrameHeightTexture = tileMapTexture->getFrameHeight();
 }

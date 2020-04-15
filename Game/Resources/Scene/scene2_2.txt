@@ -1,6 +1,29 @@
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 1 = Brick, 2 = Torch, 3 = Gate, 4 = Stairs
+# 5 = DarkenBat, 6 = Knight, 7 = BreakableBrick, 8 = Candle, 9 = Moving Flatform
+
+#DarkenBat
+5	608	137	1
+
+#Knight
+6	672	249	1	1000
+6	304	137	-1	112
+
+#BreakableBrick
+7	720	249	3
+
+#Candle
+8	928	128	1
+8	800	128	1
+8	672	128	1
+8	544	128	1
+8	416	128	1
+8	288	128	1
+8	160	128	1
+
+#Moving Flatform
+9	144	249
 
 #Brick
 1	16	441	3
@@ -20,6 +43,7 @@
 
 1	208	249	3
 1	240	249	3
+#
 1	272	249	3
 1	304	249	3
 
@@ -63,12 +87,14 @@
 1	528	441	3
 
 1	592	313	3
+#
 1	624	313	3
 
 1	656	377	3
+#
 1	688	377	3
 
-1	720	249	3
+#1	720	249	3
 1	752	249	3
 1	784	249	3
 1	816	249	3

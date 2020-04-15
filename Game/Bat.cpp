@@ -35,12 +35,12 @@ void Bat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	{
 		if (currentFrame < BAT_ANI_FLYING_BEGIN) {
 			sprite->SelectFrame(BAT_ANI_FLYING_BEGIN);
-			sprite->currentTotalTime = dt;
+			sprite->SetCurrentTotalTime(dt);
 		}
 		else {
-			sprite->currentTotalTime += dt;
-			if (sprite->currentTotalTime >= BAT_FLAPPING_SPEED) {
-				sprite->currentTotalTime -= BAT_FLAPPING_SPEED;
+			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+			if (sprite->GetCurrentTotalTime() >= BAT_FLAPPING_SPEED) {
+				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - BAT_FLAPPING_SPEED);
 				sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			
 			}
 

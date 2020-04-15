@@ -1,6 +1,6 @@
 #include "Knight.h"
 
-Knight::Knight(float posX, float posY, int directionX)
+Knight::Knight(float posX, float posY, int directionX, float maxAmplitudeX)
 {
 	this->texture = Texture2dManager::GetInstance()->GetTexture(EntityType::KNIGHT);
 	this->sprite = new Sprite(texture, MaxFrameRate);
@@ -10,11 +10,14 @@ Knight::Knight(float posX, float posY, int directionX)
 	this->posY = posY;
 	this->direction = directionX;
 	startX = posX + 1;
+	this->maxAmplitudeX = maxAmplitudeX;
 
 	SetState(KNIGHT_STATE_WALKING);
 
 	health = 2;
 	isDead = false;
+
+	randomTurnaround = false;
 }
 
 Knight::~Knight(){}
@@ -32,13 +35,13 @@ void Knight::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		if (currentFrame < KNIGHT_ANI_WALKING_BEGIN)
 		{
 			sprite->SelectFrame(KNIGHT_ANI_WALKING_BEGIN);
-			sprite->currentTotalTime = dt;
+			sprite->SetCurrentTotalTime(dt);
 		}
 		else {
-			sprite->currentTotalTime += dt;
-			if (sprite->currentTotalTime >= KNIGHT_SWAPLEG_SPEED)
+			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+			if (sprite->GetCurrentTotalTime() >= KNIGHT_SWAPLEG_SPEED)
 			{
-				sprite->currentTotalTime -= KNIGHT_SWAPLEG_SPEED;
+				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - KNIGHT_SWAPLEG_SPEED);
 				sprite->SelectFrame(currentFrame + 1);
 			}
 
@@ -58,7 +61,8 @@ void Knight::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	coEvents.clear();
 	bricks.clear();
 	for (UINT i = 0; i < coObjects->size(); i++)
-		if (coObjects->at(i)->GetType() == EntityType::BRICK)
+		if (coObjects->at(i)->GetType() == EntityType::BRICK ||
+			coObjects->at(i)->GetType() == EntityType::BREAKABLEBRICK)
 			bricks.push_back(coObjects->at(i));
 
 	// turn off collision when die 
@@ -83,8 +87,7 @@ void Knight::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 		if (nx != 0 && ny == 0)
 		{
-			direction *= -1;
-			vX *= -1;
+			TurnAround();
 		}
 		else 
 			if (ny == -1)
@@ -94,11 +97,32 @@ void Knight::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	for (UINT i = 0; i < coEvents.size(); i++)
 		delete coEvents[i];
 
-	if (posX >= startX)
+	//Cham diem khoi dau hoac vuot qua bien do cho phep
+	if (posX >= startX || posX <= startX - maxAmplitudeX)
 	{
-		direction *= -1;
-		vX *= -1;
+		TurnAround();
 	}
+
+	//Extension
+	int random = rand() % 10000;	//The bigger random range, the more accurate
+	if (random <= 50)
+	{
+		randomTurnaround = true;
+		random = NULL;
+	}
+
+	if (randomTurnaround)
+	{
+		TurnAround();
+		randomTurnaround = false;
+	}
+
+}
+
+void Knight::TurnAround()
+{
+	direction *= -1;
+	vX *= -1;
 }
 
 void Knight::Render()

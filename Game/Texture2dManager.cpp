@@ -48,10 +48,11 @@ void Texture2dManager::LoadContent()
 	//Static Obj
 	AddTexture(EntityType::BRICK, new Texture2d("Resources/Objects/Ground.png", 3, 1, 3));
 	AddTexture(EntityType::TORCH, new Texture2d("Resources/Objects/Torch.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
-	AddTexture(EntityType::CANDLE, new Texture2d("Resources/Objects/Candle.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::CANDLE, new Texture2d("Resources/Objects/Candle.png", 2, 1, 2, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::GATE, new Texture2d("Resources/Objects/Gate.png", 4, 1, 4, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::STAIRS, new Texture2d("Resources/Objects/Stair.png", 2, 1, 2));
 	AddTexture(EntityType::BREAKABLEBRICK, new Texture2d("Resources/Objects/Ground.png", 3, 1, 3));
+	AddTexture(EntityType::MOVINGPLATFORM, new Texture2d("Resources/Objects/MovingPlatform.png", 1, 1, 1, D3DCOLOR_ARGB(255, 116, 116, 116)));
 
 	//UI
 	AddTexture(EntityType::BLACKBOARD, new Texture2d("Resources/UI/BlackBoard.png", 1, 1, 1));

@@ -49,20 +49,40 @@ void MorningStar::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 void MorningStar::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	//Weapon::GetBoundingBox(left, top, right, bottom);
-	if (level == 1 || level == 2)
+
+
+	//Numbers below is the result of testing
+	if (direction == 1)
 	{
-		left = posX + 10;
-		top = posY;
-		right = posX + texture->getFrameWidth() - 30;
-		bottom = posY + texture->getFrameHeight();
+		if (level == 1 || level == 2)
+		{
+			left = posX + 50;
+			right = posX + texture->getFrameWidth() - 30;
+		}
+		else if (level == 3)
+		{
+			left = posX + 50;
+			right = posX + texture->getFrameWidth();
+		}
 	}
-	else if (level == 3)
-	{
-		left = posX - 18;
-		top = posY;
-		right = posX + texture->getFrameWidth() + 5;
-		bottom = posY + texture->getFrameHeight();
-	}
+	else 
+		if (direction == -1)
+		{
+			if (level == 1 || level == 2)
+			{
+				left = posX + 15;
+				right = posX + texture->getFrameWidth() - 68;
+			}
+			else if (level == 3)
+			{
+				left = posX - 15;
+				right = posX + texture->getFrameWidth() - 68;
+			}
+		}
+
+
+	top = posY;
+	bottom = posY + texture->getFrameHeight() - 40;
 }
 
 void MorningStar::Attack(float posX, float posY, int direction)

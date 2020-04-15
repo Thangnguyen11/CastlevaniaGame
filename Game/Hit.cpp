@@ -21,12 +21,12 @@ void Hit::Update(DWORD dt)
 	int currentFrame = sprite->GetCurrentFrame();
 	if (currentFrame < HIT_ANI_BEGIN) {
 		sprite->SelectFrame(HIT_ANI_BEGIN);
-		sprite->currentTotalTime = dt;
+		sprite->SetCurrentTotalTime(dt);
 	}
 	else {
-		sprite->currentTotalTime += dt;
-		if (sprite->currentTotalTime >= HIT_TIME_OF_PER_EFFECT) {
-			sprite->currentTotalTime -= HIT_TIME_OF_PER_EFFECT;
+		sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+		if (sprite->GetCurrentTotalTime() >= HIT_TIME_OF_PER_EFFECT) {
+			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - HIT_TIME_OF_PER_EFFECT);
 			sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
 		}
 

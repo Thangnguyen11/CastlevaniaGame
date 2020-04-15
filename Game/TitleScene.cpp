@@ -35,14 +35,14 @@ void TitleScene::Update(DWORD dt)
 	if (currentFrame < BAT_ANI_BEGIN)
 	{
 		batSprite->SelectFrame(BAT_ANI_BEGIN);
-		batSprite->currentTotalTime = dt;
+		batSprite->SetCurrentTotalTime(dt);
 	}
 	else
 	{
-		batSprite->currentTotalTime += dt;
-		if (batSprite->currentTotalTime >= BAT_FLAPPING_SPEED)
+		batSprite->SetCurrentTotalTime(batSprite->GetCurrentTotalTime() + dt);
+		if (batSprite->GetCurrentTotalTime() >= BAT_FLAPPING_SPEED)
 		{
-			batSprite->currentTotalTime -= BAT_FLAPPING_SPEED;
+			batSprite->SetCurrentTotalTime(batSprite->GetCurrentTotalTime() - BAT_FLAPPING_SPEED);
 			batSprite->SelectFrame(currentFrame + 1);
 		}
 
@@ -59,14 +59,14 @@ void TitleScene::Update(DWORD dt)
 		if (currentStartFrame < STARTTEXT_BEGIN)
 		{
 			startSprite->SelectFrame(STARTTEXT_BEGIN);
-			startSprite->currentTotalTime = dt;
+			startSprite->SetCurrentTotalTime(dt);
 		}
 		else
 		{
-			startSprite->currentTotalTime += dt;
-			if (startSprite->currentTotalTime >= STARTTEXT_TRANS_SPEED)
+			startSprite->SetCurrentTotalTime(startSprite->GetCurrentTotalTime() + dt);
+			if (startSprite->GetCurrentTotalTime() >= STARTTEXT_TRANS_SPEED)
 			{
-				startSprite->currentTotalTime -= STARTTEXT_TRANS_SPEED;
+				startSprite->SetCurrentTotalTime(startSprite->GetCurrentTotalTime() - STARTTEXT_TRANS_SPEED);
 				startSprite->SelectFrame(currentFrame + 1);
 			}
 

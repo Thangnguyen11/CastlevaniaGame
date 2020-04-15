@@ -21,12 +21,12 @@ void Fire::Update(DWORD dt)
 	int currentFrame = sprite->GetCurrentFrame();
 	if (currentFrame < FIRE_ANI_BEGIN) {
 		sprite->SelectFrame(FIRE_ANI_BEGIN);
-		sprite->currentTotalTime = dt;
+		sprite->SetCurrentTotalTime(dt);
 	}
 	else {
-		sprite->currentTotalTime += dt;
-		if (sprite->currentTotalTime >= FIRE_TIME_OF_PER_EFFECT) {
-			sprite->currentTotalTime -= FIRE_TIME_OF_PER_EFFECT;
+		sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+		if (sprite->GetCurrentTotalTime() >= FIRE_TIME_OF_PER_EFFECT) {
+			sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - FIRE_TIME_OF_PER_EFFECT);
 			sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
 		}
 

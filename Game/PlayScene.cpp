@@ -1,28 +1,4 @@
 #include "PlayScene.h"
-#include <iostream>
-#include <fstream>
-
-#define STAGE_1						1
-#define STAGE_2_1					2
-#define STAGE_2_2					3
-
-#define STAGE_1_MAX_WIDTH			1250
-#define STAGE_2_1_MAX_WIDTH			262
-#define STAGE_2_2_MAX_WIDTH			776
-
-#define SCENE_SECTION_UNKNOWN		-1
-#define SCENE_SECTION_OBJECTS		1
-
-//tam thoi, co the thay the = EntityType
-#define OBJECT_TYPE_BRICK			1
-#define OBJECT_TYPE_TORCH			2
-#define OBJECT_TYPE_GATE			3
-#define OBJECT_TYPE_STAIRS			4
-#define OBJECT_TYPE_DARKENBAT		5
-#define OBJECT_TYPE_KNIGHT			6
-#define OBJECT_TYPE_BREAKABLEBRICK	7
-
-using namespace std;
 
 PlayScene::PlayScene() : Scene()
 {
@@ -55,6 +31,7 @@ void PlayScene::ChooseMap(int whatMap)
 		idStage = STAGE_1;
 		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
 		map->LoadMap(MAPSTAGE1);
+		player->ReceiveCurrentStage(idStage);
 
 		sceneFilePath = ToLPCWSTR("Resources/Scene/scene1.txt");
 		Load();
@@ -65,10 +42,11 @@ void PlayScene::ChooseMap(int whatMap)
 		idStage = STAGE_2_1;
 		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
 		map->LoadMap(MAPSTAGE2_1);
+		player->ReceiveCurrentStage(idStage);
 
 		gameTime->ResetGameTime();	//Reset lai gameTime
 
-		countHiddenQuestDone_Stage2_1 = 0;
+		easterEgg_Stage2_1 = 0;
 		////Zombie Logic
 		//counterZombie = 0;
 		//isTimeToSpawnZombie = true;		//vua vao spawn luon
@@ -86,6 +64,7 @@ void PlayScene::ChooseMap(int whatMap)
 		idStage = STAGE_2_2;
 		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
 		map->LoadMap(MAPSTAGE2_2);
+		player->ReceiveCurrentStage(idStage);
 
 		gameTime->ResetGameTime();	//Reset lai gameTime
 
@@ -115,7 +94,11 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 	int bagrandom = rand() % 100;
 	if (createrType == EntityType::NONE)		//special case
 	{
-		return new Crown(posX, posY);
+		if(idStage == STAGE_2_1)
+			return new Crown(posX, posY);
+		else
+			if (idStage == STAGE_2_2)
+				return new ExtraShot(posX, posY, 2);
 	}
 
 	if (createrType == EntityType::TORCH)
@@ -156,8 +139,18 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 					}
 				}
 	}
+	else
+		if (createrType == EntityType::CANDLE)
+		{
+			if (idCreater == 1)
+			{
+				return new SmallHeart(posX, posY);
+			}
+			else
+				return new BigHeart(posX, posY);
+		}
 	else 
-		if (createrType == EntityType::ZOMBIE)
+		if (createrType == EntityType::ZOMBIE || createrType == EntityType::KNIGHT || createrType == EntityType::DARKENBAT)
 	{
 		int random = rand() % 1000;
 		if (random <= 200)
@@ -248,6 +241,16 @@ void PlayScene::WeaponInteractObj(UINT i, bool isMainWeapon)
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), torch->GetIdTorch()));
+		break;
+	}
+	case EntityType::CANDLE:
+	{
+		Candle* candle = dynamic_cast<Candle*>(listObjects[i]);	//Extension cua DropItem
+		listObjects[i]->AddHealth(-1);
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
+		listItems.push_back(DropItem(listObjects[i]->GetType(), listObjects[i]->GetPosX(), listObjects[i]->GetPosY(), candle->GetIdCandle()));
+		break;
 	}
 	case EntityType::BREAKABLEBRICK:
 	{
@@ -255,12 +258,18 @@ void PlayScene::WeaponInteractObj(UINT i, bool isMainWeapon)
 		{
 			if (idStage == STAGE_2_1)
 			{
-				countHiddenQuestDone_Stage2_1++;
+				easterEgg_Stage2_1++;
 			}
+			else 
+				if (idStage == STAGE_2_2)
+				{
+					easterEgg_Stage2_2++;
+				}
 			listObjects[i]->AddHealth(-1);
 			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::HITEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 			listEffects.push_back(CreateEffect(listObjects[i]->GetType(), EntityType::FIREEFFECT, listObjects[i]->GetPosX(), listObjects[i]->GetPosY()));
 		}
+		break;
 	}
 	default:
 		break;
@@ -382,6 +391,10 @@ void PlayScene::PlayerCollideItem()
 					player->AddScore(10000);
 					listItems[i]->SetIsDone(true);
 					break;
+				case EntityType::ITEMEXTRASHOT:
+					//Xet type extra
+					listItems[i]->SetIsDone(true);
+					break;
 				case EntityType::UPGRADEMORNINGSTAR:
 				{
 					//nang cap ms
@@ -480,16 +493,39 @@ bool PlayScene::PlayerGotStairs()
 	return false;
 }
 
-void PlayScene::HiddenItemOpen()
+void PlayScene::PlayerFailDown()
+{
+	if (idStage == STAGE_2_2)
+	{
+		if (player->GetPosX() <= 544)
+		{
+			if (player->GetPosY() >= 441)
+			{
+				player->AddHealth(-player->GetHealth());
+			}
+		}
+	}
+}
+
+void PlayScene::EasterEggEvent()
 {
 	if (idStage == STAGE_2_1)
 	{
-		if (countHiddenQuestDone_Stage2_1 == 2)
+		if (easterEgg_Stage2_1 == 2)
 		{
 			listItems.push_back(DropItem(EntityType::NONE, 240.0f, 441.0f));
-			countHiddenQuestDone_Stage2_1 = 0;
+			easterEgg_Stage2_1 = 0;
 		}
 	}
+	else
+		if (idStage == STAGE_2_2)
+		{
+			if (easterEgg_Stage2_2 == 1)
+			{
+				listItems.push_back(DropItem(EntityType::NONE, 720.0f, 233.0f));
+				easterEgg_Stage2_2 = 0;
+			}
+		}
 }
 
 void PlayScene::CheckObjAlive()
@@ -671,7 +707,8 @@ void PlayScene::Update(DWORD dt)
 	PlayerCollideItem();
 	PlayerGotGate(); 
 	//PlayerGotStairs();
-	HiddenItemOpen();
+	PlayerFailDown();
+	EasterEggEvent();
 
 	gameTime->Update(dt);
 	gameUI->Update(cx + 260, 35, player->GetHealth(), 16);	//move posX follow camera
@@ -681,13 +718,13 @@ void PlayScene::Update(DWORD dt)
 void PlayScene::Render()
 {
 	map->Draw();
-	player->Render();
 	for (int i = 0; i < listObjects.size(); i++)
 		listObjects[i]->Render();
 	for (int i = 0; i < listEffects.size(); i++)
 		listEffects[i]->Render();
 	for (int i = 0; i < listItems.size(); i++)
 		listItems[i]->Render();
+	player->Render();
 	gameUI->Render(idStage, SCENEGAME_GAMETIMEMAX - gameTime->GetTime(), player);
 }
 
@@ -726,10 +763,16 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			else
 				listObj[i]->SetBBARGB(0);
 		}
+
 		if (simon->GetBBARGB() == 0)
 			simon->SetBBARGB(200);
 		else
 			simon->SetBBARGB(0);
+
+		if (simon->GetPlayerMainWeapon()->GetBBARGB() == 0)
+			simon->GetPlayerMainWeapon()->SetBBARGB(200);
+		else
+			simon->GetPlayerMainWeapon()->SetBBARGB(0);
 		break;
 	case DIK_C:
 		if (simon->IsDeadYet() || simon->IsAttacking() || simon->IsSitting() || simon->IsHurting() || simon->IsUpgrading() || simon->IsPassingStage() || simon->IsProcessingAuto())
@@ -926,6 +969,12 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
+	case OBJECT_TYPE_CANDLE:
+	{
+		int extras = atoi(tokens[3].c_str());
+		listObjects.push_back(new Candle(x, y, extras));
+		break;
+	}
 	case OBJECT_TYPE_BRICK:
 	{
 		int extras = atoi(tokens[3].c_str());
@@ -961,13 +1010,19 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_KNIGHT:
 	{
 		int extras1 = atoi(tokens[3].c_str());
-		listObjects.push_back(new Knight(x, y, extras1));
+		int extras2 = atoi(tokens[4].c_str());
+		listObjects.push_back(new Knight(x, y, extras1, extras2));
 		break;
 	}
 	case OBJECT_TYPE_BREAKABLEBRICK:
 	{
 		int extras1 = atoi(tokens[3].c_str());
 		listObjects.push_back(new BreakableBrick(x, y, extras1));
+		break;
+	}
+	case OBJECT_TYPE_MOVING_PLATFORM:
+	{
+		listObjects.push_back(new MovingPlatform(x, y));
 		break;
 	}
 	default:

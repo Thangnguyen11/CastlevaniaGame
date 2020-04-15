@@ -18,12 +18,18 @@
 class Knight : public Entity
 {
 	float startX;
+	float maxAmplitudeX;	//Bien do toi da cho phep di
+
+	//Extension
+	bool randomTurnaround;
 public:
-	Knight(float posX, float posY, int directionX);
+	Knight(float posX, float posY, int directionX, float maxAmplitudeX = 2000);
 	~Knight();
 	virtual void Update(DWORD dt, vector<LPGAMEENTITY> *coObjects);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	virtual void SetState(int state);
+
+	void TurnAround();
 };
 

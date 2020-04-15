@@ -5,7 +5,7 @@ Sprite::Sprite(Texture2d* TEXTURE, float TIMEPERFRAME)
 	this->texture = TEXTURE;
 	this->timePerFrame = TIMEPERFRAME;
 	this->currentFrame = 0;
-	totalFrame = texture->totalFrame - 1;
+	totalFrame = texture->GetTotalFrame() - 1;
 	spriteHandler = Game::GetInstance()->GetSpriteHandler();
 }
 
@@ -46,7 +46,7 @@ void Sprite::Draw(float posX, float posY, int alpha, int R, int G, int B)
 	D3DXVECTOR3 pos(floor(posX - Camera::GetInstance()->GetCamPosX()), floor(posY - Camera::GetInstance()->GetCamPosY()), 0);
 	//Origin set center (position) is the center of frame, instead of left-top
 	D3DXVECTOR3 origin((float)texture->getFrameWidth() / 2, (float)texture->getFrameHeight() / 2, 0);
-	spriteHandler->Draw(texture->Texture, &rec, &origin, &pos, D3DCOLOR_ARGB(alpha, R, G, B));
+	spriteHandler->Draw(texture->GetTexture(), &rec, &origin, &pos, D3DCOLOR_ARGB(alpha, R, G, B));
 }
 
 void Sprite::DrawFlipVertical(float posX, float posY, int alpha, int R, int G, int B)
@@ -60,7 +60,7 @@ void Sprite::DrawFlipVertical(float posX, float posY, int alpha, int R, int G, i
 	spriteHandler->GetTransform(&oldMatrix);
 	spriteHandler->SetTransform(&newMatrix);
 
-	spriteHandler->Draw(texture->Texture, &rec, &origin, &pos, D3DCOLOR_ARGB(alpha, R, G, B));
+	spriteHandler->Draw(texture->GetTexture(), &rec, &origin, &pos, D3DCOLOR_ARGB(alpha, R, G, B));
 
 	spriteHandler->SetTransform(&oldMatrix);
 }
@@ -71,5 +71,5 @@ void Sprite::Draw1Frame(int idFrame, float posX, float posY, int alpha, int R, i
 	D3DXVECTOR3 pos(floor(posX - Camera::GetInstance()->GetCamPosX()), floor(posY - Camera::GetInstance()->GetCamPosY()), 0);
 	//Origin set center (position) is the center of frame, instead of left-top
 	D3DXVECTOR3 origin((float)texture->getFrameWidth() / 2, (float)texture->getFrameHeight() / 2, 0);
-	spriteHandler->Draw(texture->Texture, &rec, &origin, &pos, D3DCOLOR_ARGB(alpha, R, G, B));
+	spriteHandler->Draw(texture->GetTexture(), &rec, &origin, &pos, D3DCOLOR_ARGB(alpha, R, G, B));
 }

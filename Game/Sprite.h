@@ -5,12 +5,11 @@
 class Sprite
 {
 	int currentFrame, totalFrame;
-	float timePerFrame;
+	float timePerFrame, currentTotalTime;
+	Texture2d* texture;
 	LPD3DXSPRITE spriteHandler;
 
 public:
-	float currentTotalTime;
-	Texture2d* texture;
 	Sprite(Texture2d* TEXTURE, float TIMEPERFRAME = 0.1f);	//Khong chinh timeperframe cho moi ani duoc
 	~Sprite();
 
@@ -22,6 +21,8 @@ public:
 	RECT GetRectFrame(int CURRENTFRAME);
 
 	int GetCurrentFrame() { return currentFrame; }
+	void SetCurrentTotalTime(float value) { currentTotalTime = value; }
+	float GetCurrentTotalTime() { return currentTotalTime; }
 	void SelectFrame(int idFrame) { currentFrame = idFrame; }
 };
 

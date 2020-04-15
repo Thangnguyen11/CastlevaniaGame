@@ -42,12 +42,12 @@ void DarkenBat::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		{
 			if (currentFrame < DARKBAT_ANI_FLYING_BEGIN) {
 				sprite->SelectFrame(DARKBAT_ANI_FLYING_BEGIN);
-				sprite->currentTotalTime = dt;
+				sprite->SetCurrentTotalTime(dt);
 			}
 			else {
-				sprite->currentTotalTime += dt;
-				if (sprite->currentTotalTime >= DARKBAT_FLAPPING_SPEED) {
-					sprite->currentTotalTime -= DARKBAT_FLAPPING_SPEED;
+				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+				if (sprite->GetCurrentTotalTime() >= DARKBAT_FLAPPING_SPEED) {
+					sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - DARKBAT_FLAPPING_SPEED);
 					sprite->SelectFrame(sprite->GetCurrentFrame() + 1);
 				}
 

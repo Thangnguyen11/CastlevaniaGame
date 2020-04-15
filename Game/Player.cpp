@@ -12,6 +12,7 @@ Player::Player(float posX, float posY)
 	this->posX = posX;
 	this->posY = posY;
 	direction = 1;
+	currentStageLiving = 1;
 
 	this->SetState(PLAYER_STATE_IDLE);
 
@@ -42,15 +43,15 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 {	
 	if (health <= 0 && !isRespawning)
 	{
-		respawningTimer->Start();
-		isRespawning = true;
-		immortalTimer->Start();
-		isImmortaling = true;
 		live -= 1;
 		if (live <= 0)
 		{
 			isDead = true;
 		}
+		respawningTimer->Start();
+		isRespawning = true;
+		immortalTimer->Start();
+		isImmortaling = true;
 	}
 
 	if (!isWalking && !isJumping)	//Attack tren mat dat thi dung yen, attack khi dang jump thi di chuyen duoc
@@ -88,7 +89,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	}
 #pragma endregion
 
-#pragma region Update Sprite
+#pragma region Sprite Logic
+
 	int currentFrame = sprite->GetCurrentFrame();
 	if (isDead || isRespawning)
 	{
@@ -100,14 +102,14 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 			if (currentFrame < PLAYER_ANI_UPGRADING_BEGIN) //Can be bug here
 			{
 				sprite->SelectFrame(PLAYER_ANI_UPGRADING_BEGIN);
-				sprite->currentTotalTime = dt;
+				sprite->SetCurrentTotalTime(dt);
 			}
 			else 
 			{
-				sprite->currentTotalTime += dt;
-				if (sprite->currentTotalTime >= PLAYER_UPGRADING_DELAY) 
+				sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+				if (sprite->GetCurrentTotalTime() >= PLAYER_UPGRADING_DELAY)
 				{
-					sprite->currentTotalTime -= PLAYER_UPGRADING_DELAY;
+					sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - PLAYER_UPGRADING_DELAY);
 					sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100ms and trans to next frame
 				}
 
@@ -138,14 +140,14 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 								dagger->ResetDelay();
 							}
 						}
-						sprite->currentTotalTime = dt;
+						sprite->SetCurrentTotalTime(dt);
 					}
 					else 
 					{
-						sprite->currentTotalTime += dt;
-						if (sprite->currentTotalTime >= PLAYER_ATTACKING_DELAY) 
+						sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+						if (sprite->GetCurrentTotalTime() >= PLAYER_ATTACKING_DELAY)
 						{
-							sprite->currentTotalTime -= PLAYER_ATTACKING_DELAY;
+							sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - PLAYER_ATTACKING_DELAY);
 							sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100 and trans to next frame
 						}
 
@@ -174,14 +176,14 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 							dagger->ResetDelay();
 						}
 					}
-					sprite->currentTotalTime = dt;
+					sprite->SetCurrentTotalTime(dt);
 				}
 				else 
 				{
-					sprite->currentTotalTime += dt;
-					if (sprite->currentTotalTime >= PLAYER_ATTACKING_DELAY) 
+					sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() + dt);
+					if (sprite->GetCurrentTotalTime() >= PLAYER_ATTACKING_DELAY)
 					{
-						sprite->currentTotalTime -= PLAYER_ATTACKING_DELAY;
+						sprite->SetCurrentTotalTime(sprite->GetCurrentTotalTime() - PLAYER_ATTACKING_DELAY);
 						sprite->SelectFrame(sprite->GetCurrentFrame() + 1);			//Wait 100ms and trans to next frame
 					}
 
@@ -237,7 +239,8 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	listObjMayCollide.clear();
 	for (UINT i = 0; i < coObjects->size(); i++)
 		if (coObjects->at(i)->GetType() != EntityType::TORCH &&
-			coObjects->at(i)->GetType() != EntityType::STAIRS)
+			coObjects->at(i)->GetType() != EntityType::STAIRS&&
+			coObjects->at(i)->GetType() != EntityType::CANDLE)
 			listObjMayCollide.push_back(coObjects->at(i));
 
 	// turn off collision when die 
@@ -349,6 +352,14 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 							isImmortaling = true;
 							SetState(PLAYER_STATE_HURTING);
 						}
+					}
+				}
+				if (e->obj->GetType() == EntityType::MOVINGPLATFORM)
+				{
+					if (e->ny < 0)
+					{
+						//is it wrong ?
+						posX = e->obj->GetPosX();
 					}
 				}
 			}
@@ -643,8 +654,24 @@ void Player::SetPlayerSupWeaponType(EntityType supWeaponType)
 
 void Player::Respawn()
 {
-	posX = 100;
-	posY = 280;
+	switch (currentStageLiving)
+	{
+	case STAGE_1:
+		posX = 100;
+		posY = 280;
+		break;
+	case STAGE_2_1:
+		posX = 400;
+		posY = 150;
+		break;
+	case STAGE_2_2:
+		posX = 800;
+		posY = 150;
+		break;
+	default:
+		break;
+	}
+
 	vX = 0;
 	isJumping = false;
 	isHurting = false;

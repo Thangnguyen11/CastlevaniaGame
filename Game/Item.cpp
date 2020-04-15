@@ -35,7 +35,8 @@ void Item::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 	coEvents.clear();
 	bricks.clear();
 	for (UINT i = 0; i < coObjects->size(); i++)
-		if (coObjects->at(i)->GetType() == EntityType::BRICK)
+		if (coObjects->at(i)->GetType() == EntityType::BRICK ||
+			coObjects->at(i)->GetType() == EntityType::BREAKABLEBRICK)
 			bricks.push_back(coObjects->at(i));
 
 	CalcPotentialCollisions(&bricks, coEvents);
