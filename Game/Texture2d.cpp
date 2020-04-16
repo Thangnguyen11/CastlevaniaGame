@@ -7,11 +7,11 @@ Texture2d::Texture2d(char* filePath, int COLUMN, int ROW, int TOTALFRAME, D3DCOL
 	this->totalFrame = TOTALFRAME;
 
 	D3DXIMAGE_INFO info;
-	this->frameWidth = info.Width / column;
-	this->frameHeight = info.Height / row;
 
 	HRESULT result = D3DXGetImageInfoFromFileA(filePath, &info);
 
+	this->frameWidth = info.Width / column;
+	this->frameHeight = info.Height / row;
 	if (result != D3D_OK)
 	{
 		DebugOut(L"[ERROR] GetImageInfoFromFile failed: %s\n", filePath);

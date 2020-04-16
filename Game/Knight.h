@@ -13,7 +13,7 @@
 #define KNIGHT_ANI_WALKING_BEGIN		0
 #define KNIGHT_ANI_WALKING_END			2
 
-#define KNIGHT_SWAPLEG_SPEED			130 
+#define KNIGHT_SWAPLEG_SPEED			200 
 
 class Knight : public Entity
 {
