@@ -35,6 +35,8 @@
 #define STAGE_1						1
 #define STAGE_2_1					2
 #define STAGE_2_2					3
+#define STAGE_3_1					4
+#define STAGE_3_2					5
 
 #define STAGE_1_MAX_WIDTH			1250
 #define STAGE_2_1_MAX_WIDTH			262
@@ -156,7 +158,11 @@ enum EntityType
 
 	ITEMEXTRASHOT = 52,
 
-	MOVINGPLATFORM = 53
+	MOVINGPLATFORM = 53,
+
+	MAPSTAGE3_1 = 54,
+
+	MAPSTAGE3_2 = 55
 };
 
 class define

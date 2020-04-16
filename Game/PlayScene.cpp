@@ -68,7 +68,35 @@ void PlayScene::ChooseMap(int whatMap)
 
 		gameTime->ResetGameTime();	//Reset lai gameTime
 
+		easterEgg_Stage2_2 = 0;
+
 		sceneFilePath = ToLPCWSTR("Resources/Scene/scene2_2.txt");
+		Load();
+		break;
+	}
+	case STAGE_3_1:
+	{
+		idStage = STAGE_3_1;
+		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
+		map->LoadMap(MAPSTAGE3_1);
+		player->ReceiveCurrentStage(idStage);
+
+		gameTime->ResetGameTime();	//Reset lai gameTime
+
+		sceneFilePath = ToLPCWSTR("Resources/Scene/scene1.txt");
+		Load();
+		break;
+	}
+	case STAGE_3_2:
+	{
+		idStage = STAGE_3_2;
+		Game::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
+		map->LoadMap(MAPSTAGE3_2);
+		player->ReceiveCurrentStage(idStage);
+
+		gameTime->ResetGameTime();	//Reset lai gameTime
+
+		sceneFilePath = ToLPCWSTR("Resources/Scene/scene1.txt");
 		Load();
 		break;
 	}
@@ -746,11 +774,26 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_2:	//test jump stage
 		playScene->Unload();
 		playScene->ChooseMap(playScene->idStage + 1);
-		if(playScene->idStage == STAGE_2_1)
+		if (playScene->idStage == STAGE_2_1)
+		{
 			simon->SetPosition(400, 150);
+		}
 		else
 			if (playScene->idStage == STAGE_2_2)
+			{
 				simon->SetPosition(800, 150);
+			}
+			else 
+				if (playScene->idStage == STAGE_3_1)
+				{
+					simon->SetPosition(100, 150);
+				}
+				else 
+					if (playScene->idStage == STAGE_3_2)
+					{
+						simon->SetPosition(100, 150);
+					}
+
 		simon->SetVx(0);
 		simon->SetVy(0);
 		simon->SetState(PLAYER_STATE_IDLE);

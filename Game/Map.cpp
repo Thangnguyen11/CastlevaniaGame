@@ -35,6 +35,22 @@ void Map::LoadMap(EntityType typeMap)
 		Load();
 		break;
 	}
+	case MAPSTAGE3_1:
+	{
+		mapFilePath = ToLPCWSTR("Resources/TileMap/TilesetStage3-1Text.txt");
+		RowMap = STAGE3_1_ROWMAP;
+		ColumnMap = STAGE3_1_COLUMNMAP;
+		Load();
+		break;
+	}
+	case MAPSTAGE3_2:
+	{
+		mapFilePath = ToLPCWSTR("Resources/TileMap/TilesetStage3-2Text.txt");
+		RowMap = STAGE3_2_ROWMAP;
+		ColumnMap = STAGE3_2_COLUMNMAP;
+		Load();
+		break;
+	}
 	default:
 		break;
 	}

@@ -17,6 +17,14 @@
 #define STAGE2_2_COLUMNMAP		32
 #define STAGE2_2_BOTTOMDIST		48
 
+#define STAGE3_1_ROWMAP			12
+#define STAGE3_1_COLUMNMAP		48
+#define STAGE3_1_BOTTOMDIST		24
+
+#define STAGE3_2_ROWMAP			12
+#define STAGE3_2_COLUMNMAP		48
+#define STAGE3_2_BOTTOMDIST		48
+
 class Map
 {
 	Texture2d* tileMapTexture;	//Tileset

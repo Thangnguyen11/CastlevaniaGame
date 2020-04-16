@@ -34,6 +34,8 @@ void Texture2dManager::LoadContent()
 	AddTexture(EntityType::MAPSTAGE1, new Texture2d("Resources/TileMap/TilesetStage1.png", 68, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::MAPSTAGE2_1, new Texture2d("Resources/TileMap/TilesetStage2.png", 28, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::MAPSTAGE2_2, new Texture2d("Resources/TileMap/TilesetStage2.png", 28, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::MAPSTAGE3_1, new Texture2d("Resources/TileMap/TilesetStage3.png", 60, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::MAPSTAGE3_2, new Texture2d("Resources/TileMap/TilesetStage3.png", 60, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
 	//Static Obj
 	AddTexture(EntityType::BRICK, new Texture2d("Resources/Objects/Ground.png", 3, 32, 32));
