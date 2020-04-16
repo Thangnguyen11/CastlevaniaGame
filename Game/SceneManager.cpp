@@ -2,17 +2,16 @@
 
 SceneManager * SceneManager::__instance = NULL;
 
-
-SceneManager::SceneManager(){}
-
-SceneManager::~SceneManager(){}
-
 SceneManager * SceneManager::GetInstance()
 {
 	if (__instance == NULL)
 		__instance = new SceneManager();
 	return __instance;
 }
+
+SceneManager::SceneManager(){}
+
+SceneManager::~SceneManager(){}
 
 void SceneManager::Load()
 {

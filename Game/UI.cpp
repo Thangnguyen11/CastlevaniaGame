@@ -24,12 +24,6 @@ void UI::Render(int currentStage, int remainingTime, Player* playerInfo)
 {
 	UISprite->Draw(posX, posY);
 
-	text.Render(this->posX - 140, this->posY - 20, text.FillZeroString(to_string(playerInfo->GetScore()), MAX_TEXTLENGHT_SCORE));
-	text.Render(this->posX + 50, this->posY - 20, text.FillZeroString(to_string(remainingTime), MAX_TEXTLENGHT_REMAININGTIME));
-	text.Render(this->posX + 220, this->posY - 20, text.FillZeroString(to_string(currentStage), MAX_TEXTLENGHT_STAGE));
-	text.Render(this->posX + 145, this->posY , text.FillZeroString(to_string(playerInfo->GetMana()), MAX_TEXTLENGHT_MANA));
-	text.Render(this->posX + 145, this->posY + 18, text.FillZeroString(to_string(playerInfo->GetLive()), MAX_TEXTLENGHT_LIVE));
-
 	playerHB->Render();
 	bossHB->Render();
 
@@ -38,5 +32,11 @@ void UI::Render(int currentStage, int remainingTime, Player* playerInfo)
 		playerSubWeaponSprite = new Sprite(Texture2dManager::GetInstance()->GetTexture(EntityType::ITEMDAGGER), MaxFrameRate);
 		playerSubWeaponSprite->Draw(posX + 68, posY + 8);
 	}
+
+	text.Render(this->posX - 140, this->posY - 20, text.FillZeroString(to_string(playerInfo->GetScore()), MAX_TEXTLENGHT_SCORE));
+	text.Render(this->posX + 50, this->posY - 20, text.FillZeroString(to_string(remainingTime), MAX_TEXTLENGHT_REMAININGTIME));
+	text.Render(this->posX + 220, this->posY - 20, text.FillZeroString(to_string(currentStage), MAX_TEXTLENGHT_STAGE));
+	text.Render(this->posX + 145, this->posY , text.FillZeroString(to_string(playerInfo->GetMana()), MAX_TEXTLENGHT_MANA));
+	text.Render(this->posX + 145, this->posY + 18, text.FillZeroString(to_string(playerInfo->GetLive()), MAX_TEXTLENGHT_LIVE));
 
 }

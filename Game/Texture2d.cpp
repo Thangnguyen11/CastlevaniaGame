@@ -1,17 +1,21 @@
 #include "Texture2d.h"
 
-Texture2d::Texture2d(char* filePath, int COLUMN, int ROW, int TOTALFRAME, D3DCOLOR colorKey)
+Texture2d::Texture2d(char* filePath, int TOTALFRAME, int FRAMEWIDTH, int FRAMEHEIGHT, D3DCOLOR colorKey, int left, int top, int right, int bottom)
 {
-	this->column = COLUMN;
-	this->row = ROW;
 	this->totalFrame = TOTALFRAME;
+	frameWidth = FRAMEWIDTH;
+	frameHeight = FRAMEHEIGHT;
+	this->left = left;
+	this->top = top;
+	this->right = right;
+	this->bottom = bottom;
 
 	D3DXIMAGE_INFO info;
-
 	HRESULT result = D3DXGetImageInfoFromFileA(filePath, &info);
 
-	this->frameWidth = info.Width / column;
-	this->frameHeight = info.Height / row;
+	totalColumn = info.Width / frameWidth;
+	totalRow = info.Height / frameHeight;
+
 	if (result != D3D_OK)
 	{
 		DebugOut(L"[ERROR] GetImageInfoFromFile failed: %s\n", filePath);

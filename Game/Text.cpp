@@ -12,19 +12,15 @@ void Text::Render(float posX, float posY, const string &str)
 {
 	for (UINT i = 0; i < str.size(); i++)
 	{
-		if (str[i] == ' ')
-			continue;
-		if (str[i] >= 'A' && str[i] <= 'Z')
+		//Hien tai chi dung so'
+		if (str[i] >= '0' && str[i] <= '9')
 		{
-			textSprite->SelectFrame(str[i] - 'A');
+			textSprite->SelectFrame(str[i] - '0' + 26);
 		}
-		else
-			if (str[i] >= '0' && str[i] <= '9')
-			{
-				textSprite->SelectFrame(str[i] - '0' + 26);
-			}
-			else
-				textSprite->SelectFrame(36);
+		else	//va dau tru	
+		{
+			textSprite->SelectFrame(36);
+		}
 		textSprite->Draw(posX + i * textTexture->getFrameWidth(), posY);
 	}
 }

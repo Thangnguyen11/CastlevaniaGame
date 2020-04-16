@@ -4,21 +4,29 @@
 
 class Texture2d
 {
-	int column, row, frameWidth, frameHeight;
+	int left;
+	int top;
+	int right;
+	int bottom;
+	int totalColumn, totalRow, frameWidth, frameHeight;
 	int totalFrame;
 	LPDIRECT3DTEXTURE9 Texture;
 
 public:
-
-	Texture2d(char* filePath, int COLUMN = 1, int ROW = 1, int TOTALFRAME = 1, D3DCOLOR colorKey = NULL);
+	Texture2d(char* filePath, int TOTALFRAME, int FRAMEWIDTH, int FRAMEHEIGHT, D3DCOLOR colorKey = NULL, int left = 0, int top = 0, int right = 0, int bottom = 0);
 	~Texture2d();
 
-	int getColumn() { return column; }
-	int getRow() { return row; }
+	int getColumn() { return totalColumn; }
+	int getRow() { return totalRow; }
 	int getFrameWidth() { return frameWidth; }
 	int getFrameHeight() { return frameHeight; }
+	int GetTotalFrame() { return totalFrame; }
+
+	int GetRectLeft() { return left; }
+	int GetRectTop() { return top; }
+	int GetRectRight() { return right; }
+	int GetRectBottom() { return bottom; }
 
 	LPDIRECT3DTEXTURE9 GetTexture() { return Texture; }
-	int GetTotalFrame() { return totalFrame; }
 };
 

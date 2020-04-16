@@ -19,13 +19,12 @@ GameTime::~GameTime() {}
 void GameTime::Update(DWORD dt)
 {
 	//Cu 1000ms thi +gametime len 1 lan
-	if (currentTotalTime + dt < 1000)	
+	if (currentTotalTime + dt > ONE_SECOND_UNIT)
 	{
-		currentTotalTime += dt;
-	}
-	else
-	{
-		currentTotalTime = (currentTotalTime + dt) % 1000;
+		//Lay phan thua` cua dt ra
+		currentTotalTime = (currentTotalTime + dt) % ONE_SECOND_UNIT;
 		gameTime++;
 	}
+	else
+		currentTotalTime += dt;
 }

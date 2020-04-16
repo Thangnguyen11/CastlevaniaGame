@@ -9,10 +9,12 @@ Weapon::~Weapon(){}
 
 void Weapon::Attack(float posX, float posY, int direction)
 {
+	//su dung bien isDone nhu khi lam projectiles
+	//isDone khi chua danh la true, duoc danh la false
+	isDone = false;
 	this->posX = posX;
 	this->posY = posY;
 	this->direction = direction;
-	isDone = false;
 }
 
 void Weapon::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)

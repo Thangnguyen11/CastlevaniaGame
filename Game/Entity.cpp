@@ -25,17 +25,17 @@ void Entity::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 
 void Entity::RenderBoundingBox() 
 {
-	Texture2d* bbox = Texture2dManager::GetInstance()->GetTexture(EntityType::BBOX);
-	D3DXVECTOR3 origin((float)texture->getFrameWidth() / 2, (float)texture->getFrameHeight() / 2, 0);
-
 	float l, t, r, b;
 	GetBoundingBox(l, t, r, b);
+
 	RECT rect;
 	rect.left = 0;
 	rect.top = 0;
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;
 
+	Texture2d* bbox = Texture2dManager::GetInstance()->GetTexture(EntityType::BBOX);
+	D3DXVECTOR3 origin((float)texture->getFrameWidth() / 2, (float)texture->getFrameHeight() / 2, 0);
 	Game::GetInstance()->Draw(posX, posY, bbox->GetTexture(), rect.left, rect.top, rect.right, rect.bottom, origin, bbARGB);
 }
 
@@ -137,16 +137,18 @@ void Entity::FilterCollision(
 bool Entity::IsCollidingObject(Entity* Obj)
 {
 	float ml, mt, mr, mb;		// moving object bbox
-	float sl, st, sr, sb;		// static object bbox
-
 	this->GetBoundingBox(ml, mt, mr, mb);
+
+	float sl, st, sr, sb;		// static object bbox
 	Obj->GetBoundingBox(sl, st, sr, sb);
 
+	//Check AABB first
 	if (Game::GetInstance()->IsCollidingAABB(
 		ml - (float)texture->getFrameWidth() / 2, mt - (float)texture->getFrameHeight() / 2, mr - (float)texture->getFrameWidth() / 2, mb - (float)texture->getFrameHeight() / 2,
 		sl - (float)Obj->texture->getFrameWidth() / 2, st - (float)Obj->texture->getFrameHeight() / 2, sr - (float)Obj->texture->getFrameWidth(), sb - (float)Obj->texture->getFrameHeight() / 2))
 		return true;
 
+	//Swept AABB later
 	LPCOLLISIONEVENT e = SweptAABBEx(Obj);
 	bool isColliding = e->t > 0 && e->t <= 1;
 	return isColliding;

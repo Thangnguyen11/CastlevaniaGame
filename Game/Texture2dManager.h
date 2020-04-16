@@ -14,9 +14,8 @@ public:
 	~Texture2dManager();
 
 	static Texture2dManager* GetInstance();
-	Texture2d* GetTexture(EntityType tag);
-
-	void AddTexture(EntityType tag, Texture2d* texture);
+	Texture2d* GetTexture(EntityType tag) { return Textures[tag]; }
+	void AddTexture(EntityType tag, Texture2d* texture) { Textures[tag] = texture; }
 	void LoadContent();
 };
 

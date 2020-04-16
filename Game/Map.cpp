@@ -38,9 +38,6 @@ void Map::LoadMap(EntityType typeMap)
 	default:
 		break;
 	}
-	RowTexture = tileMapTexture->getRow();
-	ColumnTexture = tileMapTexture->getColumn();
-	TotalFrameTexture = tileMapTexture->GetTotalFrame();
 	FrameWidthTexture = tileMapTexture->getFrameWidth();
 	FrameHeightTexture = tileMapTexture->getFrameHeight();
 }
@@ -78,9 +75,9 @@ void Map::Draw()
 	int firstColumn = (int)Camera::GetInstance()->GetCamPosX() / FrameWidthTexture;
 	int lastColumn = firstColumn + SCREEN_WIDTH / FrameWidthTexture;
 
-	for (UINT i = 0; i < RowScreen; i++)	//chay tung row tu tren xuong
+	for (UINT i = 0; i < RowScreen; i++)	//chay tung totalRow tu tren xuong
 	{
-		for (UINT j = firstColumn; j <= lastColumn; j++)	//chay tung column tu trai qua
+		for (UINT j = firstColumn; j <= lastColumn; j++)	//chay tung totalColumn tu trai qua
 		{
 			//pos cua 1 vien tile
 			//FrameWidth * (j - firstCol) de xac dinh vien tile can ve~ trong file tileset.text

@@ -26,7 +26,7 @@ class Map
 
 	int ColumnMap, RowMap;	//So cot, hang cua map, Khoang cach voi day screen cua map
 
-	int ColumnTexture, RowTexture, TotalFrameTexture, FrameWidthTexture, FrameHeightTexture;
+	int FrameWidthTexture, FrameHeightTexture;
 
 	int TileMap[100][100];
 	//So cot va hang toi da phai lon hon Screen Resolution chia cho do cao/dai cua frame tile
