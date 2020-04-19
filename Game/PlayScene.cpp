@@ -83,7 +83,7 @@ void PlayScene::ChooseMap(int whatMap)
 
 		gameTime->ResetGameTime();	//Reset lai gameTime
 
-		sceneFilePath = ToLPCWSTR("Resources/Scene/scene1.txt");
+		sceneFilePath = ToLPCWSTR("Resources/Scene/scene3_1.txt");
 		Load();
 		break;
 	}
@@ -96,7 +96,7 @@ void PlayScene::ChooseMap(int whatMap)
 
 		gameTime->ResetGameTime();	//Reset lai gameTime
 
-		sceneFilePath = ToLPCWSTR("Resources/Scene/scene1.txt");
+		sceneFilePath = ToLPCWSTR("Resources/Scene/scene3_2.txt");
 		Load();
 		break;
 	}
@@ -175,7 +175,26 @@ Item* PlayScene::DropItem(EntityType createrType, float posX, float posY, int id
 				return new SmallHeart(posX, posY);
 			}
 			else
-				return new BigHeart(posX, posY);
+			{
+				int random = rand() % 1000;
+				if (random <= 200)
+					return new SmallHeart(posX, posY);
+				else if (200 < random && random <= 400)
+					return new BigHeart(posX, posY);
+				else if (400 < random && random <= 600)
+					return new YummiChickenLeg(posX, posY);
+				else if (600 < random && random <= 800)
+					return new UpgradeMorningStar(posX, posY);
+				else
+				{
+					if (bagrandom <= 33)
+						return new MoneyBags(posX, posY, EntityType::MONEYBAGRED);
+					else if (33 < bagrandom && bagrandom <= 66)
+						return new MoneyBags(posX, posY, EntityType::MONEYBAGWHITE);
+					else
+						return new MoneyBags(posX, posY, EntityType::MONEYBAGBLUE);
+				}
+			}
 		}
 	else 
 		if (createrType == EntityType::ZOMBIE || createrType == EntityType::KNIGHT || createrType == EntityType::DARKENBAT)
@@ -447,13 +466,27 @@ void PlayScene::PlayerCollideItem()
 	}
 }
 
-bool PlayScene::PlayerPassingStage(float DistanceXWant)
+bool PlayScene::PlayerPassingStage(float DistanceXWant, int directionGo)
 {
-	if (player->GetPosX() < DistanceXWant)
+	if (directionGo == 1)	//cua o ben phai
 	{
-		player->SetState(PLAYER_STATE_PASSING_STAGE);
-		return false;
+		if (player->GetPosX() < DistanceXWant)
+		{
+			player->SetDirection(directionGo);
+			player->SetState(PLAYER_STATE_PASSING_STAGE);
+			return false;
+		}
 	}
+	else
+		if (directionGo == -1)	//cua o ben trai
+		{
+			if (player->GetPosX() > DistanceXWant)
+			{
+				player->SetDirection(directionGo);
+				player->SetState(PLAYER_STATE_PASSING_STAGE);
+				return false;
+			}
+		}
 	return true;
 }
 
@@ -465,13 +498,25 @@ void PlayScene::PlayerGotGate()
 		{
 			if (player->IsCollidingObject(listObjects[i]))
 			{
-				if (PlayerPassingStage(listObjects[i]->GetPosX() + 20.0f))
+				if (idStage == STAGE_1)
 				{
-					Unload();
-					if (idStage == STAGE_1)
+					if (PlayerPassingStage(listObjects[i]->GetPosX() + 20.0f, 1))
 					{
+						Unload();
 						ChooseMap(STAGE_2_1);
-						player->SetPosition(100, 130);
+						player->SetPosition(50, 365);
+						player->SetVx(0);
+						player->SetVy(0);
+						player->SetState(PLAYER_STATE_IDLE);
+					}
+				}
+				else if (idStage == STAGE_2_2)
+				{
+					if (PlayerPassingStage(listObjects[i]->GetPosX() - 10.0f, -1))
+					{
+						Unload();
+						ChooseMap(STAGE_3_1);
+						player->SetPosition(1440, 350);
 						player->SetVx(0);
 						player->SetVy(0);
 						player->SetState(PLAYER_STATE_IDLE);
@@ -533,6 +578,14 @@ void PlayScene::PlayerFailDown()
 			}
 		}
 	}
+	else
+		if (idStage == STAGE_3_2)
+		{
+			if (player->GetPosY() >= 441)
+			{
+				player->AddHealth(-player->GetHealth());
+			}
+		}
 }
 
 void PlayScene::EasterEggEvent()
@@ -719,10 +772,21 @@ void PlayScene::Update(DWORD dt)
 			{
 				cx -= SCREEN_WIDTH / 2 - (STAGE_2_2_MAX_WIDTH - player->GetPosX());
 			}
+			else
+				if (idStage == STAGE_3_1 && player->GetPosX() >= STAGE_3_1_MAX_WIDTH)
+				{
+					cx -= SCREEN_WIDTH / 2 - (STAGE_3_1_MAX_WIDTH - player->GetPosX());
+				}
+				else
+					if (idStage == STAGE_3_2 && player->GetPosX() >= STAGE_3_2_MAX_WIDTH)
+					{
+						cx -= SCREEN_WIDTH / 2 - (STAGE_3_2_MAX_WIDTH - player->GetPosX());
+					}
 	else
 	{
 		if (player->GetPosX() < SCREEN_WIDTH / 2)
-			cx -= SCREEN_WIDTH / 2 - (SCREEN_WIDTH / 2 - player->GetPosX());
+			//cx -= SCREEN_WIDTH / 2 - (SCREEN_WIDTH / 2 - player->GetPosX());
+			cx = 0;
 		else
 			cx -= SCREEN_WIDTH / 2;
 	}
@@ -786,12 +850,12 @@ void PlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			else 
 				if (playScene->idStage == STAGE_3_1)
 				{
-					simon->SetPosition(100, 150);
+					simon->SetPosition(1440, 350);
 				}
 				else 
 					if (playScene->idStage == STAGE_3_2)
 					{
-						simon->SetPosition(100, 150);
+						simon->SetPosition(304, 200);
 					}
 
 		simon->SetVx(0);

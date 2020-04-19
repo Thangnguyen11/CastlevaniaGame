@@ -7,6 +7,7 @@
 #define BBRICK_TYPE1		0
 #define BBRICK_TYPE2		1
 #define BBRICK_TYPE3		2
+#define BBRICK_TYPE4		3
 
 class BreakableBrick : public Entity
 {

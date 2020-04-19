@@ -2,7 +2,7 @@
 
 Texture2d::Texture2d(char* filePath, int TOTALFRAME, int FRAMEWIDTH, int FRAMEHEIGHT, D3DCOLOR colorKey, int left, int top, int right, int bottom)
 {
-	this->totalFrame = TOTALFRAME;
+	this->totalFrame = TOTALFRAME;	//that ra khong can vi tinh duoc = totalColumn * totalRow
 	frameWidth = FRAMEWIDTH;
 	frameHeight = FRAMEHEIGHT;
 	this->left = left;

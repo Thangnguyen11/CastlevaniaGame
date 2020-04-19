@@ -1,2 +1,6 @@
-﻿  Texture2dManager.cpp
+﻿  Player.cpp
+c:\users\pc\documents\github\castlevaniagame\game\timer.h(20): warning C4018: '>=': signed/unsigned mismatch
+c:\users\pc\documents\github\castlevaniagame\game\player.cpp(101): warning C4244: 'argument': conversion from 'DWORD' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\player.cpp(139): warning C4244: 'argument': conversion from 'DWORD' to 'float', possible loss of data
+c:\users\pc\documents\github\castlevaniagame\game\player.cpp(175): warning C4244: 'argument': conversion from 'DWORD' to 'float', possible loss of data
   Game.vcxproj -> C:\Users\PC\Documents\GitHub\CastlevaniaGame\Debug\Game.exe

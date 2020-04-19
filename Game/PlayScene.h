@@ -106,7 +106,7 @@ public:
 	void PlayerCollideItem();
 	void CheckObjAlive();
 	void SetSubWeaponDone(UINT i);
-	bool PlayerPassingStage(float DistanceXWant);
+	bool PlayerPassingStage(float DistanceXWant, int directionGo);
 	void PlayerGotGate();
 	bool PlayerGotStairs();
 	void EasterEggEvent();	//EEE

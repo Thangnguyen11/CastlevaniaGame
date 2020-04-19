@@ -21,6 +21,8 @@ void Brick::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		sprite->SelectFrame(BRICK_TYPE2);
 	else if(brickType == 3)
 		sprite->SelectFrame(BRICK_TYPE3);
+	else if (brickType == 4)
+		sprite->SelectFrame(BRICK_TYPE4);
 }
 
 void Brick::Render()

@@ -30,6 +30,8 @@ void BreakableBrick::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 		sprite->SelectFrame(BBRICK_TYPE2);
 	else if (brickType == 3)
 		sprite->SelectFrame(BBRICK_TYPE3);
+	else if (brickType == 4)
+		sprite->SelectFrame(BBRICK_TYPE4);
 }
 
 void BreakableBrick::Render()

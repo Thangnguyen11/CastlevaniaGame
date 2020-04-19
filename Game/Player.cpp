@@ -565,7 +565,7 @@ void Player::SetState(int state)
 		vY = 0;
 		break;
 	case PLAYER_STATE_PASSING_STAGE:
-		direction = 1;
+		//direction = 1;
 		isWalking = true;
 		//isSitting = false;
 		vX = PLAYER_PASSING_STAGE_SPEED * direction; 
@@ -657,6 +657,14 @@ void Player::Respawn()
 	case STAGE_2_2:
 		posX = 800;
 		posY = 150;
+		break;
+	case STAGE_3_1:
+		posX = 1440;
+		posY = 350;
+		break;
+	case STAGE_3_2:
+		posX = 304;
+		posY = 200;
 		break;
 	default:
 		break;

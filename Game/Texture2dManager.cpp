@@ -38,12 +38,12 @@ void Texture2dManager::LoadContent()
 	AddTexture(EntityType::MAPSTAGE3_2, new Texture2d("Resources/TileMap/TilesetStage3.png", 60, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
 	//Static Obj
-	AddTexture(EntityType::BRICK, new Texture2d("Resources/Objects/Ground.png", 3, 32, 32));
+	AddTexture(EntityType::BRICK, new Texture2d("Resources/Objects/Ground.png", 4, 32, 32));
 	AddTexture(EntityType::TORCH, new Texture2d("Resources/Objects/Torch.png", 2, 32, 64, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::CANDLE, new Texture2d("Resources/Objects/Candle.png", 2, 16, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::GATE, new Texture2d("Resources/Objects/Gate.png", 4, 48, 96, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::STAIRS, new Texture2d("Resources/Objects/Stair.png", 2, 32, 32));
-	AddTexture(EntityType::BREAKABLEBRICK, new Texture2d("Resources/Objects/Ground.png", 3, 32, 32));
+	AddTexture(EntityType::BREAKABLEBRICK, new Texture2d("Resources/Objects/Ground.png", 4, 32, 32));
 	AddTexture(EntityType::MOVINGPLATFORM, new Texture2d("Resources/Objects/MovingPlatform.png", 1, 64, 16, D3DCOLOR_ARGB(255, 116, 116, 116)));
 
 	//UI
