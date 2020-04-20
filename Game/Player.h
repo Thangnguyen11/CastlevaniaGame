@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include "MorningStar.h"
 #include "Dagger.h"
+#include "Boomerang.h"
 #include "Timer.h"
 #include <map>
 

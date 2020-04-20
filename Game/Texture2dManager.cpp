@@ -72,6 +72,7 @@ void Texture2dManager::LoadContent()
 	//Weapons
 	AddTexture(EntityType::MORNINGSTAR, new Texture2d("Resources/Weapons/MorningStar.png", 12, 160, 68, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::DAGGER, new Texture2d("Resources/Weapons/Dagger.png", 1, 32, 18, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::BOOMERANG, new Texture2d("Resources/Weapons/Boomerang.png", 3, 28, 28, D3DCOLOR_ARGB(255, 255, 0, 255)));
 
 	//Items
 	AddTexture(EntityType::SMALLHEART, new Texture2d("Resources/Items/SmallHeart.png", 1, 16, 16, D3DCOLOR_ARGB(255, 255, 0, 255)));
@@ -84,7 +85,7 @@ void Texture2dManager::LoadContent()
 	AddTexture(EntityType::STOPWATCH, new Texture2d("Resources/Items/StopWatch.png", 1, 30, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::CROSS, new Texture2d("Resources/Items/Cross.png", 1, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::AXE, new Texture2d("Resources/Items/Axe.png", 1, 30, 28, D3DCOLOR_ARGB(255, 255, 0, 255)));
-	AddTexture(EntityType::BOOMERANG, new Texture2d("Resources/Items/Boomerang.png", 1, 30, 28, D3DCOLOR_ARGB(255, 255, 0, 255)));
+	AddTexture(EntityType::ITEMBOOMERANG, new Texture2d("Resources/Items/Boomerang.png", 1, 30, 28, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::WATERPOTION, new Texture2d("Resources/Items/WaterPotion.png", 1, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::ITEMDAGGER, new Texture2d("Resources/Items/Dagger.png", 1, 32, 18, D3DCOLOR_ARGB(255, 255, 0, 255)));
 	AddTexture(EntityType::CROWN, new Texture2d("Resources/Items/Crown.png", 2, 32, 32, D3DCOLOR_ARGB(255, 255, 0, 255)));

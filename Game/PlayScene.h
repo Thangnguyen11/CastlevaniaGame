@@ -17,6 +17,7 @@
 #include "YummiChickenLeg.h"
 #include "UpgradeMorningStar.h"
 #include "ItemDagger.h"
+#include "ItemBoomerang.h"
 #include "Hit.h"
 #include "Fire.h"
 #include "Score.h"

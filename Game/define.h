@@ -164,7 +164,9 @@ enum EntityType
 
 	MAPSTAGE3_1 = 54,
 
-	MAPSTAGE3_2 = 55
+	MAPSTAGE3_2 = 55,
+
+	ITEMBOOMERANG = 56
 };
 
 class define

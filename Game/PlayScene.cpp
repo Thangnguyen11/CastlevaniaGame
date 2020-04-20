@@ -458,6 +458,12 @@ void PlayScene::PlayerCollideItem()
 					listItems[i]->SetIsDone(true);
 					break;
 				}
+				case EntityType::ITEMBOOMERANG:
+				{
+					player->SetPlayerSupWeaponType(EntityType::BOOMERANG);
+					listItems[i]->SetIsDone(true);
+					break;
+				}
 				default:
 					break;
 				}

@@ -135,6 +135,11 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 								Dagger* dagger = dynamic_cast<Dagger*>(supWeapon);
 								dagger->ResetDelay();
 							}
+							else if (supWeapon->GetType() == EntityType::BOOMERANG)
+							{
+								Boomerang* boomerang = dynamic_cast<Boomerang*>(supWeapon);
+								boomerang->ResetDelay();
+							}
 						}
 						sprite->SetCurrentTotalTime(dt);
 					}
@@ -170,6 +175,11 @@ void Player::Update(DWORD dt, vector<LPGAMEENTITY> *coObjects)
 						{
 							Dagger* dagger = dynamic_cast<Dagger*>(supWeapon);
 							dagger->ResetDelay();
+						}
+						else if (supWeapon->GetType() == EntityType::BOOMERANG)
+						{
+							Boomerang* boomerang = dynamic_cast<Boomerang*>(supWeapon);
+							boomerang->ResetDelay();
 						}
 					}
 					sprite->SetCurrentTotalTime(dt);
@@ -611,6 +621,20 @@ void Player::Attack(EntityType weaponType)
 				supWeapon->Attack(posX, posY, direction);
 			}
 		}
+		break;
+	}
+	case EntityType::BOOMERANG:
+	{
+		if (mana > 0)
+		{
+			if (supWeapon->GetIsDone())
+			{
+				AddMana(-1);
+				isAttacking = true;
+				supWeapon->Attack(posX, posY, direction);
+			}
+		}
+		break;
 	}
 	default:
 		break;
@@ -636,6 +660,10 @@ void Player::SetPlayerSupWeaponType(EntityType supWeaponType)
 	case EntityType::DAGGER:
 		currentSupWeaponType = EntityType::DAGGER;
 		supWeapon = new Dagger();
+		break;
+	case EntityType::BOOMERANG:
+		currentSupWeaponType = EntityType::BOOMERANG;
+		supWeapon = new Boomerang(this);
 		break;
 	default:
 		break;
